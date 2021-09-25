@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "804367024320",
+    "project_id": "take-a-step-8bec7",
+    "storage_bucket": "take-a-step-8bec7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:804367024320:android:8a81041e6b47642aaaed25",
+        "android_client_info": {
+          "package_name": "com.example.takeastep"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "804367024320-bipqkqvf89g9m7he2ip0ucjo9kikillq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhVphovhX5P29DrdHuO6V7Au0vYe8gaN4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "804367024320-bipqkqvf89g9m7he2ip0ucjo9kikillq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
