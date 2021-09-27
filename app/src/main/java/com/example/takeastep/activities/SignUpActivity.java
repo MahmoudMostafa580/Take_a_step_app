@@ -12,6 +12,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.takeastep.databinding.ActivitySignUpBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -84,6 +85,7 @@ public class SignUpActivity extends AppCompatActivity {
                                                 user.put("email",email);
                                                 user.put("image",uri.toString());
                                                 user.put("password",password);
+                                                user.put("id",firebaseAuth.getCurrentUser().getUid());
                                                 DocumentReference documentReference=mFirestore.collection("users").document(firebaseAuth.getCurrentUser().getUid());
                                                 documentReference.set(user)
                                                         .addOnSuccessListener(unused -> {
@@ -125,6 +127,7 @@ public class SignUpActivity extends AppCompatActivity {
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             profileImage=data.getData();
             signUpBinding.profileImage.setImageURI(profileImage);
+            //Glide.with(this).load(profileImage).fitCenter().into(signUpBinding.profileImage);
             Picasso.with(this).load(profileImage).fit().centerCrop().into(signUpBinding.profileImage);
             signUpBinding.addImageTxt.setVisibility(View.GONE);
         }

@@ -36,7 +36,6 @@
         android:layout_gravity="start"
         android:background="#FFFFFF"
         app:headerLayout="@layout/drawer_header"
-        app:itemIconTint="#1557FF"
         app:menu="@menu/drawer_menu">
     </com.google.android.material.navigation.NavigationView>
 

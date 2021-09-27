@@ -7,7 +7,7 @@
     android:gravity="bottom"
     android:orientation="vertical"
     android:padding="15dp"
-    android:background="@drawable/drawer_header_bg"
+    android:background="#1557FF"
     android:theme="@style/ThemeOverlay.AppCompat.Light">
 
     <com.makeramen.roundedimageview.RoundedImageView
@@ -16,7 +16,7 @@
         android:layout_height="64dp"
         android:layout_marginBottom="8dp"
         android:background="@drawable/ic_person"
-        app:riv_border_color="@color/black"
+        app:riv_border_color="@android:color/transparent"
         app:riv_oval="true" />
 
     <TextView
@@ -24,8 +24,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="mahmoud"
-        android:textColor="#000000"
+        android:textColor="#ffffff"
         android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textStyle="normal" />
 
 </LinearLayout>

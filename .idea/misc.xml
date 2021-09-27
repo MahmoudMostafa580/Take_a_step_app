@@ -4,17 +4,27 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/drawable-v24/background_sign_up_image.xml" value="0.26927083333333335" />
+        <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/drawable/background_chat_input.xml" value="0.26927083333333335" />
+        <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/drawable/background_content_up.xml" value="0.26927083333333335" />
+        <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/drawable/background_recieved_message.xml" value="0.26927083333333335" />
+        <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/drawable/background_sent_message.xml" value="0.26927083333333335" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/drawable/ic_email.xml" value="0.26927083333333335" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/drawable/ic_log_out.xml" value="0.26927083333333335" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/drawable/ic_person.xml" value="0.26927083333333335" />
+        <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/drawable/ic_send.xml" value="0.26927083333333335" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/activity_home.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/activity_launcher.xml" value="0.253125" />
+        <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/activity_main.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/activity_sign_in.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/activity_sign_up.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/drawer_header.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/fragment_covid19_discount.xml" value="0.253125" />
+        <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/fragment_help_center.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/fragment_home.xml" value="0.253125" />
+        <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/fragment_profile.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/fragment_take_step.xml" value="0.253125" />
+        <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/item_container_recieved_message.xml" value="0.253125" />
+        <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/item_container_sent_message.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/menu/drawer_menu.xml" value="0.253125" />
       </map>
     </option>
