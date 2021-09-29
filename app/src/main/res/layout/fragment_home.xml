@@ -17,7 +17,7 @@
         app:layout_constraintBottom_toTopOf="@id/are_you_ready_btn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
-    <androidx.appcompat.widget.AppCompatButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/are_you_ready_btn"
         android:layout_width="match_parent"
         android:layout_height="64dp"
@@ -32,7 +32,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/together_we_win_btn"/>
-    <androidx.appcompat.widget.AppCompatButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/together_we_win_btn"
         android:layout_width="match_parent"
         android:layout_height="64dp"
@@ -47,7 +47,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/covid_19_discount_btn"/>
-    <androidx.appcompat.widget.AppCompatButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/covid_19_discount_btn"
         android:layout_width="match_parent"
         android:layout_height="64dp"
@@ -62,7 +62,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/take_a_step_btn"/>
-    <androidx.appcompat.widget.AppCompatButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/take_a_step_btn"
         android:layout_width="match_parent"
         android:layout_height="64dp"

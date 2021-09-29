@@ -27,11 +27,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Objects;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link HelpCenterFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class HelpCenterFragment extends Fragment {
     FragmentHelpCenterBinding helpCenterBinding;
     ArrayList<ChatMessage> chatMessages;
@@ -39,27 +34,8 @@ public class HelpCenterFragment extends Fragment {
     FirebaseFirestore firestore;
     FirebaseAuth mFirebaseAuth;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     public HelpCenterFragment() {
         // Required empty public constructor
-    }
-
-    // TODO: Rename and change types and number of parameters
-    public static HelpCenterFragment newInstance(String param1, String param2) {
-        HelpCenterFragment fragment = new HelpCenterFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
