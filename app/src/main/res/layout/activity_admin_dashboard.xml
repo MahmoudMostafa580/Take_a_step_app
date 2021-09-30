@@ -6,5 +6,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.AdminDashboardActivity">
+  <androidx.appcompat.widget.Toolbar
+      android:id="@+id/toolBar"
+      android:layout_width="match_parent"
+      android:layout_height="?attr/actionBarSize"
+      android:background="#1557FF"
+      android:elevation="4dp"
+      app:menu="@menu/admin_dashboard_menu"
+      android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+      app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintVertical_bias="0"/>
 
   </androidx.constraintlayout.widget.ConstraintLayout>

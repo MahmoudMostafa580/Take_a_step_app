@@ -32,6 +32,7 @@
             android:parentActivityName=".activities.MainActivity" />
         <activity
             android:name=".activities.AdminDashboardActivity"
+            android:label="Admin Dashboard"
             android:exported="true" />
         <activity
             android:name=".activities.MainActivity"

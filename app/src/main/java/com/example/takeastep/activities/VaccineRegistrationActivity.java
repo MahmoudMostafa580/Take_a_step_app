@@ -25,9 +25,10 @@ public class VaccineRegistrationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         vaccineRegistrationBinding=ActivityVaccineRegistrationBinding.inflate(getLayoutInflater());
+        getWindow().requestFeature(Window.FEATURE_PROGRESS);
+
         setContentView(vaccineRegistrationBinding.getRoot());
 
-        //getWindow().requestFeature(Window.FEATURE_PROGRESS);
         WebSettings webSettings = vaccineRegistrationBinding.webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setBuiltInZoomControls(true);
