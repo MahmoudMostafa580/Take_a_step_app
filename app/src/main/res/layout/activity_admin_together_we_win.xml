@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.user.TogetherWeWinActivity">
+    tools:context=".activities.admin.AdminTogetherWeWinActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolBar"
@@ -13,24 +13,30 @@
         android:layout_height="?attr/actionBarSize"
         android:background="#1557FF"
         android:elevation="4dp"
-        app:title="Together we win"
+        app:title="Together We Win"
         app:navigationIcon="@drawable/ic_arrow_back"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/togetherWeWinRecycler"/>
-
+        app:layout_constraintBottom_toTopOf="@id/vaccine_type_recycler"
+        app:layout_constraintVertical_bias="0"/>
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/togetherWeWinRecycler"
+        android:id="@+id/vaccine_type_recycler"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintTop_toBottomOf="@id/toolBar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
-
+        android:src="@drawable/ic_add"
+        android:tintMode="@color/white" />
 </androidx.constraintlayout.widget.ConstraintLayout>

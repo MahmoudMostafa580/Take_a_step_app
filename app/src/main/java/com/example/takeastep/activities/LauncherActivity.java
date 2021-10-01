@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.WindowManager;
 
+import com.example.takeastep.activities.admin.AdminDashboardActivity;
+import com.example.takeastep.activities.user.MainActivity;
 import com.example.takeastep.databinding.ActivityLauncherBinding;
 
 public class LauncherActivity extends AppCompatActivity {

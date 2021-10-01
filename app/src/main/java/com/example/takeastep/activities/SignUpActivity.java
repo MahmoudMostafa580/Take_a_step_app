@@ -12,7 +12,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+import com.example.takeastep.activities.user.MainActivity;
 import com.example.takeastep.databinding.ActivitySignUpBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

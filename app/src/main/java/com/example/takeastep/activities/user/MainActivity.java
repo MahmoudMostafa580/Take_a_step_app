@@ -1,4 +1,4 @@
-package com.example.takeastep.activities;
+package com.example.takeastep.activities.user;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.takeastep.R;
+import com.example.takeastep.activities.SignInActivity;
 import com.example.takeastep.databinding.ActivityMainBinding;
 import com.example.takeastep.fragments.HelpCenterFragment;
 import com.example.takeastep.fragments.HomeFragment;
@@ -122,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.logout:
             {
                 firebaseAuth.signOut();
-                startActivity(new Intent(getApplicationContext(),SignInActivity.class));
+                startActivity(new Intent(getApplicationContext(), SignInActivity.class));
                 editor.putBoolean("isLogged",false);
                 editor.apply();
                 finish();

@@ -9,10 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.takeastep.R;
-import com.example.takeastep.activities.AreYouReadyActivity;
-import com.example.takeastep.activities.TakeAstepActivity;
-import com.example.takeastep.activities.TogetherWeWinActivity;
+import com.example.takeastep.activities.user.AreYouReadyActivity;
+import com.example.takeastep.activities.user.TakeAstepActivity;
+import com.example.takeastep.activities.user.TogetherWeWinActivity;
 import com.example.takeastep.databinding.FragmentHomeBinding;
 
 public class HomeFragment extends Fragment {

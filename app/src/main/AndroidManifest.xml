@@ -15,27 +15,43 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TakeAStep">
         <activity
-            android:name=".activities.VaccineRegistrationActivity"
+            android:name=".activities.admin.AddContentActivity"
             android:exported="true" />
         <activity
-            android:name=".activities.TakeAstepActivity"
+            android:name=".activities.admin.AdminTakeAStepActivity"
             android:exported="true" />
         <activity
-            android:name=".activities.CovidDiscountActivity"
+            android:name=".activities.admin.AdminCovidDiscountActivity"
             android:exported="true" />
         <activity
-            android:name=".activities.TogetherWeWinActivity"
+            android:name=".activities.admin.AdminTogetherWeWinActivity"
             android:exported="true" />
         <activity
-            android:name=".activities.AreYouReadyActivity"
+            android:name=".activities.admin.AdminAreYouReadyActivity"
             android:exported="true"
-            android:parentActivityName=".activities.MainActivity" />
+            android:label="Are You Ready" />
         <activity
-            android:name=".activities.AdminDashboardActivity"
-            android:label="Admin Dashboard"
+            android:name=".activities.user.VaccineRegistrationActivity"
             android:exported="true" />
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".activities.user.TakeAstepActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.user.CovidDiscountActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.user.TogetherWeWinActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.user.AreYouReadyActivity"
+            android:exported="true"
+            android:parentActivityName=".activities.user.MainActivity" />
+        <activity
+            android:name=".activities.admin.AdminDashboardActivity"
+            android:exported="true"
+            android:label="Admin Dashboard" />
+        <activity
+            android:name=".activities.user.MainActivity"
             android:exported="true" />
         <activity
             android:name=".activities.SignUpActivity"

@@ -1,4 +1,4 @@
-package com.example.takeastep.activities;
+package com.example.takeastep.activities.admin;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +12,7 @@ import android.view.MenuItem;
 
 
 import com.example.takeastep.R;
+import com.example.takeastep.activities.SignInActivity;
 import com.example.takeastep.databinding.ActivityAdminDashboardBinding;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -32,6 +33,15 @@ public class AdminDashboardActivity extends AppCompatActivity {
         editor = mySharedPreferences.edit();
 
         setSupportActionBar(adminDashboardBinding.toolBar);
+        adminDashboardBinding.areYouReadyCard.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(),
+                AdminAreYouReadyActivity.class)));
+        adminDashboardBinding.togetherWeWinCard.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(),
+                AdminTogetherWeWinActivity.class)));
+        adminDashboardBinding.covidDiscountCard.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(),
+                AdminCovidDiscountActivity.class)));
+        adminDashboardBinding.takeAstepCard.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(),
+                AdminTakeAStepActivity.class)));
+
 
 
     }
@@ -47,13 +57,15 @@ public class AdminDashboardActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.logout) {
             signOut();
+        }else if (item.getItemId()==R.id.notification){
+
         }
         return super.onOptionsItemSelected(item);
     }
 
     private void signOut() {
         firebaseAuth.signOut();
-        startActivity(new Intent(getApplicationContext(),SignInActivity.class));
+        startActivity(new Intent(getApplicationContext(), SignInActivity.class));
         editor.putBoolean("isLogged",false);
         editor.apply();
         finish();

@@ -1,4 +1,4 @@
-package com.example.takeastep.activities;
+package com.example.takeastep.activities.user;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;

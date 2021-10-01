@@ -1,8 +1,7 @@
-package com.example.takeastep.activities;
+package com.example.takeastep.activities.user;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,7 +14,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-import com.example.takeastep.R;
 import com.example.takeastep.databinding.ActivityVaccineRegistrationBinding;
 
 public class VaccineRegistrationActivity extends AppCompatActivity {

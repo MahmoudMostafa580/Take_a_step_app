@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.AreYouReadyActivity">
+    tools:context=".activities.user.AreYouReadyActivity">
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolBar"
         android:layout_width="match_parent"
@@ -32,7 +32,6 @@
         app:layout_constraintTop_toBottomOf="@id/toolBar">
 
         <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chip_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingHorizontal="4dp"
@@ -53,7 +52,6 @@
                 app:chipBackgroundColor="@drawable/chip_selection" />
 
             <com.google.android.material.chip.Chip
-                android:id="@+id/benefitsOfVaccineChip"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -62,7 +60,6 @@
                 app:chipBackgroundColor="@drawable/chip_selection" />
 
             <com.google.android.material.chip.Chip
-                android:id="@+id/vaccinationRiskChip"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
