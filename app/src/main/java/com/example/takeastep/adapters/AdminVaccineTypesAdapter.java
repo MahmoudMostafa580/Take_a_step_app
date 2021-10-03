@@ -21,31 +21,31 @@ import java.util.ArrayList;
 public class AdminVaccineTypesAdapter extends RecyclerView.Adapter<AdminVaccineTypesAdapter.VaccineTypesViewHolder> {
     private ArrayList<Vaccine> mVaccinesList;
     private Context mContext;
-    private OnMenuItemClickListener mListener;
+    private OnItemClickListener mListener;
 
     public AdminVaccineTypesAdapter(Context context, ArrayList<Vaccine> vaccinesList) {
         mContext = context;
         mVaccinesList = vaccinesList;
     }
 
-    public interface OnMenuItemClickListener {
+    public interface OnItemClickListener {
         void onMenuClick(View view,int position);
     }
 
+    public void setOnItemClickListener(AdminVaccineTypesAdapter.OnItemClickListener listener){
+        mListener=listener;
+    }
     @NonNull
     @Override
     public VaccineTypesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new VaccineTypesViewHolder(
-                LayoutInflater.from(mContext).inflate(R.layout.item_vaccine_type_container, parent, false));
+                LayoutInflater.from(mContext).inflate(R.layout.item_vaccine_type_container, parent, false),mListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull VaccineTypesViewHolder holder, int position) {
         Vaccine currentVaccine = mVaccinesList.get(position);
         holder.vaccineName.setText(currentVaccine.getName());
-        holder.menu.setOnClickListener(v -> {
-            mListener.onMenuClick(v,position);
-        });
     }
 
     @Override
@@ -57,10 +57,19 @@ public class AdminVaccineTypesAdapter extends RecyclerView.Adapter<AdminVaccineT
         TextView vaccineName;
         ImageView menu;
 
-        public VaccineTypesViewHolder(@NonNull View itemView) {
+        public VaccineTypesViewHolder(@NonNull View itemView,final OnItemClickListener listener) {
             super(itemView);
             vaccineName = itemView.findViewById(R.id.vaccine_name);
             menu = itemView.findViewById(R.id.menu_image);
+
+            menu.setOnClickListener(v -> {
+                if (listener!=null){
+                    int position=getAdapterPosition();
+                    if (position!=RecyclerView.NO_POSITION){
+                        listener.onMenuClick(v,position);
+                    }
+                }
+            });
         }
     }
 }

@@ -15,7 +15,9 @@
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/drawable/ic_person.xml" value="0.26927083333333335" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/drawable/ic_send.xml" value="0.26927083333333335" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/activity_add_content.xml" value="0.2390625" />
+        <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/activity_add_vaccine.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/activity_admin_are_you_ready.xml" value="0.253125" />
+        <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/activity_admin_covid_discount.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/activity_admin_dashboard.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/activity_admin_take_a_step.xml" value="0.2390625" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/activity_admin_together_we_win.xml" value="0.253125" />
@@ -29,15 +31,20 @@
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/activity_take_astep.xml" value="0.2390625" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/activity_together_we_win.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/activity_vaccine_registration.xml" value="0.253125" />
+        <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/add_country_layout.xml" value="0.253125" />
+        <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/add_vaccine_layout.xml" value="0.253125" />
+        <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/check_certificate_layout.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/drawer_header.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/fragment_covid19_discount.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/fragment_help_center.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/fragment_home.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/fragment_profile.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/fragment_take_step.xml" value="0.253125" />
+        <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/item_areyouready_container.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/item_container_recieved_message.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/item_container_sent_message.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/item_container_together_win_recycler.xml" value="0.253125" />
+        <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/item_country_container.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/item_vaccine_type_container.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/menu/admin_dashboard_menu.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/menu/are_you_ready_menu.xml" value="0.253125" />

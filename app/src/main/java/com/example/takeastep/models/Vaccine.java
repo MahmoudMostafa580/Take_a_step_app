@@ -8,6 +8,9 @@ public class Vaccine {
         this.info = info;
     }
 
+    public Vaccine() {
+    }
+
     public String getName() {
         return name;
     }
