@@ -127,7 +127,7 @@ public class AddContentActivity extends AppCompatActivity {
                                     documentReference.set(content)
                                             .addOnSuccessListener(unused -> {
                                                 Toast.makeText(this, "Data Uploaded Successfully", Toast.LENGTH_SHORT).show();
-                                                startActivity(new Intent(getApplicationContext(),AdminAreYouReadyActivity.class));
+                                                startActivity(new Intent(AddContentActivity.this,AdminAreYouReadyActivity.class));
                                                 finish();
                                             })
                                             .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
@@ -145,7 +145,7 @@ public class AddContentActivity extends AppCompatActivity {
                                     documentReference.set(content)
                                             .addOnSuccessListener(unused -> {
                                                 Toast.makeText(this, "Data Uploaded Successfully", Toast.LENGTH_SHORT).show();
-                                                startActivity(new Intent(getApplicationContext(),AdminAreYouReadyActivity.class));
+                                                startActivity(new Intent(AddContentActivity.this,AdminAreYouReadyActivity.class));
                                                 finish();
                                             })
                                             .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());

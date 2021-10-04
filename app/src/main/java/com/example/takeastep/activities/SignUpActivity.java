@@ -75,7 +75,7 @@ public class SignUpActivity extends AppCompatActivity {
         firebaseAuth.createUserWithEmailAndPassword(email,password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()){
-                        StorageReference imageReference=mStorageReference.child("usersPictures/"+firebaseAuth.getCurrentUser().getEmail());
+                        StorageReference imageReference=mStorageReference.child("usersPictures/"+firebaseAuth.getCurrentUser().getEmail()+"/profile");
                         mUploadTask=imageReference.putFile(profileImage)
                                 .addOnSuccessListener(taskSnapshot -> {
                                     imageReference.getDownloadUrl()

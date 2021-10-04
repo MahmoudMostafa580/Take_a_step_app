@@ -32,7 +32,6 @@ public class AdminAreYouReadyActivity extends AppCompatActivity {
     ActivityAdminAreYouReadyBinding adminAreYouReadyBinding;
     ReadyContentAdapter mContentAdapter;
     FirebaseFirestore mFirestore;
-    StorageReference mStorageReference;
     CollectionReference mCollectionReference;
 
     ArrayList<ReadyContent> mContent;
@@ -45,7 +44,7 @@ public class AdminAreYouReadyActivity extends AppCompatActivity {
         setContentView(adminAreYouReadyBinding.getRoot());
 
         mFirestore = FirebaseFirestore.getInstance();
-        mStorageReference = FirebaseStorage.getInstance().getReference();
+        //mStorageReference = FirebaseStorage.getInstance().getReference();
         mCollectionReference = mFirestore.collection("ReadyContent");
 
         setSupportActionBar(adminAreYouReadyBinding.toolBar);
@@ -54,11 +53,8 @@ public class AdminAreYouReadyActivity extends AppCompatActivity {
         adminAreYouReadyBinding.recycler.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(this);
         adminAreYouReadyBinding.recycler.setLayoutManager(linearLayoutManager);
-        linearLayoutManager.setReverseLayout(true);
-        linearLayoutManager.setStackFromEnd(true);
 
         mContent = new ArrayList<>();
-
 
         mContentAdapter = new ReadyContentAdapter(mContent, AdminAreYouReadyActivity.this);
         adminAreYouReadyBinding.recycler.setAdapter(mContentAdapter);

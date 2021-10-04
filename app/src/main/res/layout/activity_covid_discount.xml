@@ -6,4 +6,71 @@
     android:layout_height="match_parent"
     tools:context=".activities.user.CovidDiscountActivity">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolBar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#1557FF"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_arrow_back"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:title="COVID-19 Discount" />
+
+    <TextView
+        android:id="@+id/txt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginTop="32dp"
+        android:fontFamily="@font/abhaya_libre"
+        android:gravity="center"
+        android:text="To get discounts. Please upload your verified vaccination card photo"
+        android:textSize="22sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolBar" />
+
+    <FrameLayout
+        android:id="@+id/certificate_frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txt">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/certificateImage"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:background="@drawable/background_sign_up_image"
+            android:scaleType="centerCrop"
+            android:foreground="?attr/selectableItemBackground"
+            app:riv_corner_radius="5dp"
+            app:riv_oval="false" />
+
+        <TextView
+            android:id="@+id/addCertificateTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Add Vaccine Certificate"
+            android:textSize="18sp" />
+    </FrameLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/upload_certificate_btn"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        app:layout_constraintTop_toBottomOf="@id/certificate_frame_layout"
+        android:layout_marginHorizontal="32dp"
+        android:text="Upload certificate"
+        android:layout_marginTop="32dp"/>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

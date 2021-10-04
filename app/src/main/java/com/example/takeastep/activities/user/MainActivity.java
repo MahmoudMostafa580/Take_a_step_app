@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void loadUserDetails() {
         StorageReference mStorageReference = FirebaseStorage.getInstance().getReference();
-        StorageReference img= mStorageReference.child("usersPictures/"+firebaseAuth.getCurrentUser().getEmail());
+        StorageReference img= mStorageReference.child("usersPictures/"+firebaseAuth.getCurrentUser().getEmail()+"/profile");
         img.getDownloadUrl()
                 .addOnSuccessListener(uri ->{
                     Glide.with(MainActivity.this)

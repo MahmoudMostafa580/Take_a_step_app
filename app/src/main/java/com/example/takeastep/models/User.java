@@ -3,10 +3,14 @@ package com.example.takeastep.models;
 import java.io.Serializable;
 
 public class User implements Serializable {
-    public String name,image,email,id;
+    public String name,image,email,id,certificate;
 
-    public User(String name) {
-        this.name = name;
+    public User() {
+    }
+
+    public User(String name, String certificate) {
+        this.name=name;
+        this.certificate=certificate;
     }
 
     public User(String name, String image, String email, String id) {
@@ -14,6 +18,14 @@ public class User implements Serializable {
         this.image = image;
         this.email = email;
         this.id = id;
+    }
+
+    public String getCertificate() {
+        return certificate;
+    }
+
+    public void setCertificate(String certificate) {
+        this.certificate = certificate;
     }
 
     public String getName() {
