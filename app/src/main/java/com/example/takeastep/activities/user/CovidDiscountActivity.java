@@ -1,19 +1,23 @@
 package com.example.takeastep.activities.user;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.bumptech.glide.Glide;
 import com.example.takeastep.R;
 import com.example.takeastep.databinding.ActivityCovidDiscountBinding;
-import com.example.takeastep.models.User;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -23,6 +27,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class CovidDiscountActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
@@ -32,20 +37,26 @@ public class CovidDiscountActivity extends AppCompatActivity {
     private FirebaseFirestore mFirestore;
     private FirebaseAuth mFirebaseAuth;
     private StorageTask mUploadTask;
-
+    private DocumentReference mDocumentReference;
+    private CollectionReference mCollectionReference;
     private Uri certificateImage;
+
+    private final String[] discounts = {};
+
+    boolean isValid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        covidDiscountBinding=ActivityCovidDiscountBinding.inflate(getLayoutInflater());
+        covidDiscountBinding = ActivityCovidDiscountBinding.inflate(getLayoutInflater());
         setContentView(covidDiscountBinding.getRoot());
         setSupportActionBar(covidDiscountBinding.toolBar);
         covidDiscountBinding.toolBar.setNavigationOnClickListener(v -> onBackPressed());
 
-        mStorageReference= FirebaseStorage.getInstance().getReference();
-        mFirestore=FirebaseFirestore.getInstance();
-        mFirebaseAuth=FirebaseAuth.getInstance();
+        mStorageReference = FirebaseStorage.getInstance().getReference();
+        mFirestore = FirebaseFirestore.getInstance();
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mDocumentReference = mFirestore.collection("users").document(mFirebaseAuth.getCurrentUser().getUid());
 
         covidDiscountBinding.certificateFrameLayout.setOnClickListener(v -> {
             openFileChooser();
@@ -55,19 +66,58 @@ public class CovidDiscountActivity extends AppCompatActivity {
         covidDiscountBinding.uploadCertificateBtn.setOnClickListener(v -> {
             uploadCertificate();
         });
+        checkValidation();
 
     }
 
+    private void showAlert() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(CovidDiscountActivity.this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogLayout = inflater.inflate(R.layout.discount_layout, null);
+
+        builder.setView(dialogLayout);
+        builder.setTitle("Congratulations");
+
+        ImageView discountImg = dialogLayout.findViewById(R.id.discount_img);
+
+        Random random = new Random();
+        int randInt = random.nextInt(10) + 1;
+        String imgName = "discount" + randInt;
+        Uri img = Uri.parse("android.resource://com.example.takeastep/drawable/" + imgName);
+        Glide.with(getApplicationContext()).load(img).centerInside().into(discountImg);
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+    }
+
+    private void checkValidation() {
+        mDocumentReference.get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    isValid = documentSnapshot.getBoolean("valid certificate");
+                    if (isValid){
+                        Toast.makeText(this, "Congratulations. You are vaccinated", Toast.LENGTH_SHORT).show();
+                        covidDiscountBinding.certificateFrameLayout.setEnabled(false);
+                        covidDiscountBinding.uploadCertificateBtn.setEnabled(false);
+
+                        showAlert();
+                    }else{
+                        Toast.makeText(this, "Waiting for admin confirmation", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
+    }
+
     private void openFileChooser() {
-        Intent intent=new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent,PICK_IMAGE_REQUEST);
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            certificateImage=data.getData();
+            certificateImage = data.getData();
             covidDiscountBinding.certificateImage.setImageURI(certificateImage);
             //Glide.with(this).load(profileImage).fitCenter().into(signUpBinding.profileImage);
             Picasso.with(this).load(certificateImage).fit().centerCrop().into(covidDiscountBinding.certificateImage);
@@ -76,16 +126,16 @@ public class CovidDiscountActivity extends AppCompatActivity {
     }
 
     private void uploadCertificate() {
-        if (certificateImage!=null){
-            StorageReference certificateReference=mStorageReference.child("usersPictures/"+mFirebaseAuth.getCurrentUser().getEmail()+"/"+"certificate");
-            mUploadTask=certificateReference.putFile(certificateImage)
+        if (certificateImage != null) {
+            StorageReference certificateReference = mStorageReference.child("usersPictures/" + mFirebaseAuth.getCurrentUser().getEmail() + "/" + "certificate");
+            mUploadTask = certificateReference.putFile(certificateImage)
                     .addOnSuccessListener(taskSnapshot -> {
                         certificateReference.getDownloadUrl()
                                 .addOnSuccessListener(uri -> {
-                                    Map<String,Object> user=new HashMap<>();
-                                    user.put("certificate",uri.toString());
+                                    Map<String, Object> user = new HashMap<>();
+                                    user.put("certificate", uri.toString());
 
-                                    DocumentReference documentReference=mFirestore.collection("users").document(mFirebaseAuth.getCurrentUser().getUid());
+                                    DocumentReference documentReference = mFirestore.collection("users").document(mFirebaseAuth.getCurrentUser().getUid());
                                     documentReference.update(user)
                                             .addOnSuccessListener(unused -> Toast.makeText(this,
                                                     "Certificate uploaded successfully..Wait for admin response", Toast.LENGTH_LONG).show())
@@ -96,7 +146,7 @@ public class CovidDiscountActivity extends AppCompatActivity {
 
                     })
                     .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
-        }else{
+        } else {
             Toast.makeText(this, "No image selected!", Toast.LENGTH_SHORT).show();
         }
     }

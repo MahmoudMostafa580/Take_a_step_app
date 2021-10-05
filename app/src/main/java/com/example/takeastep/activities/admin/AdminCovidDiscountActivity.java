@@ -23,12 +23,15 @@ import com.example.takeastep.models.User;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class AdminCovidDiscountActivity extends AppCompatActivity {
@@ -83,6 +86,31 @@ public class AdminCovidDiscountActivity extends AppCompatActivity {
                                     .centerInside()
                                     .into(certImage))
                     .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
+
+            acceptBtn.setOnClickListener(v -> {
+                Map<String,Object> valid=new HashMap<>();
+                valid.put("valid certificate",true);
+
+                DocumentReference documentReference=mFirestore.collection("users").document(selectedUser.getId());
+                documentReference.update(valid)
+                        .addOnSuccessListener(unused -> {
+                            Toast.makeText(this, "Reply sent to user", Toast.LENGTH_SHORT).show();
+                            builder.dismiss();
+                        });
+            });
+
+            rejectBtn.setOnClickListener(v -> {
+                Map<String,Object> valid=new HashMap<>();
+                valid.put("valid certificate",false);
+
+                DocumentReference documentReference=mFirestore.collection("users").document(selectedUser.getId());
+                documentReference.update(valid)
+                        .addOnSuccessListener(unused -> {
+                            Toast.makeText(this, "Reply sent to user", Toast.LENGTH_SHORT).show();
+                            builder.dismiss();
+                        });
+            });
+
             builder.show();
         });
 
