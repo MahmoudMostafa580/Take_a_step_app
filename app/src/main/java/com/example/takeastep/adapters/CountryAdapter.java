@@ -29,19 +29,20 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.CountryV
         void onMenuClick(View view,int position);
     }
 
+    public void setOnItemClickListener(CountryAdapter.OnItemClickListener listener){
+        mListener=listener;
+    }
+
     @NonNull
     @Override
     public CountryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new CountryViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item_country_container, parent, false));
+        return new CountryViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item_country_container, parent, false),mListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull CountryViewHolder holder, int position) {
         Country currentCountry=countriesList.get(position);
         holder.countryName.setText(currentCountry.getName());
-        holder.menu.setOnClickListener(v -> {
-            mListener.onMenuClick(v,position);
-        });
     }
 
     @Override
@@ -49,19 +50,23 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.CountryV
         return countriesList.size();
     }
 
-    public void setList(ArrayList<Country> usersList) {
-        this.countriesList = usersList;
-        notifyDataSetChanged();
-    }
-
     public static class CountryViewHolder extends RecyclerView.ViewHolder {
 
         TextView countryName;
         ImageView menu;
-        public CountryViewHolder(@NonNull View itemView) {
+        public CountryViewHolder(@NonNull View itemView,final OnItemClickListener listener) {
             super(itemView);
             countryName=itemView.findViewById(R.id.country_name);
             menu=itemView.findViewById(R.id.delete_img);
+
+            menu.setOnClickListener(v -> {
+                if (listener!=null){
+                    int position=getAdapterPosition();
+                    if (position!=RecyclerView.NO_POSITION){
+                        listener.onMenuClick(v,position);
+                    }
+                }
+            });
 
 
         }

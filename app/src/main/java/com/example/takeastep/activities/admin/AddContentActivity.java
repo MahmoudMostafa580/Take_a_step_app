@@ -123,7 +123,7 @@ public class AddContentActivity extends AppCompatActivity {
                         .addOnSuccessListener(taskSnapshot -> contentReference.getDownloadUrl()
                                 .addOnSuccessListener(uri -> {
                                     ReadyContent content = new ReadyContent(uri.toString(), caption, category,new Date().toString());
-                                    DocumentReference documentReference = mFirestore.collection("ReadyContent").document();
+                                    DocumentReference documentReference = mFirestore.collection("Ready Content").document(content.getCaption());
                                     documentReference.set(content)
                                             .addOnSuccessListener(unused -> {
                                                 Toast.makeText(this, "Data Uploaded Successfully", Toast.LENGTH_SHORT).show();
@@ -141,7 +141,7 @@ public class AddContentActivity extends AppCompatActivity {
                         .addOnSuccessListener(taskSnapshot -> contentReference.getDownloadUrl()
                                 .addOnSuccessListener(uri -> {
                                     ReadyContent content = new ReadyContent(uri.toString(), caption, category,new Date().toString());
-                                    DocumentReference documentReference = mFirestore.collection("ReadyContent").document();
+                                    DocumentReference documentReference = mFirestore.collection("Ready Content").document(content.getCaption());
                                     documentReference.set(content)
                                             .addOnSuccessListener(unused -> {
                                                 Toast.makeText(this, "Data Uploaded Successfully", Toast.LENGTH_SHORT).show();

@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="70dp"
     xmlns:tools="http://schemas.android.com/tools"
+    android:foreground="?attr/selectableItemBackground"
     android:layout_margin="8dp"
     app:cardCornerRadius="4dp"
     app:cardElevation="8dp">

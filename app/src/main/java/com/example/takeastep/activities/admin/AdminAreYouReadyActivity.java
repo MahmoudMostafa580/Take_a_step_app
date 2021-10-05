@@ -45,7 +45,7 @@ public class AdminAreYouReadyActivity extends AppCompatActivity {
 
         mFirestore = FirebaseFirestore.getInstance();
         //mStorageReference = FirebaseStorage.getInstance().getReference();
-        mCollectionReference = mFirestore.collection("ReadyContent");
+        mCollectionReference = mFirestore.collection("Ready Content");
 
         setSupportActionBar(adminAreYouReadyBinding.toolBar);
         adminAreYouReadyBinding.toolBar.setNavigationOnClickListener(v -> onBackPressed());
@@ -66,9 +66,23 @@ public class AdminAreYouReadyActivity extends AppCompatActivity {
             popup.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
                     case R.id.edit:
+                        Intent updateIntent=new Intent(getApplicationContext(),EditContentActivity.class);
+                        String caption=mContent.get(position).getCaption();
+                        String category=mContent.get(position).getCategory();
+                        String url=mContent.get(position).getUrl();
+                        updateIntent.putExtra("caption",caption);
+                        updateIntent.putExtra("category",category);
+                        updateIntent.putExtra("url",url);
+                        startActivity(updateIntent);
 
                         return true;
                     case R.id.delete:
+                        mCollectionReference.document(selectedContent.getCaption()).delete()
+                                .addOnSuccessListener(unused -> {
+                                    mContent.remove(position);
+                                    mContentAdapter.notifyItemRemoved(position);
+                                })
+                                .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
 
                         return false;
 

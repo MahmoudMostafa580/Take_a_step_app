@@ -8,6 +8,9 @@ public class Country {
         this.link = link;
     }
 
+    public Country() {
+    }
+
     public String getName() {
         return name;
     }

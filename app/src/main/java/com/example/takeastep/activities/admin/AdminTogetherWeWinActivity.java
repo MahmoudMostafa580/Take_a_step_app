@@ -1,18 +1,15 @@
 package com.example.takeastep.activities.admin;
 
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.View;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import com.example.takeastep.R;
 import com.example.takeastep.adapters.AdminVaccineTypesAdapter;
@@ -26,13 +23,15 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-public class AdminTogetherWeWinActivity extends AppCompatActivity{
+public class AdminTogetherWeWinActivity extends AppCompatActivity {
 
     ArrayList<Vaccine> mVaccine;
     AdminVaccineTypesAdapter vaccineAdapter;
     ActivityAdminTogetherWeWinBinding adminTogetherWeWinBinding;
-    Vaccine selectedVaccine=new Vaccine();
+    Vaccine selectedVaccine = new Vaccine();
 
     private FirebaseFirestore mFirestore;
     private CollectionReference mCollectionReference;
@@ -56,12 +55,12 @@ public class AdminTogetherWeWinActivity extends AppCompatActivity{
         mCollectionReference = mFirestore.collection("Vaccines Types");
 
         adminTogetherWeWinBinding.vaccineTypeRecycler.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(this);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         adminTogetherWeWinBinding.vaccineTypeRecycler.setLayoutManager(linearLayoutManager);
 
-        mVaccine=new ArrayList<>();
+        mVaccine = new ArrayList<>();
 
-        vaccineAdapter=new AdminVaccineTypesAdapter(AdminTogetherWeWinActivity.this,mVaccine);
+        vaccineAdapter = new AdminVaccineTypesAdapter(AdminTogetherWeWinActivity.this, mVaccine);
         adminTogetherWeWinBinding.vaccineTypeRecycler.setAdapter(vaccineAdapter);
         vaccineAdapter.setOnItemClickListener(this::menuClick);
 
@@ -89,6 +88,7 @@ public class AdminTogetherWeWinActivity extends AppCompatActivity{
                 }
             });
             dialogBuilder.show();
+            dialogBuilder.setOnDismissListener(dialog -> loadVaccines());
         });
 
         loadVaccines();
@@ -98,8 +98,8 @@ public class AdminTogetherWeWinActivity extends AppCompatActivity{
         mCollectionReference.get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     mVaccine.clear();
-                    for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots){
-                        Vaccine vaccine=documentSnapshot.toObject(Vaccine.class);
+                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        Vaccine vaccine = documentSnapshot.toObject(Vaccine.class);
                         mVaccine.add(vaccine);
                     }
                     vaccineAdapter.notifyDataSetChanged();
@@ -107,7 +107,7 @@ public class AdminTogetherWeWinActivity extends AppCompatActivity{
                 .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
-    private void menuClick(View view,int position) {
+    private void menuClick(View view, int position) {
         selectedVaccine = mVaccine.get(position);
         PopupMenu popup = new PopupMenu(AdminTogetherWeWinActivity.this, view);
         MenuInflater inflater = popup.getMenuInflater();
@@ -115,9 +115,49 @@ public class AdminTogetherWeWinActivity extends AppCompatActivity{
         popup.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case R.id.edit:
+                    AlertDialog dialogBuilder = new AlertDialog.Builder(this).create();
+                    LayoutInflater layoutInflater = this.getLayoutInflater();
+                    View dialogView = layoutInflater.inflate(R.layout.add_vaccine_layout, null);
+                    dialogBuilder.setView(dialogView);
+
+                    nameLayout = dialogView.findViewById(R.id.vaccine_name_layout);
+                    infoLayout = dialogView.findViewById(R.id.vaccine_info_layout);
+                    uploadBtn = dialogView.findViewById(R.id.vaccineUploadBtn);
+
+                    nameLayout.getEditText().setText(selectedVaccine.getName());
+                    nameLayout.setEnabled(false);
+                    infoLayout.getEditText().setText(selectedVaccine.getInfo());
+                    uploadBtn.setText("Update");
+                    uploadBtn.setOnClickListener(v -> {
+                        String info = infoLayout.getEditText().getText().toString();
+                        if (!info.isEmpty()) {
+                            Map<String, Object> update = new HashMap<>();
+                            update.put("info", info);
+
+                            mCollectionReference.document(selectedVaccine.getName()).update(update)
+                                    .addOnSuccessListener(unused -> {
+                                        Toast.makeText(this, "Country updated successfully", Toast.LENGTH_SHORT).show();
+                                    })
+                                    .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
+
+                            dialogBuilder.dismiss();
+                        } else {
+                            Toast.makeText(this, "Invalid data", Toast.LENGTH_SHORT).show();
+                        }
+
+                    });
+                    dialogBuilder.show();
+                    dialogBuilder.setOnDismissListener(dialog -> loadVaccines());
+                    loadVaccines();
 
                     return true;
                 case R.id.delete:
+                    mCollectionReference.document(selectedVaccine.getName()).delete()
+                            .addOnSuccessListener(unused -> {
+                                mVaccine.remove(position);
+                                vaccineAdapter.notifyItemRemoved(position);
+                            })
+                            .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
 
                     return false;
 
