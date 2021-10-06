@@ -12,7 +12,7 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.takeastep.R;
-import com.example.takeastep.adapters.AdminVaccineTypesAdapter;
+import com.example.takeastep.activities.admin.adapters.AdminVaccineTypesAdapter;
 import com.example.takeastep.databinding.ActivityAdminTogetherWeWinBinding;
 import com.example.takeastep.models.Vaccine;
 import com.google.android.material.button.MaterialButton;

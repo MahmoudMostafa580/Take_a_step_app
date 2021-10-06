@@ -33,6 +33,7 @@
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/activity_vaccine_registration.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/add_country_layout.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/add_vaccine_layout.xml" value="0.253125" />
+        <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/are_you_ready_list_item.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/check_certificate_layout.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/discount_layout.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/drawer_header.xml" value="0.253125" />
@@ -42,12 +43,17 @@
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/fragment_profile.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/fragment_take_step.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/item_areyouready_container.xml" value="0.253125" />
+        <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/item_areyouready_image_container.xml" value="0.253125" />
+        <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/item_areyouready_video_container.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/item_container_recieved_message.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/item_container_sent_message.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/item_container_together_win_recycler.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/item_country_container.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/item_request_container.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/item_vaccine_type_container.xml" value="0.253125" />
+        <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/together_we_win_list_item.xml" value="0.253125" />
+        <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/user_item_areyouready_image_container.xml" value="0.253125" />
+        <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/user_item_areyouready_video_container.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/menu/admin_dashboard_menu.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/menu/are_you_ready_menu.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/menu/drawer_menu.xml" value="0.253125" />

@@ -29,7 +29,7 @@ public class EditContentActivity extends AppCompatActivity {
     private CollectionReference mCollectionReference;
 
     ReadyContent content = new ReadyContent();
-    String caption, category, url;
+    String caption, category, imageUrl,videoUrl;
 
 
     @Override
@@ -49,18 +49,27 @@ public class EditContentActivity extends AppCompatActivity {
         Intent updateIntent = getIntent();
         caption = updateIntent.getStringExtra("caption");
         category = updateIntent.getStringExtra("category");
-        url = updateIntent.getStringExtra("url");
+        imageUrl = updateIntent.getStringExtra("imageUrl");
+        videoUrl=updateIntent.getStringExtra("videoUrl");
 
 
         content.setCaption(caption);
         content.setCategory(category);
-        content.setUrl(url);
+        if (videoUrl==null){
+            content.setImageUrl(imageUrl);
+            Glide.with(this).load(imageUrl).into(addContentBinding.contentImage);
+            addContentBinding.addImageTxt.setVisibility(View.GONE);
+
+        }else{
+            content.setVideoUrl(videoUrl);
+            addContentBinding.contentVideo.start();
+            addContentBinding.addVideoTxt.setVisibility(View.GONE);
+        }
 
         addContentBinding.captionLayout.getEditText().setText(caption);
         addContentBinding.categorySpinner.setText(category);
         addContentBinding.addImageTxt.setVisibility(View.GONE);
         addContentBinding.captionLayout.setEnabled(false);
-        Glide.with(this).load(url).into(addContentBinding.contentImage);
 
         addContentBinding.uploadBtn.setText("Update");
         addContentBinding.uploadBtn.setOnClickListener(v -> {
@@ -104,7 +113,7 @@ public class EditContentActivity extends AppCompatActivity {
     private boolean checkValidate() {
         String caption = addContentBinding.captionLayout.getEditText().getText().toString();
         String category = addContentBinding.categorySpinner.getText().toString();
-        if (url != null) {
+        if (imageUrl != null || videoUrl != null) {
             if (!caption.isEmpty() && !category.isEmpty()) {
                 return true;
             } else {

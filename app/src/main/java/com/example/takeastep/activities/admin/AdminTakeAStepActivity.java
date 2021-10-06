@@ -1,6 +1,5 @@
 package com.example.takeastep.activities.admin;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -13,7 +12,7 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.takeastep.R;
-import com.example.takeastep.adapters.CountryAdapter;
+import com.example.takeastep.activities.admin.adapters.CountryAdapter;
 import com.example.takeastep.databinding.ActivityAdminTakeAStepBinding;
 import com.example.takeastep.models.Country;
 import com.google.android.material.button.MaterialButton;

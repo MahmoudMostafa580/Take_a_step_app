@@ -122,7 +122,7 @@ public class AddContentActivity extends AppCompatActivity {
                 mUploadTask = contentReference.putFile(videoUri)
                         .addOnSuccessListener(taskSnapshot -> contentReference.getDownloadUrl()
                                 .addOnSuccessListener(uri -> {
-                                    ReadyContent content = new ReadyContent(uri.toString(), caption, category,new Date().toString());
+                                    ReadyContent content = new ReadyContent(null,uri.toString(), caption, category,new Date().toString());
                                     DocumentReference documentReference = mFirestore.collection("Ready Content").document(content.getCaption());
                                     documentReference.set(content)
                                             .addOnSuccessListener(unused -> {
@@ -140,7 +140,7 @@ public class AddContentActivity extends AppCompatActivity {
                 mUploadTask = contentReference.putFile(imageUri)
                         .addOnSuccessListener(taskSnapshot -> contentReference.getDownloadUrl()
                                 .addOnSuccessListener(uri -> {
-                                    ReadyContent content = new ReadyContent(uri.toString(), caption, category,new Date().toString());
+                                    ReadyContent content = new ReadyContent(uri.toString(),null, caption, category,new Date().toString());
                                     DocumentReference documentReference = mFirestore.collection("Ready Content").document(content.getCaption());
                                     documentReference.set(content)
                                             .addOnSuccessListener(unused -> {

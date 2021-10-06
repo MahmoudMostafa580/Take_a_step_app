@@ -10,21 +10,16 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.example.takeastep.R;
-import com.example.takeastep.adapters.ReadyContentAdapter;
+import com.example.takeastep.activities.admin.adapters.ReadyContentAdapter;
 import com.example.takeastep.databinding.ActivityAdminAreYouReadyBinding;
 import com.example.takeastep.models.ReadyContent;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
@@ -69,10 +64,15 @@ public class AdminAreYouReadyActivity extends AppCompatActivity {
                         Intent updateIntent=new Intent(getApplicationContext(),EditContentActivity.class);
                         String caption=mContent.get(position).getCaption();
                         String category=mContent.get(position).getCategory();
-                        String url=mContent.get(position).getUrl();
+                        String imageUrl=mContent.get(position).getImageUrl();
+                        String videoUrl=mContent.get(position).getVideoUrl();
                         updateIntent.putExtra("caption",caption);
                         updateIntent.putExtra("category",category);
-                        updateIntent.putExtra("url",url);
+                        if (videoUrl==null){
+                            updateIntent.putExtra("imageUrl",imageUrl);
+                        }else{
+                            updateIntent.putExtra("videoUrl",videoUrl);
+                        }
                         startActivity(updateIntent);
 
                         return true;

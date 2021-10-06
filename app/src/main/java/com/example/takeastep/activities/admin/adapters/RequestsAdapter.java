@@ -1,4 +1,4 @@
-package com.example.takeastep.adapters;
+package com.example.takeastep.activities.admin.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;

@@ -10,13 +10,25 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 
+import com.example.takeastep.activities.user.adapters.TakeStepAdapter;
 import com.example.takeastep.databinding.ActivityTakeAstepBinding;
+import com.example.takeastep.models.Country;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.util.ArrayList;
 
 public class TakeAstepActivity extends AppCompatActivity {
     ActivityTakeAstepBinding takeAstepBinding;
-    String[] countries = {"Egypt", "Kuwait", "Kingdom of Saudi Arabia", "The Emirates"};
+    ArrayList<Country> countries;
+    Country selectedCountry = new Country();
+    ArrayAdapter<Country> spinnerAdapter;
+
+    private FirebaseFirestore mFirestore;
+    private CollectionReference mCollectionReference;
+
     String mCountry;
-    String countryUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,12 +39,18 @@ public class TakeAstepActivity extends AppCompatActivity {
         setSupportActionBar(takeAstepBinding.toolBar);
         takeAstepBinding.toolBar.setNavigationOnClickListener(v -> onBackPressed());
 
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_item, countries);
+        mFirestore = FirebaseFirestore.getInstance();
+        mCollectionReference = mFirestore.collection("Countries");
+
+        countries=new ArrayList<>();
+
+        spinnerAdapter = new ArrayAdapter<>(TakeAstepActivity.this, android.R.layout.expandable_list_content,countries);
         takeAstepBinding.countriesSpinner.setAdapter(spinnerAdapter);
         takeAstepBinding.countriesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 mCountry = parent.getItemAtPosition(position).toString();
+                selectedCountry=countries.get(position);
             }
 
             @Override
@@ -40,46 +58,40 @@ public class TakeAstepActivity extends AppCompatActivity {
                 Toast.makeText(TakeAstepActivity.this, "No country selected !", Toast.LENGTH_SHORT).show();
             }
         });
-        takeAstepBinding.countriesSpinner.setOnDismissListener(new AutoCompleteTextView.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                takeAstepBinding.countriesSpinner.clearFocus();
-            }
-        });
+        takeAstepBinding.countriesSpinner.setOnDismissListener(() -> takeAstepBinding.countriesSpinner.clearFocus());
 
         takeAstepBinding.registrationBtn.setOnClickListener(v -> checkCountry());
+
+        loadCountries();
+    }
+
+    private void loadCountries(){
+        mCollectionReference.get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    countries.clear();
+                    for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots){
+                        Country country=documentSnapshot.toObject(Country.class);
+                        countries.add(country);
+                    }
+
+                })
+                .addOnFailureListener(e -> Toast.makeText(this, "Error while loading countries!", Toast.LENGTH_SHORT).show());
     }
 
     public void checkCountry() {
-        String country = takeAstepBinding.countriesSpinner.getText().toString();
+        String countryUrl=selectedCountry.getLink();
         Intent intent = new Intent(getApplicationContext(), VaccineRegistrationActivity.class);
 
-        if (country.isEmpty()) {
-            Toast.makeText(TakeAstepActivity.this, "No country selected !", Toast.LENGTH_SHORT).show();
-        } else if (country.equals("Egypt")) {
-            countryUrl = "https://egcovac.mohp.gov.eg/#/home";
-            intent.putExtra("countryUrl", countryUrl);
-            startActivity(intent);
-        } else if (country.equals("Kuwait")) {
-            countryUrl = "https://cov19vaccine.moh.gov.kw/SPCMS/CVD_19_Vaccine_RegistrationAr.aspx";
-            intent.putExtra("countryUrl", countryUrl);
-            startActivity(intent);
-        } else if (country.equals("Kingdom of Saudi Arabia")) {
-            countryUrl = "https://eservices.moh.gov.sa/CoronaVaccineRegistration";
-            intent.putExtra("countryUrl", countryUrl);
-            startActivity(intent);
-        } else if (country.equals("The Emirates")) {
-            countryUrl = "https://www.dha.gov.ae/ar/covid19/pages/vaccineappoint.aspx";
-            intent.putExtra("countryUrl", countryUrl);
-            startActivity(intent);
-        }
+        intent.putExtra("countryUrl",countryUrl);
+        startActivity(intent);
+
     }
 
 
     @Override
     protected void onResume() {
         super.onResume();
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_item, countries);
+        ArrayAdapter<Country> spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_item, countries);
         takeAstepBinding.countriesSpinner.setAdapter(spinnerAdapter);
     }
 }

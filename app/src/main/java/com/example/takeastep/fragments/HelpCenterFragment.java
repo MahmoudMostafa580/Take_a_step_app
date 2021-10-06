@@ -8,11 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.takeastep.R;
-import com.example.takeastep.adapters.ChatAdapter;
+import com.example.takeastep.activities.user.adapters.ChatAdapter;
 import com.example.takeastep.databinding.FragmentHelpCenterBinding;
 import com.example.takeastep.models.ChatMessage;
-import com.example.takeastep.models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
@@ -54,7 +52,7 @@ public class HelpCenterFragment extends Fragment {
         firestore=FirebaseFirestore.getInstance();
         mFirebaseAuth=FirebaseAuth.getInstance();
 
-        chatAdapter=new ChatAdapter(chatMessages, Objects.requireNonNull(mFirebaseAuth.getCurrentUser()).getUid());
+        chatAdapter=new ChatAdapter(chatMessages,getContext(), Objects.requireNonNull(mFirebaseAuth.getCurrentUser()).getUid());
         helpCenterBinding.chatRecyclerView.setAdapter(chatAdapter);
 
         helpCenterBinding.layoutSend.setOnClickListener(v -> {

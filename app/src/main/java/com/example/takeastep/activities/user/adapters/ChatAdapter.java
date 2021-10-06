@@ -1,14 +1,13 @@
-package com.example.takeastep.adapters;
+package com.example.takeastep.activities.user.adapters;
 
+import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-import com.example.takeastep.R;
 import com.example.takeastep.databinding.ItemContainerRecievedMessageBinding;
 import com.example.takeastep.databinding.ItemContainerSentMessageBinding;
 import com.example.takeastep.models.ChatMessage;
@@ -18,13 +17,15 @@ import java.util.ArrayList;
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<ChatMessage> chatMessages;
     private final String senderId;
+    private Context mContext;
 
     public static final int VIEW_TYPE_SENT = 1;
     public static final int VIEW_TYPE_RECEIVED = 2;
 
-    public ChatAdapter(ArrayList<ChatMessage> chatMessages, String senderId) {
+    public ChatAdapter(ArrayList<ChatMessage> chatMessages,Context mContext, String senderId) {
         this.chatMessages = chatMessages;
         this.senderId = senderId;
+        this.mContext=mContext;
     }
 
     @NonNull
@@ -60,11 +61,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         } else {
             return VIEW_TYPE_RECEIVED;
         }
-    }
-
-    public void setList(ArrayList<ChatMessage> usersList) {
-        this.chatMessages = usersList;
-        notifyDataSetChanged();
     }
 
     public static class SentMessageViewHolder extends RecyclerView.ViewHolder {

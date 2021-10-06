@@ -1,13 +1,14 @@
 package com.example.takeastep.models;
 
 public class ReadyContent {
-    String url,caption,category,time;
+    String imageUrl,videoUrl,caption,category,time;
 
     public ReadyContent() {
     }
 
-    public ReadyContent(String url, String caption, String category,String time) {
-        this.url = url;
+    public ReadyContent(String imageUrl,String videoUrl, String caption, String category,String time) {
+        this.imageUrl = imageUrl;
+        this.videoUrl=videoUrl;
         this.caption = caption;
         this.category = category;
         this.time=time;
@@ -21,12 +22,20 @@ public class ReadyContent {
         this.time = time;
     }
 
-    public String getUrl() {
-        return url;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public void setVideoUrl(String videoUrl) {
+        this.videoUrl = videoUrl;
+    }
+
+    public String getVideoUrl() {
+        return videoUrl;
     }
 
     public String getCaption() {
