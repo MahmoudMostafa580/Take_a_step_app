@@ -44,6 +44,7 @@ public class TogetherWeWinActivity extends AppCompatActivity {
         mVaccine = new ArrayList<>();
 
         togetherWeWinAdapter = new TogetherWeWinAdapter(mVaccine, TogetherWeWinActivity.this);
+        togetherWeWinBinding.togetherWeWinRecycler.setAdapter(togetherWeWinAdapter);
 
         loadVaccines();
 
@@ -51,21 +52,15 @@ public class TogetherWeWinActivity extends AppCompatActivity {
 
     private void loadVaccines() {
         mCollectionReference.get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        mVaccine.clear();
-                        for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                            if (documentSnapshot.exists()) {
-                                togetherWeWinBinding.text.setVisibility(View.GONE);
-                                Vaccine vaccine = documentSnapshot.toObject(Vaccine.class);
-                                mVaccine.add(vaccine);
-                            }
-                        }
-                        togetherWeWinAdapter.notifyDataSetChanged();
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    mVaccine.clear();
+                    for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots){
 
-                    } else {
-                        showTextMessage();
+                            togetherWeWinBinding.text.setVisibility(View.GONE);
+                            Vaccine vaccine = documentSnapshot.toObject(Vaccine.class);
+                            mVaccine.add(vaccine);
                     }
+                    togetherWeWinAdapter.notifyDataSetChanged();
                 })
                 .addOnFailureListener(e -> Toast.makeText(this, "Error while loading vaccines", Toast.LENGTH_SHORT).show());
     }

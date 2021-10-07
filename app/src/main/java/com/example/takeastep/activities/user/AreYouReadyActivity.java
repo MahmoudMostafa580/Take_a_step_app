@@ -2,6 +2,7 @@ package com.example.takeastep.activities.user;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -43,10 +44,19 @@ public class AreYouReadyActivity extends AppCompatActivity {
         mCollectionReference = mFirestore.collection("Ready Content");
         mContent = new ArrayList<>();
 
+
+        areYouReadyBinding.contentRecyclerView.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(this);
+        areYouReadyBinding.contentRecyclerView.setLayoutManager(linearLayoutManager);
+
         mAdapter=new AreYouReadyAdapter(mContent,AreYouReadyActivity.this);
         areYouReadyBinding.contentRecyclerView.setAdapter(mAdapter);
 
+
         chipId=areYouReadyBinding.chipGroup.getCheckedChipId();
+        areYouReadyBinding.allCategoriesChip.setOnClickListener(v -> loadAllCategoriesList());
+        areYouReadyBinding.vaccinationBenefits.setOnClickListener(v -> loadBenefitsList());
+        areYouReadyBinding.vaccinationRisks.setOnClickListener(v -> loadRisksList());
 
         checkChip(chipId);
     }
@@ -62,7 +72,7 @@ public class AreYouReadyActivity extends AppCompatActivity {
     }
 
     private void loadRisksList() {
-        mCollectionReference.orderBy("time",Query.Direction.ASCENDING).get()
+        mCollectionReference.orderBy("time",Query.Direction.DESCENDING).get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult()!=null){
                         mContent.clear();
@@ -76,6 +86,7 @@ public class AreYouReadyActivity extends AppCompatActivity {
                             }
                         }
                         mAdapter.notifyDataSetChanged();
+                        //Toast.makeText(this, mContent.size(), Toast.LENGTH_SHORT).show();
                     }else{
                         showTextMessage();
                     }
@@ -84,7 +95,7 @@ public class AreYouReadyActivity extends AppCompatActivity {
     }
 
     private void loadBenefitsList() {
-        mCollectionReference.orderBy("time",Query.Direction.ASCENDING).get()
+        mCollectionReference.orderBy("time",Query.Direction.DESCENDING).get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult()!=null){
                         mContent.clear();
@@ -97,6 +108,7 @@ public class AreYouReadyActivity extends AppCompatActivity {
                                 }
                             }
                         }
+                        //Toast.makeText(this, mContent.size(), Toast.LENGTH_SHORT).show();
                         mAdapter.notifyDataSetChanged();
                     }else{
                         showTextMessage();
@@ -106,7 +118,7 @@ public class AreYouReadyActivity extends AppCompatActivity {
     }
 
     private void loadAllCategoriesList() {
-        mCollectionReference.orderBy("time", Query.Direction.ASCENDING).get()
+        mCollectionReference.orderBy("time", Query.Direction.DESCENDING).get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     mContent.clear();
                     for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {

@@ -58,7 +58,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.logout) {
             signOut();
         }else if (item.getItemId()==R.id.notification){
-
+            startActivity(new Intent(getApplicationContext(),AdminHelpCenterActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }

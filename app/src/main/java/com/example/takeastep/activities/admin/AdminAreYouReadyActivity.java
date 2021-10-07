@@ -96,7 +96,7 @@ public class AdminAreYouReadyActivity extends AppCompatActivity {
     }
 
     private void loadContents() {
-        mCollectionReference.orderBy("time",Query.Direction.ASCENDING).get()
+        mCollectionReference.orderBy("time",Query.Direction.DESCENDING).get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     mContent.clear();
                     for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {

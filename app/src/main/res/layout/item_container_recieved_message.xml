@@ -15,7 +15,7 @@
         android:background="@drawable/background_recieved_message"
         android:textSize="13sp"
         android:padding="12dp"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         app:layout_constraintWidth_max="wrap"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

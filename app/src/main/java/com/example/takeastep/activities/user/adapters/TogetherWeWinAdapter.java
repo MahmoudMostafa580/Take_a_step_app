@@ -33,6 +33,7 @@ public class TogetherWeWinAdapter extends RecyclerView.Adapter<TogetherWeWinAdap
     public void onBindViewHolder(@NonNull TogetherWeWinViewHolder holder, int position) {
         Vaccine currentVaccine = mVaccine.get(position);
         holder.vaccineName.setText(currentVaccine.getName());
+        holder.vaccineInfo.setText(currentVaccine.getInfo());
     }
 
     @Override

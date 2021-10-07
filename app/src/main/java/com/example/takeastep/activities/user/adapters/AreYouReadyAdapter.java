@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
 
@@ -51,8 +52,10 @@ public class AreYouReadyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             ((AreYouReadyImageViewHolder) holder).contentCaption.setText(currentContent.getCaption());
         } else {
             ReadyContent currentContent = contentsList.get(position);
+            MediaController controller=new MediaController(mContext);
+            ((AreYouReadyVideoViewHolder) holder).contentVideo.setMediaController(controller);
             ((AreYouReadyVideoViewHolder) holder).contentVideo.setVideoURI(Uri.parse(currentContent.getVideoUrl()));
-            ((AreYouReadyVideoViewHolder) holder).contentVideo.start();
+            ((AreYouReadyVideoViewHolder) holder).contentVideo.requestFocus();
             ((AreYouReadyVideoViewHolder) holder).contentCaption.setText(currentContent.getCaption());
         }
 

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
 
@@ -58,8 +59,11 @@ public class ReadyContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         } else {
             ReadyContent currentContent = contentsList.get(position);
+            MediaController controller=new MediaController(mContext);
             ((ReadyContentVideoViewHolder) holder).contentVideo.setVideoURI(Uri.parse(currentContent.getVideoUrl()));
-            ((ReadyContentVideoViewHolder) holder).contentVideo.start();
+            ((ReadyContentVideoViewHolder) holder).contentVideo.setMediaController(controller);
+            ((ReadyContentVideoViewHolder) holder).contentVideo.canPause();
+            ((ReadyContentVideoViewHolder) holder).contentVideo.requestFocus();
             ((ReadyContentVideoViewHolder) holder).contentCaption.setText(currentContent.getCaption());
         }
     }

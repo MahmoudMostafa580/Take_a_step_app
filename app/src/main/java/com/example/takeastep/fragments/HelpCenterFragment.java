@@ -1,28 +1,27 @@
 package com.example.takeastep.fragments;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.takeastep.activities.user.adapters.ChatAdapter;
 import com.example.takeastep.databinding.FragmentHelpCenterBinding;
 import com.example.takeastep.models.ChatMessage;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Locale;
 import java.util.Objects;
 
 public class HelpCenterFragment extends Fragment {
@@ -31,6 +30,8 @@ public class HelpCenterFragment extends Fragment {
     ChatAdapter chatAdapter;
     FirebaseFirestore firestore;
     FirebaseAuth mFirebaseAuth;
+    CollectionReference mCollectionReference;
+    DocumentReference mDocumentReference;
 
     public HelpCenterFragment() {
         // Required empty public constructor
@@ -46,47 +47,76 @@ public class HelpCenterFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        helpCenterBinding=FragmentHelpCenterBinding.inflate(inflater,container,false);
-        chatMessages=new ArrayList<>();
+        helpCenterBinding = FragmentHelpCenterBinding.inflate(inflater, container, false);
 
-        firestore=FirebaseFirestore.getInstance();
-        mFirebaseAuth=FirebaseAuth.getInstance();
+        firestore = FirebaseFirestore.getInstance();
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mCollectionReference = firestore.collection("users").document(mFirebaseAuth.getCurrentUser().getUid()).collection("chat");
 
-        chatAdapter=new ChatAdapter(chatMessages,getContext(), Objects.requireNonNull(mFirebaseAuth.getCurrentUser()).getUid());
+        chatMessages = new ArrayList<>();
+        listenMessages();
+
+        helpCenterBinding.chatRecyclerView.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        helpCenterBinding.chatRecyclerView.setLayoutManager(linearLayoutManager);
+
+        chatAdapter = new ChatAdapter(chatMessages, getActivity(), Objects.requireNonNull(mFirebaseAuth.getCurrentUser()).getUid());
         helpCenterBinding.chatRecyclerView.setAdapter(chatAdapter);
 
         helpCenterBinding.layoutSend.setOnClickListener(v -> {
             sendMessage();
         });
 
-        listenMessages();
-
+        Log.v("list size", String.valueOf(chatMessages.size()));
         return helpCenterBinding.getRoot();
     }
 
-    public void sendMessage(){
-        HashMap<String,Object> message =new HashMap<>();
-        message.put("sender id",mFirebaseAuth.getCurrentUser().getUid());
-        message.put("receiver id","ALQyPwPRatn1H3oGIaOo");
-        message.put("message",helpCenterBinding.messageEditText.getText().toString());
-        message.put("messageTime",new Date());
+    public void sendMessage() {
+        String message = helpCenterBinding.messageEditText.getText().toString();
+        if (!message.isEmpty()) {
+            ChatMessage chatMessage = new ChatMessage(mFirebaseAuth.getCurrentUser().getUid(), "ALQyPwPRatn1H3oGIaOo", message, new Date().toString());
+            DocumentReference mDocumentReference=firestore.collection("users").document(mFirebaseAuth.getCurrentUser().getUid()).collection("chat").document();
+            mDocumentReference.set(chatMessage)
+            .addOnCompleteListener(task -> {
+                if (task.isSuccessful()){
+                    helpCenterBinding.messageEditText.setText(null);
+                    helpCenterBinding.progressBar.setVisibility(View.GONE);
+                    helpCenterBinding.chatRecyclerView.setVisibility(View.VISIBLE);
+                    chatMessages.add(chatMessage);
+                    chatAdapter.notifyDataSetChanged();
+                    helpCenterBinding.chatRecyclerView.smoothScrollToPosition(chatMessages.size()-1);
+                }
+            })
+            .addOnFailureListener(e -> Toast.makeText(getContext(), "جاااااااااى", Toast.LENGTH_SHORT).show());
+            //chatAdapter.notifyItemInserted(chatMessages.size()-1);
 
-        firestore.collection("chat").add(message);
-        helpCenterBinding.messageEditText.setText(null);
+        } else {
+            Toast.makeText(getContext(), "Leave message!", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    private void listenMessages(){
-        firestore.collection("chat")
-                .whereEqualTo("sender id",mFirebaseAuth.getCurrentUser().getUid())
-                .whereEqualTo("receiver id","ALQyPwPRatn1H3oGIaOo")
-                .addSnapshotListener(eventListener);
-        firestore.collection("chat")
-                .whereEqualTo("sender id","ALQyPwPRatn1H3oGIaOo")
-                .whereEqualTo("receiver id",mFirebaseAuth.getCurrentUser().getUid())
-                .addSnapshotListener(eventListener);
+    private void listenMessages() {
+
+        mCollectionReference.orderBy("dateTime", Query.Direction.ASCENDING).get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    chatMessages.clear();
+                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        helpCenterBinding.progressBar.setVisibility(View.GONE);
+                        helpCenterBinding.chatRecyclerView.setVisibility(View.VISIBLE);
+                        ChatMessage message = documentSnapshot.toObject(ChatMessage.class);
+                        chatMessages.add(message);
+
+                    }
+                    Log.v("list size", String.valueOf(chatMessages.size()));
+
+                    chatAdapter.notifyDataSetChanged();
+
+                })
+                .addOnFailureListener(e -> Toast.makeText(getContext(), "Error while loading messages", Toast.LENGTH_SHORT).show());
+
     }
 
-    private final EventListener<QuerySnapshot> eventListener=(value, error) ->{
+    /*private final EventListener<QuerySnapshot> eventListener=(value, error) ->{
         if (error!=null){
             return;
         }
@@ -102,9 +132,11 @@ public class HelpCenterFragment extends Fragment {
                     chatMessages.add(chatMessage);
                 }
             }
-            Collections.sort(chatMessages,(obj1,obj2) ->obj1.dateTime.compareTo(obj2.dateTime));
+            chatMessages.sort(Comparator.comparing(obj -> obj.dateTime));
             if (count==0){
                 chatAdapter.notifyDataSetChanged();
+                Log.v("list size",String.valueOf(chatMessages.size()));
+
             }else{
                 chatAdapter.notifyItemRangeInserted(chatMessages.size(),chatMessages.size());
                 helpCenterBinding.chatRecyclerView.smoothScrollToPosition(chatMessages.size()-1);
@@ -114,6 +146,6 @@ public class HelpCenterFragment extends Fragment {
     };
 
     public String getReadableDateTime(Date date){
-        return new SimpleDateFormat("MMMM dd, yyyy - hh:mm a", Locale.getDefault()).format(date);
-    }
+        return new SimpleDateFormat("MMMM dd, hh:mm a", Locale.getDefault()).format(date);
+    }*/
 }

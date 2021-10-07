@@ -21,14 +21,16 @@ import java.util.ArrayList;
 
 public class TakeAstepActivity extends AppCompatActivity {
     ActivityTakeAstepBinding takeAstepBinding;
-    ArrayList<Country> countries;
+    ArrayList<String> countries;
+    ArrayList<String> links;
     Country selectedCountry = new Country();
-    ArrayAdapter<Country> spinnerAdapter;
+    ArrayAdapter<String> spinnerAdapter;
 
     private FirebaseFirestore mFirestore;
     private CollectionReference mCollectionReference;
 
     String mCountry;
+    int p;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,7 @@ public class TakeAstepActivity extends AppCompatActivity {
         mCollectionReference = mFirestore.collection("Countries");
 
         countries=new ArrayList<>();
+        links=new ArrayList<>();
 
         spinnerAdapter = new ArrayAdapter<>(TakeAstepActivity.this, android.R.layout.expandable_list_content,countries);
         takeAstepBinding.countriesSpinner.setAdapter(spinnerAdapter);
@@ -50,7 +53,9 @@ public class TakeAstepActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 mCountry = parent.getItemAtPosition(position).toString();
-                selectedCountry=countries.get(position);
+                //selectedCountry=countries.get(position);
+                p=position;
+
             }
 
             @Override
@@ -60,30 +65,41 @@ public class TakeAstepActivity extends AppCompatActivity {
         });
         takeAstepBinding.countriesSpinner.setOnDismissListener(() -> takeAstepBinding.countriesSpinner.clearFocus());
 
-        takeAstepBinding.registrationBtn.setOnClickListener(v -> checkCountry());
 
+        takeAstepBinding.registrationBtn.setOnClickListener(v -> checkCountry(p));
         loadCountries();
     }
 
     private void loadCountries(){
         mCollectionReference.get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    countries.clear();
-                    for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots){
-                        Country country=documentSnapshot.toObject(Country.class);
-                        countries.add(country);
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult()!=null){
+                        countries.clear();
+                        links.clear();
+                        for (QueryDocumentSnapshot queryDocumentSnapshot:task.getResult()){
+                            if (queryDocumentSnapshot.exists()){
+                                Country country=queryDocumentSnapshot.toObject(Country.class);
+                                countries.add(country.getName());
+                                links.add(country.getLink());
+                            }
+                        }
+                        spinnerAdapter.notifyDataSetChanged();
                     }
-
                 })
                 .addOnFailureListener(e -> Toast.makeText(this, "Error while loading countries!", Toast.LENGTH_SHORT).show());
     }
 
-    public void checkCountry() {
-        String countryUrl=selectedCountry.getLink();
-        Intent intent = new Intent(getApplicationContext(), VaccineRegistrationActivity.class);
+    public void checkCountry(int position) {
+        String countryUrl=links.get(position);
+        if (countryUrl!=null){
+            Intent intent = new Intent(getApplicationContext(), VaccineRegistrationActivity.class);
 
-        intent.putExtra("countryUrl",countryUrl);
-        startActivity(intent);
+            intent.putExtra("countryUrl",countryUrl);
+            startActivity(intent);
+        }else{
+            Toast.makeText(this, "Please choose country!", Toast.LENGTH_SHORT).show();
+        }
+
 
     }
 
@@ -91,7 +107,7 @@ public class TakeAstepActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        ArrayAdapter<Country> spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_item, countries);
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_item, countries);
         takeAstepBinding.countriesSpinner.setAdapter(spinnerAdapter);
     }
 }

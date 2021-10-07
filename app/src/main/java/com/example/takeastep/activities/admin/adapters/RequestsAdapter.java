@@ -15,7 +15,7 @@ import com.example.takeastep.models.User;
 import java.util.ArrayList;
 
 public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.RequestsViewHolder> {
-    private ArrayList<User> requestsList = new ArrayList<>();
+    private ArrayList<User> requestsList;
     private Context mContext;
     private OnItemClickListener mListener;
 
