@@ -118,20 +118,23 @@ public class AdminTakeAStepActivity extends AppCompatActivity {
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                         isCountryExists = name.equals(documentSnapshot.getId());
+                        if (isCountryExists)
+                            break;
+                    }
+
+                    if (isCountryExists) {
+                        Toast.makeText(this, "This country already exist", Toast.LENGTH_SHORT).show();
+                    } else {
+                        DocumentReference documentReference = mFirestore.collection("Countries").document(country.getName());
+                        documentReference.set(country)
+                                .addOnSuccessListener(unused -> {
+                                    Toast.makeText(this, "Country added successfully", Toast.LENGTH_SHORT).show();
+                                })
+                                .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
                     }
                 })
                 .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
 
-        if (isCountryExists) {
-            Toast.makeText(this, "This country already exist", Toast.LENGTH_SHORT).show();
-        } else {
-            DocumentReference documentReference = mFirestore.collection("Countries").document(country.getName());
-            documentReference.set(country)
-                    .addOnSuccessListener(unused -> {
-                        Toast.makeText(this, "Country added successfully", Toast.LENGTH_SHORT).show();
-                    })
-                    .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
-        }
     }
 
     private void menuClick(View view, int position) {

@@ -178,19 +178,22 @@ public class AdminTogetherWeWinActivity extends AppCompatActivity {
                     if (task.isSuccessful() && task.getResult() != null) {
                         for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
                             isVaccineExists = name.equals(queryDocumentSnapshot.getId());
+                            if (isVaccineExists)
+                                break;
+                        }
+                        if (isVaccineExists) {
+                            Toast.makeText(this, "This vaccine already exist...", Toast.LENGTH_SHORT).show();
+                        } else {
+                            DocumentReference documentReference = mFirestore.collection("Vaccines Types").document(vaccine.getName());
+                            documentReference.set(vaccine)
+                                    .addOnSuccessListener(unused -> Toast.makeText(this, "Vaccine added successfully", Toast.LENGTH_SHORT).show())
+                                    .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
                         }
                     }
                 })
                 .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
 
-        if (isVaccineExists) {
-            Toast.makeText(this, "This vaccine already exist...", Toast.LENGTH_SHORT).show();
-        } else {
-            DocumentReference documentReference = mFirestore.collection("Vaccines Types").document(vaccine.getName());
-            documentReference.set(vaccine)
-                    .addOnSuccessListener(unused -> Toast.makeText(this, "Vaccine added successfully", Toast.LENGTH_SHORT).show())
-                    .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
-        }
+
     }
 
     @Override

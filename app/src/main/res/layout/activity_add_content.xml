@@ -112,7 +112,6 @@
                     android:id="@+id/contentVideo"
                     android:layout_width="match_parent"
                     android:layout_height="220dp"
-                    android:background="@drawable/background_sign_up_image"
                     android:scaleType="centerCrop"
                     app:riv_corner_radius="10dp"
                     app:riv_oval="true" />

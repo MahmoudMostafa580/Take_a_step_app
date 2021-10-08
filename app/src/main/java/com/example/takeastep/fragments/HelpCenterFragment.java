@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.takeastep.activities.user.adapters.ChatAdapter;
 import com.example.takeastep.databinding.FragmentHelpCenterBinding;
 import com.example.takeastep.models.ChatMessage;
+import com.example.takeastep.models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -31,7 +32,7 @@ public class HelpCenterFragment extends Fragment {
     FirebaseFirestore firestore;
     FirebaseAuth mFirebaseAuth;
     CollectionReference mCollectionReference;
-    DocumentReference mDocumentReference;
+    DocumentReference chatReference;
 
     public HelpCenterFragment() {
         // Required empty public constructor
@@ -52,6 +53,7 @@ public class HelpCenterFragment extends Fragment {
         firestore = FirebaseFirestore.getInstance();
         mFirebaseAuth = FirebaseAuth.getInstance();
         mCollectionReference = firestore.collection("users").document(mFirebaseAuth.getCurrentUser().getUid()).collection("chat");
+        chatReference = firestore.collection("chat users").document(mFirebaseAuth.getCurrentUser().getUid());
 
         chatMessages = new ArrayList<>();
         listenMessages();
@@ -74,8 +76,10 @@ public class HelpCenterFragment extends Fragment {
     public void sendMessage() {
         String message = helpCenterBinding.messageEditText.getText().toString();
         if (!message.isEmpty()) {
-            ChatMessage chatMessage = new ChatMessage(mFirebaseAuth.getCurrentUser().getUid(), "ALQyPwPRatn1H3oGIaOo", message, new Date().toString());
-            DocumentReference mDocumentReference=firestore.collection("users").document(mFirebaseAuth.getCurrentUser().getUid()).collection("chat").document();
+            ChatMessage chatMessage = new ChatMessage(mFirebaseAuth.getCurrentUser().getUid(),
+                    "ALQyPwPRatn1H3oGIaOo", message,System.currentTimeMillis());
+            DocumentReference mDocumentReference=firestore.collection("users").document(mFirebaseAuth.getCurrentUser().getUid())
+                    .collection("chat").document();
             mDocumentReference.set(chatMessage)
             .addOnCompleteListener(task -> {
                 if (task.isSuccessful()){
@@ -89,6 +93,12 @@ public class HelpCenterFragment extends Fragment {
             })
             .addOnFailureListener(e -> Toast.makeText(getContext(), "جاااااااااى", Toast.LENGTH_SHORT).show());
             //chatAdapter.notifyItemInserted(chatMessages.size()-1);
+
+
+            User user = new User(mFirebaseAuth.getCurrentUser().getDisplayName(),mFirebaseAuth.getCurrentUser().getPhotoUrl().toString()
+                    ,message,System.currentTimeMillis(),mFirebaseAuth.getCurrentUser().getUid());
+
+            chatReference.set(user);
 
         } else {
             Toast.makeText(getContext(), "Leave message!", Toast.LENGTH_SHORT).show();

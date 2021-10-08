@@ -1,6 +1,7 @@
 package com.example.takeastep.activities.admin;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -62,6 +63,7 @@ public class EditContentActivity extends AppCompatActivity {
 
         }else{
             content.setVideoUrl(videoUrl);
+            addContentBinding.contentVideo.setVideoURI(Uri.parse(videoUrl));
             addContentBinding.contentVideo.start();
             addContentBinding.addVideoTxt.setVisibility(View.GONE);
         }

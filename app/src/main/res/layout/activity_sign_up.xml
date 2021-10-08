@@ -60,6 +60,8 @@
             android:hint="Name"
             app:boxBackgroundColor="#9FAAAAAA"
             app:errorEnabled="true"
+            app:boxStrokeColor="@color/purple_200"
+            app:hintTextColor="@color/purple_200"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/image_frame_layout"
@@ -80,6 +82,9 @@
             android:layout_marginTop="16dp"
             android:hint="Email"
             app:boxBackgroundColor="#9FAAAAAA"
+            app:boxStrokeColor="@color/purple_200"
+            app:hintTextColor="@color/purple_200"
+
             app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -101,6 +106,9 @@
             android:layout_marginTop="12dp"
             android:hint="Password"
             app:boxBackgroundColor="#9FAAAAAA"
+            app:boxStrokeColor="@color/purple_200"
+            app:hintTextColor="@color/purple_200"
+
             app:endIconMode="password_toggle"
             app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
@@ -123,6 +131,9 @@
             android:layout_marginTop="16dp"
             android:hint="Confirm Password"
             app:boxBackgroundColor="#9FAAAAAA"
+            app:boxStrokeColor="@color/purple_200"
+            app:hintTextColor="@color/purple_200"
+
             app:endIconMode="password_toggle"
             app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
@@ -152,6 +163,7 @@
                 android:layout_height="64dp"
                 android:layout_marginHorizontal="16dp"
                 android:text="Sign Up"
+                android:backgroundTint="@color/purple_700"
                 android:textColor="@android:color/white"
                 android:textSize="22sp"
                 android:textStyle="bold" />

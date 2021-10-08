@@ -14,6 +14,7 @@ import com.example.takeastep.models.ChatMessage;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -45,15 +46,22 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+
+        Calendar calendar=Calendar.getInstance();
+        SimpleDateFormat sdf= new SimpleDateFormat("hh:mm a", Locale.getDefault());
+
+        calendar.setTimeInMillis(chatMessages.get(position).getDateTime());
+        String time=sdf.format(calendar.getTime());
+
         if (getItemViewType(position) == VIEW_TYPE_SENT) {
             ChatMessage currentMessage=chatMessages.get(position);
 
             ((SentMessageViewHolder) holder).messageText.setText(currentMessage.getMessage());
-            ((SentMessageViewHolder) holder).timeText.setText(currentMessage.getDateTime());
+            ((SentMessageViewHolder) holder).timeText.setText(time);
         } else {
             ChatMessage currentMessage=chatMessages.get(position);
             ((ReceivedMessageViewHolder) holder).messageText.setText(currentMessage.getMessage());
-            ((ReceivedMessageViewHolder) holder).timeText.setText(currentMessage.getDateTime());
+            ((ReceivedMessageViewHolder) holder).timeText.setText(time);
         }
     }
 
@@ -91,7 +99,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             messageText = itemView.findViewById(R.id.textMessage);
             timeText = itemView.findViewById(R.id.textDateTime);
         }
-
 
     }
 }

@@ -1,18 +1,24 @@
 package com.example.takeastep.activities.admin;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.takeastep.activities.admin.adapters.UsersAdapter;
 import com.example.takeastep.databinding.ActivityAdminHelpcenterBinding;
 import com.example.takeastep.models.User;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class AdminHelpCenterActivity extends AppCompatActivity {
     ActivityAdminHelpcenterBinding helpCenterBinding;
@@ -33,13 +39,19 @@ public class AdminHelpCenterActivity extends AppCompatActivity {
         helpCenterBinding.toolBar.setNavigationOnClickListener(v -> onBackPressed());
 
         mFirestore = FirebaseFirestore.getInstance();
-        mCollectionReference = mFirestore.collection("users");
+        mCollectionReference = mFirestore.collection("chat users");
         usersList = new ArrayList<>();
 
         mUsersAdapter = new UsersAdapter(AdminHelpCenterActivity.this, usersList);
         helpCenterBinding.usersRecycler.setAdapter(mUsersAdapter);
+        helpCenterBinding.usersRecycler.setLayoutManager(new LinearLayoutManager(this));
         mUsersAdapter.setOnItemClickListener(position -> {
             selectedUser = usersList.get(position);
+            Intent intent=new Intent(getApplicationContext(),AdminChatActivity.class);
+            if (selectedUser.getId()!=null){
+                intent.putExtra("userId",selectedUser.getId());
+                startActivity(intent);
+            }
 
         });
 
@@ -48,18 +60,21 @@ public class AdminHelpCenterActivity extends AppCompatActivity {
     }
 
     private void getUsers() {
-        mCollectionReference.get()
+        mCollectionReference.orderBy("lastMessageTime", Query.Direction.ASCENDING).get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
                         usersList.clear();
                         for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
+                            Log.w("HERE,",queryDocumentSnapshot.exists()+"");
                             if (queryDocumentSnapshot.exists()) {
-                                if (queryDocumentSnapshot.contains("chat")) {
+                                helpCenterBinding.errorText.setVisibility(View.GONE);
+                                Log.w("HERE,",queryDocumentSnapshot.getId());
                                     User user = queryDocumentSnapshot.toObject(User.class);
                                     usersList.add(user);
-                                }
                             }
                         }
+                        Log.w("HERE,",usersList.size()+"");
+                        mUsersAdapter.setUsersList(usersList);
                         mUsersAdapter.notifyDataSetChanged();
                     }
                 })

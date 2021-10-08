@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.example.takeastep.activities.user.MainActivity;
 import com.example.takeastep.databinding.ActivitySignUpBinding;
+import com.example.takeastep.models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -80,12 +81,7 @@ public class SignUpActivity extends AppCompatActivity {
                                 .addOnSuccessListener(taskSnapshot -> {
                                     imageReference.getDownloadUrl()
                                             .addOnSuccessListener(uri -> {
-                                                Map<String,Object> user =new HashMap<>();
-                                                user.put("name",name);
-                                                user.put("email",email);
-                                                user.put("image",uri.toString());
-                                                user.put("password",password);
-                                                user.put("id",firebaseAuth.getCurrentUser().getUid());
+                                                User user=new User(name,uri.toString(),email,firebaseAuth.getCurrentUser().getUid());
                                                 DocumentReference documentReference=mFirestore.collection("users").document(firebaseAuth.getCurrentUser().getUid());
                                                 documentReference.set(user)
                                                         .addOnSuccessListener(unused -> {

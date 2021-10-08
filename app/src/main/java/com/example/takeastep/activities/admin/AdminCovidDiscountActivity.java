@@ -84,7 +84,7 @@ public class AdminCovidDiscountActivity extends AppCompatActivity {
 
             acceptBtn.setOnClickListener(v -> {
                 Map<String,Object> valid=new HashMap<>();
-                valid.put("valid certificate",true);
+                valid.put("validCertificate",true);
 
                 DocumentReference documentReference=mFirestore.collection("users").document(selectedUser.getId());
                 documentReference.update(valid)
@@ -96,7 +96,7 @@ public class AdminCovidDiscountActivity extends AppCompatActivity {
 
             rejectBtn.setOnClickListener(v -> {
                 Map<String,Object> valid=new HashMap<>();
-                valid.put("valid certificate",false);
+                valid.put("validCertificate",false);
 
                 DocumentReference documentReference=mFirestore.collection("users").document(selectedUser.getId());
                 documentReference.update(valid)

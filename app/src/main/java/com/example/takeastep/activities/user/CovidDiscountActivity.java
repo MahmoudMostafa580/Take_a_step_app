@@ -94,7 +94,7 @@ public class CovidDiscountActivity extends AppCompatActivity {
     private void checkValidation() {
         mDocumentReference.get()
                 .addOnSuccessListener(documentSnapshot -> {
-                    isValid = documentSnapshot.getBoolean("valid certificate");
+                    isValid = documentSnapshot.getBoolean("validCertificate")!=null;
                     if (isValid){
                         Toast.makeText(this, "Congratulations. You are vaccinated", Toast.LENGTH_SHORT).show();
                         covidDiscountBinding.certificateFrameLayout.setEnabled(false);

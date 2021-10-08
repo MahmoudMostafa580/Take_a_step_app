@@ -49,7 +49,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="All Categories"
-                android:textColor="@color/black"
+                android:textColor="@drawable/chip_text"
                 app:chipBackgroundColor="@drawable/chip_selection" />
 
             <com.google.android.material.chip.Chip
@@ -58,7 +58,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Vaccination Benefits"
-                android:textColor="@color/black"
+                android:textColor="@drawable/chip_text"
                 app:chipBackgroundColor="@drawable/chip_selection" />
 
             <com.google.android.material.chip.Chip
@@ -67,7 +67,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Vaccination Risks"
-                android:textColor="@color/black"
+                android:textColor="@drawable/chip_text"
                 app:chipBackgroundColor="@drawable/chip_selection" />
 
         </com.google.android.material.chip.ChipGroup>
@@ -78,10 +78,11 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:padding="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/chips_scrollView"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/chips_scrollView" />
 
     <TextView
         android:id="@+id/error_text"

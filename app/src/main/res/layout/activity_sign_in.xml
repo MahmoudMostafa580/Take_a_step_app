@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:theme="@style/Theme.TakeAStep"
     tools:context=".activities.SignInActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -44,6 +45,8 @@
             android:hint="Email"
             app:errorEnabled="true"
             app:boxBackgroundColor="#9FAAAAAA"
+            app:boxStrokeColor="@color/purple_200"
+            app:hintTextColor="@color/purple_200"
             app:startIconDrawable="@drawable/ic_email"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -65,6 +68,8 @@
             android:hint="Password"
             app:errorEnabled="true"
             app:boxBackgroundColor="#9FAAAAAA"
+            app:boxStrokeColor="@color/purple_200"
+            app:hintTextColor="@color/purple_200"
             app:endIconMode="password_toggle"
             app:startIconDrawable="@drawable/ic_lock"
             app:layout_constraintEnd_toEndOf="parent"
@@ -93,6 +98,7 @@
                 android:layout_marginHorizontal="16dp"
                 android:text="sign in"
                 android:textColor="@android:color/white"
+                android:backgroundTint="@color/purple_700"
                 android:textSize="22sp"
                 android:textStyle="bold" />
             <ProgressBar

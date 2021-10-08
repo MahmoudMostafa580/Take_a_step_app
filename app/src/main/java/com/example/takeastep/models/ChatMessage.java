@@ -1,12 +1,13 @@
 package com.example.takeastep.models;
 
 public class ChatMessage {
-    public String  senderId,receiverId,message,dateTime;
+    public String  senderId,receiverId,message;
+    Long dateTime;
 
     public ChatMessage() {
     }
 
-    public ChatMessage(String senderId, String receiverId, String message, String dateTime) {
+    public ChatMessage(String senderId, String receiverId, String message, Long dateTime) {
         this.senderId = senderId;
         this.receiverId = receiverId;
         this.message = message;
@@ -25,7 +26,7 @@ public class ChatMessage {
         return message;
     }
 
-    public String getDateTime() {
+    public Long getDateTime() {
         return dateTime;
     }
 }
