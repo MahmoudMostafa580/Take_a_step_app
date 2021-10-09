@@ -119,8 +119,20 @@ public class AdminAreYouReadyActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.add) {
             startActivity(new Intent(getApplicationContext(), AddContentActivity.class));
+            //finish();
         }
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadContents();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        loadContents();
+    }
 }

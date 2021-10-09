@@ -21,7 +21,7 @@
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/activity_admin_are_you_ready.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/activity_admin_chat.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/activity_admin_covid_discount.xml" value="0.253125" />
-        <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/activity_admin_dashboard.xml" value="0.253125" />
+        <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/activity_admin_dashboard.xml" value="0.1" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/activity_admin_helpcenter.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/activity_admin_take_a_step.xml" value="0.2390625" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/activity_admin_together_we_win.xml" value="0.253125" />
@@ -57,7 +57,7 @@
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/item_request_container.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/item_user_container.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/item_vaccine_type_container.xml" value="0.253125" />
-        <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/together_we_win_list_item.xml" value="0.253125" />
+        <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/together_we_win_list_item.xml" value="0.2" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/user_item_areyouready_image_container.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/layout/user_item_areyouready_video_container.xml" value="0.253125" />
         <entry key="..\:/Android/AndroidStudioProjects/Takeastep/app/src/main/res/menu/admin_dashboard_menu.xml" value="0.253125" />

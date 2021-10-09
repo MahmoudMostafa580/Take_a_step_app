@@ -59,6 +59,7 @@ public class AdminTogetherWeWinActivity extends AppCompatActivity {
         adminTogetherWeWinBinding.vaccineTypeRecycler.setLayoutManager(linearLayoutManager);
 
         mVaccine = new ArrayList<>();
+        loadVaccines();
 
         vaccineAdapter = new AdminVaccineTypesAdapter(AdminTogetherWeWinActivity.this, mVaccine);
         adminTogetherWeWinBinding.vaccineTypeRecycler.setAdapter(vaccineAdapter);
@@ -83,15 +84,18 @@ public class AdminTogetherWeWinActivity extends AppCompatActivity {
                 if (!name.isEmpty() && !info.isEmpty()) {
                     uploadVaccine();
                     dialogBuilder.dismiss();
+                    vaccineAdapter.notifyDataSetChanged();
                 } else {
                     Toast.makeText(this, "Invalid data!", Toast.LENGTH_SHORT).show();
                 }
             });
             dialogBuilder.show();
-            dialogBuilder.setOnDismissListener(dialog -> loadVaccines());
+            dialogBuilder.setOnDismissListener(dialog -> {
+                loadVaccines();
+                vaccineAdapter.notifyDataSetChanged();
+            });
         });
 
-        loadVaccines();
     }
 
     private void loadVaccines() {
@@ -136,7 +140,7 @@ public class AdminTogetherWeWinActivity extends AppCompatActivity {
 
                             mCollectionReference.document(selectedVaccine.getName()).update(update)
                                     .addOnSuccessListener(unused -> {
-                                        Toast.makeText(this, "Country updated successfully", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(this, "Vaccine updated successfully", Toast.LENGTH_SHORT).show();
                                     })
                                     .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
 
@@ -186,7 +190,11 @@ public class AdminTogetherWeWinActivity extends AppCompatActivity {
                         } else {
                             DocumentReference documentReference = mFirestore.collection("Vaccines Types").document(vaccine.getName());
                             documentReference.set(vaccine)
-                                    .addOnSuccessListener(unused -> Toast.makeText(this, "Vaccine added successfully", Toast.LENGTH_SHORT).show())
+                                    .addOnSuccessListener(unused -> {
+                                        Toast.makeText(this, "Vaccine added successfully", Toast.LENGTH_SHORT).show();
+                                        mVaccine.add(vaccine);
+                                        vaccineAdapter.notifyDataSetChanged();
+                                    })
                                     .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
                         }
                     }
@@ -196,15 +204,16 @@ public class AdminTogetherWeWinActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        loadVaccines();
-    }
 
     @Override
     protected void onResume() {
         super.onResume();
+        loadVaccines();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         loadVaccines();
     }
 }

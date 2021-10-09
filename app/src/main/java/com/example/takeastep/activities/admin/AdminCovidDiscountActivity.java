@@ -91,6 +91,10 @@ public class AdminCovidDiscountActivity extends AppCompatActivity {
                         .addOnSuccessListener(unused -> {
                             Toast.makeText(this, "Reply sent to user", Toast.LENGTH_SHORT).show();
                             builder.dismiss();
+                            mRequests.remove(position);
+                            requestsAdapter.notifyItemRemoved(position);
+                            valid.put("certificate",null);
+                            documentReference.update(valid);
                         });
             });
 

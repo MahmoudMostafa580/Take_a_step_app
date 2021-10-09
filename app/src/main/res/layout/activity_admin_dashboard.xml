@@ -30,11 +30,11 @@
       app:cardElevation="4dp"
       android:foreground="@drawable/card_foreground"
       android:clickable="true"
-      android:layout_margin="10dp"
+      android:layout_margin="8dp"
       app:layout_constraintTop_toBottomOf="@id/toolBar"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintEnd_toStartOf="@id/togetherWeWinCard"
-      app:layout_constraintBottom_toTopOf="@id/covidDiscountCard">
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintBottom_toTopOf="@id/togetherWeWinCard" >
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
           android:textSize="18sp"
           android:textStyle="bold"
           android:textColor="@color/purple_200"
-          android:paddingBottom="8dp"
+          android:paddingBottom="4dp"
           android:text="Are You Ready"/>
 
     </LinearLayout>
@@ -62,15 +62,15 @@
       android:id="@+id/togetherWeWinCard"
       android:layout_width="0dp"
       android:layout_height="0dp"
-      android:layout_margin="10dp"
+      android:layout_margin="8dp"
       app:cardCornerRadius="16dp"
       app:cardElevation="4dp"
       android:foreground="@drawable/card_foreground"
       android:clickable="true"
-      app:layout_constraintTop_toBottomOf="@id/toolBar"
-      app:layout_constraintStart_toEndOf="@id/areYouReadyCard"
+      app:layout_constraintTop_toBottomOf="@id/areYouReadyCard"
+      app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintBottom_toTopOf="@id/takeAstepCard">
+      app:layout_constraintBottom_toTopOf="@id/covidDiscountCard">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -87,7 +87,7 @@
           android:textSize="18sp"
           android:textStyle="bold"
           android:textColor="@color/purple_200"
-          android:paddingBottom="8dp"
+          android:paddingBottom="4dp"
           android:text="Together We Win"/>
 
     </LinearLayout>
@@ -97,16 +97,15 @@
       android:id="@+id/covidDiscountCard"
       android:layout_width="0dp"
       android:layout_height="0dp"
-      android:layout_margin="10dp"
-
+      android:layout_margin="8dp"
       app:cardCornerRadius="16dp"
       app:cardElevation="4dp"
       android:foreground="@drawable/card_foreground"
       android:clickable="true"
-      app:layout_constraintTop_toBottomOf="@id/areYouReadyCard"
+      app:layout_constraintTop_toBottomOf="@id/togetherWeWinCard"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintEnd_toStartOf="@id/takeAstepCard"
-      app:layout_constraintBottom_toBottomOf="parent">
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintBottom_toTopOf="@id/takeAstepCard">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -124,7 +123,7 @@
           android:textSize="18sp"
           android:textStyle="bold"
           android:textColor="@color/purple_200"
-          android:paddingBottom="8dp"
+          android:paddingBottom="4dp"
           android:text="COVID-19 Discount"/>
 
     </LinearLayout>
@@ -134,15 +133,15 @@
       android:id="@+id/takeAstepCard"
       android:layout_width="0dp"
       android:layout_height="0dp"
-      android:layout_margin="10dp"
+      android:layout_margin="8dp"
       app:cardCornerRadius="16dp"
       app:cardElevation="4dp"
       android:foreground="@drawable/card_foreground"
       android:clickable="true"
-      app:layout_constraintTop_toBottomOf="@id/togetherWeWinCard"
-      app:layout_constraintStart_toEndOf="@id/covidDiscountCard"
+      app:layout_constraintTop_toBottomOf="@id/covidDiscountCard"
+      app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintBottom_toBottomOf="parent" >
+      app:layout_constraintBottom_toBottomOf="parent">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -159,7 +158,7 @@
           android:textSize="18sp"
           android:textStyle="bold"
           android:textColor="@color/purple_200"
-          android:paddingBottom="8dp"
+          android:paddingBottom="4dp"
           android:text="Take A Step"/>
 
     </LinearLayout>

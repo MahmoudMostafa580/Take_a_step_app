@@ -61,7 +61,7 @@ public class AdminTakeAStepActivity extends AppCompatActivity {
         adminTakeAStepBinding.countriesRecycler.setAdapter(mCountryAdapter);
 
         mCountryAdapter.setOnItemClickListener(this::menuClick);
-
+        loadCountries();
 
         adminTakeAStepBinding.addCountryBtn.setOnClickListener(v -> {
             AlertDialog dialogBuilder = new AlertDialog.Builder(this).create();
@@ -81,6 +81,7 @@ public class AdminTakeAStepActivity extends AppCompatActivity {
                 if (!name.isEmpty() && !link.isEmpty()) {
                     uploadCountry();
                     dialogBuilder.dismiss();
+                    mCountryAdapter.notifyDataSetChanged();
                 } else {
                     Toast.makeText(this, "Invalid data", Toast.LENGTH_SHORT).show();
                 }
@@ -88,10 +89,10 @@ public class AdminTakeAStepActivity extends AppCompatActivity {
             dialogBuilder.show();
             dialogBuilder.setOnDismissListener(dialog -> {
                 loadCountries();
+                mCountryAdapter.notifyDataSetChanged();
             });
         });
 
-        loadCountries();
 
     }
 
@@ -129,6 +130,8 @@ public class AdminTakeAStepActivity extends AppCompatActivity {
                         documentReference.set(country)
                                 .addOnSuccessListener(unused -> {
                                     Toast.makeText(this, "Country added successfully", Toast.LENGTH_SHORT).show();
+                                    mCountries.add(country);
+                                    mCountryAdapter.notifyDataSetChanged();
                                 })
                                 .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
                     }

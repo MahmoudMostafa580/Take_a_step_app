@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -30,7 +31,7 @@ public class TakeAstepActivity extends AppCompatActivity {
     private CollectionReference mCollectionReference;
 
     String mCountry;
-    int p;
+    static int p;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +55,8 @@ public class TakeAstepActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 mCountry = parent.getItemAtPosition(position).toString();
                 //selectedCountry=countries.get(position);
-                p=position;
+                p=parent.getSelectedItemPosition();
+
 
             }
 
@@ -62,6 +64,9 @@ public class TakeAstepActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {
                 Toast.makeText(TakeAstepActivity.this, "No country selected !", Toast.LENGTH_SHORT).show();
             }
+        });
+        takeAstepBinding.countriesSpinner.setOnItemClickListener((parent, view, position, id) -> {
+            p=position;
         });
         takeAstepBinding.countriesSpinner.setOnDismissListener(() -> takeAstepBinding.countriesSpinner.clearFocus());
 
@@ -83,6 +88,8 @@ public class TakeAstepActivity extends AppCompatActivity {
                                 links.add(country.getLink());
                             }
                         }
+                        Log.v("linksSize",links.size()+"");
+                        Log.v("linksSize",links.get(2));
                         spinnerAdapter.notifyDataSetChanged();
                     }
                 })

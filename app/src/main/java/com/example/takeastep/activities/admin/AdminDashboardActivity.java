@@ -6,20 +6,23 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.experimental.UseExperimental;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.takeastep.R;
 import com.example.takeastep.activities.SignInActivity;
 import com.example.takeastep.databinding.ActivityAdminDashboardBinding;
+import com.google.android.material.badge.BadgeDrawable;
+import com.google.android.material.badge.BadgeUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.Objects;
 
@@ -28,6 +31,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
     SharedPreferences mySharedPreferences;
     SharedPreferences.Editor editor;
+
 
     TextView chatsItemCount;
     int chatsCount = 0;
@@ -56,6 +60,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
         adminDashboardBinding.takeAstepCard.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(),
                 AdminTakeAStepActivity.class)));
 
+        //setupBadge();
 
     }
 
@@ -63,26 +68,33 @@ public class AdminDashboardActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.admin_dashboard_menu, menu);
+
+        //setupBadge();
+
         return super.onCreateOptionsMenu(menu);
     }
 
     private void setupBadge() {
+        BadgeDrawable badge = BadgeDrawable.create(getApplicationContext());
+        //BadgeUtils.attachBadgeDrawable(badge, new FrameLayout(getApplicationContext()));
+        badge.setBadgeGravity(BadgeDrawable.TOP_END);
+        badge.setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
+        badge.setBadgeTextColor(getResources().getColor(R.color.white));
+        badge.setMaxCharacterCount(99);
+
         if (chatsItemCount != null) {
             mRef = mFirestore.collection("chat users");
             mRef.get()
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot queryDocumentSnapshot: Objects.requireNonNull(task.getResult())){
+                            for (DocumentSnapshot documentSnapshot : Objects.requireNonNull(task.getResult())) {
                                 chatsCount++;
                             }
-                            if (chatsCount==0){
-                                chatsItemCount.setVisibility(View.GONE);
-                                chatsItemCount.setVisibility(View.INVISIBLE);
-                            }else{
-                                chatsItemCount.setText(String.valueOf(chatsCount));
-                                if (chatsItemCount.getVisibility()!=View.VISIBLE){
-                                    chatsItemCount.setVisibility(View.VISIBLE);
-                                }
+                            if (chatsCount == 0) {
+                                badge.setVisible(false);
+                            } else {
+                                badge.setVisible(true);
+                                badge.setNumber(chatsCount);
                             }
                         }
                     })
