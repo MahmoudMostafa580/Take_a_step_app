@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     RoundedImageView drawerProfileImage;
     TextView drawerUserName;
 
+    public static NavigationView navigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +52,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mFirebaseUser=FirebaseAuth.getInstance().getCurrentUser();
         mySharedPreferences = getSharedPreferences("userData", MODE_PRIVATE);
         editor = mySharedPreferences.edit();
+
+        navigationView=findViewById(R.id.drawer_nav_view);
 
         setSupportActionBar(homeBinding.toolBar);
         toggle=new ActionBarDrawerToggle(this,homeBinding.drawerLayout,

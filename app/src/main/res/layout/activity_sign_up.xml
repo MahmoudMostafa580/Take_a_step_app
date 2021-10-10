@@ -108,7 +108,6 @@
             app:boxBackgroundColor="#9FAAAAAA"
             app:boxStrokeColor="@color/purple_200"
             app:hintTextColor="@color/purple_200"
-
             app:endIconMode="password_toggle"
             app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"

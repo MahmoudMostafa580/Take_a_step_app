@@ -1,8 +1,5 @@
 package com.example.takeastep.activities;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -11,6 +8,9 @@ import android.provider.MediaStore;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.takeastep.activities.user.MainActivity;
 import com.example.takeastep.databinding.ActivitySignUpBinding;
@@ -24,9 +24,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.squareup.picasso.Picasso;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -45,15 +42,15 @@ public class SignUpActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        signUpBinding=ActivitySignUpBinding.inflate(getLayoutInflater());
+        signUpBinding = ActivitySignUpBinding.inflate(getLayoutInflater());
         setContentView(signUpBinding.getRoot());
 
-        firebaseAuth=FirebaseAuth.getInstance();
-        mStorageReference= FirebaseStorage.getInstance().getReference();
-        mFirestore=FirebaseFirestore.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
+        mStorageReference = FirebaseStorage.getInstance().getReference();
+        mFirestore = FirebaseFirestore.getInstance();
 
-        sharedPreferences=getSharedPreferences("userData",MODE_PRIVATE);
-        editor=sharedPreferences.edit();
+        sharedPreferences = getSharedPreferences("userData", MODE_PRIVATE);
+        editor = sharedPreferences.edit();
 
         signUpBinding.signInTxt.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), SignInActivity.class)));
 
@@ -62,37 +59,39 @@ public class SignUpActivity extends AppCompatActivity {
         });
 
         signUpBinding.signUpBtn.setOnClickListener(v -> {
-            if (isValidData()){
+            if (isValidData()) {
                 signUp();
+            } else {
+                loading(false);
             }
         });
     }
 
     private void signUp() {
         loading(true);
-        String name=signUpBinding.nameLayout.getEditText().getText().toString();
-        String email=signUpBinding.emailLayout.getEditText().getText().toString();
-        String password=signUpBinding.passLayout.getEditText().getText().toString();
-        firebaseAuth.createUserWithEmailAndPassword(email,password)
+        String name = signUpBinding.nameLayout.getEditText().getText().toString();
+        String email = signUpBinding.emailLayout.getEditText().getText().toString();
+        String password = signUpBinding.passLayout.getEditText().getText().toString();
+        firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()){
-                        StorageReference imageReference=mStorageReference.child("usersPictures/"+firebaseAuth.getCurrentUser().getEmail()+"/profile");
-                        mUploadTask=imageReference.putFile(profileImage)
+                    if (task.isSuccessful()) {
+                        StorageReference imageReference = mStorageReference.child("usersPictures/" + firebaseAuth.getCurrentUser().getEmail() + "/profile");
+                        mUploadTask = imageReference.putFile(profileImage)
                                 .addOnSuccessListener(taskSnapshot -> {
                                     imageReference.getDownloadUrl()
                                             .addOnSuccessListener(uri -> {
-                                                User user=new User(name,uri.toString(),email,firebaseAuth.getCurrentUser().getUid());
-                                                DocumentReference documentReference=mFirestore.collection("users").document(firebaseAuth.getCurrentUser().getUid());
+                                                User user = new User(name, uri.toString(), email, firebaseAuth.getCurrentUser().getUid());
+                                                DocumentReference documentReference = mFirestore.collection("users").document(firebaseAuth.getCurrentUser().getUid());
                                                 documentReference.set(user)
                                                         .addOnSuccessListener(unused -> {
-                                                            mFirebaseUser=FirebaseAuth.getInstance().getCurrentUser();
-                                                            UserProfileChangeRequest profileChangeRequest=new UserProfileChangeRequest.Builder()
+                                                            mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                                                            UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
                                                                     .setDisplayName(name)
                                                                     .setPhotoUri(uri)
                                                                     .build();
                                                             mFirebaseUser.updateProfile(profileChangeRequest);
                                                             showToast("Account created successfully");
-                                                            editor.putBoolean("isLogged",true);
+                                                            editor.putBoolean("isLogged", true);
                                                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
                                                             finish();
                                                         })
@@ -108,20 +107,22 @@ public class SignUpActivity extends AppCompatActivity {
                                         Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
                     }
                 })
-                .addOnFailureListener(e ->
-                        Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    loading(false);
+                });
     }
 
     private void openFileChooser() {
-        Intent intent=new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent,PICK_IMAGE_REQUEST);
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            profileImage=data.getData();
+            profileImage = data.getData();
             signUpBinding.profileImage.setImageURI(profileImage);
             //Glide.with(this).load(profileImage).fitCenter().into(signUpBinding.profileImage);
             Picasso.with(this).load(profileImage).fit().centerCrop().into(signUpBinding.profileImage);
@@ -129,43 +130,43 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
-    private void showToast(String message){
+    private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
-    private boolean isValidData(){
-        if (profileImage==null){
+    private boolean isValidData() {
+        if (profileImage == null) {
             showToast("Select profile image!");
             return false;
-        }else if (signUpBinding.nameLayout.getEditText().getText().toString().trim().isEmpty()){
+        } else if (signUpBinding.nameLayout.getEditText().getText().toString().trim().isEmpty()) {
             signUpBinding.nameLayout.setError("Please enter your name!");
             return false;
-        }else if (signUpBinding.emailLayout.getEditText().getText().toString().trim().isEmpty()){
+        } else if (signUpBinding.emailLayout.getEditText().getText().toString().trim().isEmpty()) {
             signUpBinding.emailLayout.setError("Please enter your mail!");
             return false;
-        }else if (!Patterns.EMAIL_ADDRESS.matcher(signUpBinding.emailLayout.getEditText().getText().toString()).matches()){
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(signUpBinding.emailLayout.getEditText().getText().toString()).matches()) {
             signUpBinding.emailLayout.setError("Enter valid mail!");
             return false;
-        }else if (signUpBinding.passLayout.getEditText().getText().toString().trim().isEmpty()){
-            signUpBinding.passLayout.setError("Please enter password!");
+        } else if (signUpBinding.passLayout.getEditText().getText().toString().trim().isEmpty()) {
+            signUpBinding.passLayout.getEditText().setError("Please enter password!");
             return false;
-        }else if (signUpBinding.confirmPassLayout.getEditText().getText().toString().trim().isEmpty()){
-            signUpBinding.confirmPassLayout.setError("Please confirm password!");
+        }else if (signUpBinding.confirmPassLayout.getEditText().getText().toString().trim().isEmpty()) {
+            signUpBinding.confirmPassLayout.getEditText().setError("Please confirm password!");
             return false;
-        }else if (!signUpBinding.passLayout.getEditText().getText().toString()
-                .equals(signUpBinding.confirmPassLayout.getEditText().getText().toString())){
+        } else if (!signUpBinding.passLayout.getEditText().getText().toString()
+                .equals(signUpBinding.confirmPassLayout.getEditText().getText().toString())) {
             showToast("Password and confirm password must be the same");
             return false;
-        }else{
+        } else {
             return true;
         }
     }
 
-    private void loading(boolean isLoading){
-        if (isLoading){
+    private void loading(boolean isLoading) {
+        if (isLoading) {
             signUpBinding.signUpProgressBar.setVisibility(View.VISIBLE);
             signUpBinding.signUpBtn.setVisibility(View.INVISIBLE);
-        }else{
+        } else {
             signUpBinding.signUpProgressBar.setVisibility(View.INVISIBLE);
             signUpBinding.signUpBtn.setVisibility(View.VISIBLE);
         }

@@ -7,9 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.takeastep.R;
 import com.example.takeastep.activities.user.adapters.ChatAdapter;
 import com.example.takeastep.databinding.FragmentHelpCenterBinding;
 import com.example.takeastep.models.ChatMessage;
@@ -22,7 +24,6 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Objects;
 
 public class HelpCenterFragment extends Fragment {
@@ -41,6 +42,16 @@ public class HelpCenterFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                //getActivity().getSupportFragmentManager().popBackStack();
+
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container_fragment, new HomeFragment()).commit();
+
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
 
     }
 
@@ -77,26 +88,26 @@ public class HelpCenterFragment extends Fragment {
         String message = helpCenterBinding.messageEditText.getText().toString();
         if (!message.isEmpty()) {
             ChatMessage chatMessage = new ChatMessage(mFirebaseAuth.getCurrentUser().getUid(),
-                    "ALQyPwPRatn1H3oGIaOo", message,System.currentTimeMillis());
-            DocumentReference mDocumentReference=firestore.collection("users").document(mFirebaseAuth.getCurrentUser().getUid())
+                    "ALQyPwPRatn1H3oGIaOo", message, System.currentTimeMillis());
+            DocumentReference mDocumentReference = firestore.collection("users").document(mFirebaseAuth.getCurrentUser().getUid())
                     .collection("chat").document();
             mDocumentReference.set(chatMessage)
-            .addOnCompleteListener(task -> {
-                if (task.isSuccessful()){
-                    helpCenterBinding.messageEditText.setText(null);
-                    helpCenterBinding.progressBar.setVisibility(View.GONE);
-                    helpCenterBinding.chatRecyclerView.setVisibility(View.VISIBLE);
-                    chatMessages.add(chatMessage);
-                    chatAdapter.notifyDataSetChanged();
-                    helpCenterBinding.chatRecyclerView.smoothScrollToPosition(chatMessages.size()-1);
-                }
-            })
-            .addOnFailureListener(e -> Toast.makeText(getContext(), "جاااااااااى", Toast.LENGTH_SHORT).show());
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            helpCenterBinding.messageEditText.setText(null);
+                            helpCenterBinding.progressBar.setVisibility(View.GONE);
+                            helpCenterBinding.chatRecyclerView.setVisibility(View.VISIBLE);
+                            chatMessages.add(chatMessage);
+                            chatAdapter.notifyDataSetChanged();
+                            helpCenterBinding.chatRecyclerView.smoothScrollToPosition(chatMessages.size() - 1);
+                        }
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(getContext(), "جاااااااااى", Toast.LENGTH_SHORT).show());
             //chatAdapter.notifyItemInserted(chatMessages.size()-1);
 
 
-            User user = new User(mFirebaseAuth.getCurrentUser().getDisplayName(),mFirebaseAuth.getCurrentUser().getPhotoUrl().toString()
-                    ,message,System.currentTimeMillis(),mFirebaseAuth.getCurrentUser().getUid());
+            User user = new User(mFirebaseAuth.getCurrentUser().getDisplayName(), mFirebaseAuth.getCurrentUser().getPhotoUrl().toString()
+                    , message, System.currentTimeMillis(), mFirebaseAuth.getCurrentUser().getUid());
 
             chatReference.set(user);
 
@@ -115,14 +126,20 @@ public class HelpCenterFragment extends Fragment {
                         helpCenterBinding.chatRecyclerView.setVisibility(View.VISIBLE);
                         ChatMessage message = documentSnapshot.toObject(ChatMessage.class);
                         chatMessages.add(message);
-
+                    }
+                    if (chatMessages.size()==0){
+                        helpCenterBinding.progressBar.setVisibility(View.GONE);
+                        helpCenterBinding.errorText.setVisibility(View.VISIBLE);
                     }
                     Log.v("list size", String.valueOf(chatMessages.size()));
 
                     chatAdapter.notifyDataSetChanged();
 
                 })
-                .addOnFailureListener(e -> Toast.makeText(getContext(), "Error while loading messages", Toast.LENGTH_SHORT).show());
+                .addOnFailureListener(e -> {
+                    Toast.makeText(getContext(), "Error while loading messages", Toast.LENGTH_SHORT).show();
+                    helpCenterBinding.progressBar.setVisibility(View.GONE);
+                });
 
     }
 

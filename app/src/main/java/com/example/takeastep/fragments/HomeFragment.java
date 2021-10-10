@@ -9,8 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.takeastep.R;
 import com.example.takeastep.activities.user.AreYouReadyActivity;
 import com.example.takeastep.activities.user.CovidDiscountActivity;
+import com.example.takeastep.activities.user.MainActivity;
 import com.example.takeastep.activities.user.TakeAstepActivity;
 import com.example.takeastep.activities.user.TogetherWeWinActivity;
 import com.example.takeastep.databinding.FragmentHomeBinding;
@@ -26,11 +28,14 @@ public class HomeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        MainActivity.navigationView.setCheckedItem(R.id.home);
         // Inflate the layout for this fragment
         homeBinding=FragmentHomeBinding.inflate(inflater,container,false);
         homeBinding.areYouReadyBtn.setOnClickListener(v -> startActivity(new Intent(getActivity(), AreYouReadyActivity.class)));
