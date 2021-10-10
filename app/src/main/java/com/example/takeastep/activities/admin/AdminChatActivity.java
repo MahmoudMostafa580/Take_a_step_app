@@ -132,4 +132,5 @@ public class AdminChatActivity extends AppCompatActivity {
                 .addOnFailureListener(e -> Toast.makeText(this, "Error while loading messages", Toast.LENGTH_SHORT).show());
 
     }
+
 }

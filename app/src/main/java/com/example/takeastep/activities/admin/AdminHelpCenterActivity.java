@@ -81,5 +81,15 @@ public class AdminHelpCenterActivity extends AppCompatActivity {
                 .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        getUsers();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getUsers();
+    }
 }
