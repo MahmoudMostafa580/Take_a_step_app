@@ -62,7 +62,7 @@ public class ReadyContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             MediaController controller=new MediaController(mContext);
             ((ReadyContentVideoViewHolder) holder).contentVideo.setVideoURI(Uri.parse(currentContent.getVideoUrl()));
             ((ReadyContentVideoViewHolder) holder).contentVideo.setMediaController(controller);
-            ((ReadyContentVideoViewHolder) holder).contentVideo.canPause();
+            ((ReadyContentVideoViewHolder) holder).contentVideo.seekTo(50);
             ((ReadyContentVideoViewHolder) holder).contentVideo.requestFocus();
             ((ReadyContentVideoViewHolder) holder).contentCaption.setText(currentContent.getCaption());
         }
@@ -79,6 +79,17 @@ public class ReadyContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             return VIEW_TYPE_IMAGE;
         else
             return VIEW_TYPE_VIDEO;
+    }
+
+    @Override
+    public void onViewAttachedToWindow(@NonNull RecyclerView.ViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(@NonNull RecyclerView.ViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
     }
 
     public static class ReadyContentImageViewHolder extends RecyclerView.ViewHolder {
@@ -101,6 +112,8 @@ public class ReadyContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 }
             });
         }
+
+
     }
 
     public static class ReadyContentVideoViewHolder extends RecyclerView.ViewHolder {

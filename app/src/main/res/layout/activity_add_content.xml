@@ -112,9 +112,7 @@
                     android:id="@+id/contentVideo"
                     android:layout_width="match_parent"
                     android:layout_height="220dp"
-                    android:scaleType="centerCrop"
-                    app:riv_corner_radius="10dp"
-                    app:riv_oval="true" />
+                    android:scaleType="centerCrop" />
 
                 <TextView
                     android:id="@+id/addVideoTxt"
@@ -122,6 +120,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="Add video"
+                    android:textColor="@color/white"
                     android:textSize="20sp" />
             </FrameLayout>
 
@@ -177,6 +176,16 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/chooseCategoryLayout"
                 app:layout_constraintVertical_bias="0" />
+
+            <ProgressBar
+                android:id="@+id/progress"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                app:layout_constraintTop_toTopOf="@id/uploadBtn"
+                app:layout_constraintBottom_toBottomOf="@id/uploadBtn"
+                app:layout_constraintStart_toStartOf="@id/uploadBtn"
+                app:layout_constraintEnd_toEndOf="@id/uploadBtn"
+                android:visibility="gone"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

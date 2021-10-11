@@ -55,7 +55,8 @@ public class AreYouReadyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             MediaController controller=new MediaController(mContext);
             ((AreYouReadyVideoViewHolder) holder).contentVideo.setMediaController(controller);
             ((AreYouReadyVideoViewHolder) holder).contentVideo.setVideoURI(Uri.parse(currentContent.getVideoUrl()));
-            ((AreYouReadyVideoViewHolder) holder).contentVideo.requestFocus();
+            //((AreYouReadyVideoViewHolder) holder).contentVideo.requestFocus();
+            ((AreYouReadyVideoViewHolder) holder).contentVideo.seekTo(50);
             ((AreYouReadyVideoViewHolder) holder).contentCaption.setText(currentContent.getCaption());
         }
 

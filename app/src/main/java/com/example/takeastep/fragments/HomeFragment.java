@@ -36,6 +36,7 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         MainActivity.navigationView.setCheckedItem(R.id.home);
+        MainActivity.navigationView.getCheckedItem().setTitle("Home");
         // Inflate the layout for this fragment
         homeBinding=FragmentHomeBinding.inflate(inflater,container,false);
         homeBinding.areYouReadyBtn.setOnClickListener(v -> startActivity(new Intent(getActivity(), AreYouReadyActivity.class)));

@@ -69,7 +69,6 @@
         <activity
             android:name=".activities.SignInActivity"
             android:exported="true"
-            android:noHistory="true"
             android:theme="@style/Theme.MaterialComponents.Light.NoActionBar" />
         <activity
             android:name=".activities.LauncherActivity"

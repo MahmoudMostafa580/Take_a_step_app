@@ -50,7 +50,8 @@ public class AddContentActivity extends AppCompatActivity {
         prepareSpinner();
 
         addContentBinding.contentImage.setOnClickListener(v -> openImageChooser());
-        addContentBinding.contentVideo.setOnClickListener(v -> openVideoChooser());
+        addContentBinding.videoFrameLayout.setOnClickListener(v -> openVideoChooser());
+
 
         addContentBinding.uploadBtn.setOnClickListener(v -> {
             if (mUploadTask != null && mUploadTask.isInProgress()) {
@@ -103,13 +104,13 @@ public class AddContentActivity extends AppCompatActivity {
         } else if (requestCode == PICK_VIDEO_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             videoUri = data.getData();
             addContentBinding.contentVideo.setVideoURI(videoUri);
-            //addContentBinding.contentVideo.canPause();
             addContentBinding.contentVideo.start();
             addContentBinding.addVideoTxt.setVisibility(View.GONE);
         }
     }
 
     private void uploadContent() {
+        loading(true);
         if (checkValidate()) {
             String caption = Objects.requireNonNull(addContentBinding.captionLayout.getEditText()).getText().toString();
             String category = addContentBinding.categorySpinner.getText().toString();
@@ -124,6 +125,7 @@ public class AddContentActivity extends AppCompatActivity {
                                             .addOnSuccessListener(unused -> {
                                                 Toast.makeText(this, "Data Uploaded Successfully", Toast.LENGTH_SHORT).show();
                                                 //startActivity(new Intent(AddContentActivity.this, AdminAreYouReadyActivity.class));
+                                                loading(false);
                                                 finish();
                                             })
                                             .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
@@ -131,8 +133,7 @@ public class AddContentActivity extends AppCompatActivity {
                                 .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()))
                         .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show())
                         .addOnProgressListener(snapshot -> {
-                            Toast.makeText(this, "Upload in progress...", Toast.LENGTH_SHORT).show();
-                            addContentBinding.uploadBtn.setEnabled(false);
+                            loading(true);
                         });
 
             } else if (videoUri == null) {
@@ -144,6 +145,7 @@ public class AddContentActivity extends AppCompatActivity {
                                     documentReference.set(content)
                                             .addOnSuccessListener(unused -> {
                                                 Toast.makeText(this, "Data Uploaded Successfully", Toast.LENGTH_SHORT).show();
+                                                loading(false);
                                                 //startActivity(new Intent(AddContentActivity.this, AdminAreYouReadyActivity.class));
                                                 finish();
                                             })
@@ -152,13 +154,14 @@ public class AddContentActivity extends AppCompatActivity {
                                 .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()))
                         .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show())
                         .addOnProgressListener(snapshot -> {
-                            Toast.makeText(this, "Upload in progress...", Toast.LENGTH_SHORT).show();
-                            addContentBinding.uploadBtn.setEnabled(false);
+                            loading(true);
+                            //addContentBinding.uploadBtn.setEnabled(false);
                         });
             } else {
                 Toast.makeText(this, "No File Selected!", Toast.LENGTH_SHORT).show();
             }
         } else {
+            loading(false);
             Toast.makeText(this, "Please fill fields!", Toast.LENGTH_SHORT).show();
         }
     }
@@ -174,6 +177,16 @@ public class AddContentActivity extends AppCompatActivity {
             }
         } else {
             return false;
+        }
+    }
+
+    private void loading(boolean isLoading) {
+        if (isLoading) {
+            addContentBinding.progress.setVisibility(View.VISIBLE);
+            addContentBinding.uploadBtn.setVisibility(View.INVISIBLE);
+        } else {
+            addContentBinding.progress.setVisibility(View.INVISIBLE);
+            addContentBinding.uploadBtn.setVisibility(View.VISIBLE);
         }
     }
 

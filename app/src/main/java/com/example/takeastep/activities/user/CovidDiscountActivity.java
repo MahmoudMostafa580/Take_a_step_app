@@ -41,7 +41,6 @@ public class CovidDiscountActivity extends AppCompatActivity {
     private CollectionReference mCollectionReference;
     private Uri certificateImage;
 
-    private final String[] discounts = {};
 
     boolean isValid;
 
@@ -94,14 +93,16 @@ public class CovidDiscountActivity extends AppCompatActivity {
     private void checkValidation() {
         mDocumentReference.get()
                 .addOnSuccessListener(documentSnapshot -> {
-                    isValid = documentSnapshot.getBoolean("validCertificate")!=null;
-                    if (isValid){
+                    isValid = documentSnapshot.getBoolean("validCertificate") != null;
+                    if (isValid) {
                         Toast.makeText(this, "Congratulations. You are vaccinated", Toast.LENGTH_SHORT).show();
                         covidDiscountBinding.certificateFrameLayout.setEnabled(false);
                         covidDiscountBinding.uploadCertificateBtn.setEnabled(false);
+                        loading(false);
 
                         showAlert();
-                    }else{
+                    } else {
+                        loading(false);
                         Toast.makeText(this, "Waiting for admin confirmation", Toast.LENGTH_SHORT).show();
                     }
                 })
@@ -126,6 +127,8 @@ public class CovidDiscountActivity extends AppCompatActivity {
     }
 
     private void uploadCertificate() {
+        loading(true);
+        //covidDiscountBinding.uploadCertificateBtn.setEnabled(false);
         if (certificateImage != null) {
             StorageReference certificateReference = mStorageReference.child("usersPictures/" + mFirebaseAuth.getCurrentUser().getEmail() + "/" + "certificate");
             mUploadTask = certificateReference.putFile(certificateImage)
@@ -137,8 +140,12 @@ public class CovidDiscountActivity extends AppCompatActivity {
 
                                     DocumentReference documentReference = mFirestore.collection("users").document(mFirebaseAuth.getCurrentUser().getUid());
                                     documentReference.update(user)
-                                            .addOnSuccessListener(unused -> Toast.makeText(this,
-                                                    "Certificate uploaded successfully..Wait for admin response", Toast.LENGTH_LONG).show())
+                                            .addOnSuccessListener(unused -> {
+                                                loading(false);
+                                                covidDiscountBinding.uploadCertificateBtn.setEnabled(false);
+                                                Toast.makeText(this,
+                                                        "Certificate uploaded successfully..Wait for admin response", Toast.LENGTH_LONG).show();
+                                            })
                                             .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
 
                                 })
@@ -148,6 +155,17 @@ public class CovidDiscountActivity extends AppCompatActivity {
                     .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
         } else {
             Toast.makeText(this, "No image selected!", Toast.LENGTH_SHORT).show();
+            loading(false);
+        }
+    }
+
+    private void loading(boolean isLoading) {
+        if (isLoading) {
+            covidDiscountBinding.progressBar.setVisibility(View.VISIBLE);
+            covidDiscountBinding.uploadCertificateBtn.setVisibility(View.INVISIBLE);
+        } else {
+            covidDiscountBinding.progressBar.setVisibility(View.INVISIBLE);
+            covidDiscountBinding.uploadCertificateBtn.setVisibility(View.VISIBLE);
         }
     }
 }
