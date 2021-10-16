@@ -15,6 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TakeAStep">
         <activity
+            android:name=".activities.admin.AddDiscountActivity"
+            android:exported="true" />
+        <activity
             android:name=".activities.admin.AdminChatActivity"
             android:exported="true" />
         <activity

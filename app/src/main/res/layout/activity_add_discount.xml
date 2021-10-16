@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.user.CovidDiscountActivity">
+    tools:context=".activities.admin.AddDiscountActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolBar"
@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_arrow_back"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:title="COVID-19 Discount" />
+        app:title="Add COVID-19 Discount" />
 
     <TextView
         android:id="@+id/txt"
@@ -28,14 +28,14 @@
         android:layout_marginTop="32dp"
         android:fontFamily="@font/abhaya_libre"
         android:gravity="center"
-        android:text="To get discounts. Please upload your verified vaccination card photo"
+        android:text="This user get vaccinated. Give him discount"
         android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolBar" />
 
     <FrameLayout
-        android:id="@+id/certificate_frame_layout"
+        android:id="@+id/discount_frame_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="32dp"
@@ -45,7 +45,7 @@
         app:layout_constraintTop_toBottomOf="@id/txt">
 
         <com.makeramen.roundedimageview.RoundedImageView
-            android:id="@+id/certificateImage"
+            android:id="@+id/discountImage"
             android:layout_width="match_parent"
             android:layout_height="180dp"
             android:background="@drawable/background_sign_up_image"
@@ -55,55 +55,31 @@
             app:riv_oval="false" />
 
         <TextView
-            android:id="@+id/addCertificateTxt"
+            android:id="@+id/addDiscountTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Add Vaccine Certificate"
+            android:text="Add Vaccine Discount"
             android:textSize="18sp" />
     </FrameLayout>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/upload_certificate_btn"
+        android:id="@+id/upload_discount_btn"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        app:layout_constraintTop_toBottomOf="@id/certificate_frame_layout"
+        app:layout_constraintTop_toBottomOf="@id/discount_frame_layout"
         android:layout_marginHorizontal="32dp"
-        android:text="Upload certificate"
+        android:text="Upload discount"
         android:layout_marginTop="32dp"/>
 
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="25dp"
         android:layout_height="25dp"
-        app:layout_constraintTop_toTopOf="@id/upload_certificate_btn"
-        app:layout_constraintBottom_toBottomOf="@id/upload_certificate_btn"
-        app:layout_constraintStart_toStartOf="@id/upload_certificate_btn"
-        app:layout_constraintEnd_toEndOf="@id/upload_certificate_btn"/>
-
-    <TextView
-        android:id="@+id/congratulations_txt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Congratulations. You have earned discount"
-        android:textSize="22sp"
-        android:layout_marginHorizontal="32dp"
-        android:layout_marginTop="100dp"
-        android:gravity="center"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolBar"
-        android:visibility="gone"/>
-
-    <ImageView
-        android:id="@+id/discount_image"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        app:layout_constraintTop_toBottomOf="@id/congratulations_txt"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="gone"/>
+        app:layout_constraintTop_toTopOf="@id/upload_discount_btn"
+        app:layout_constraintBottom_toBottomOf="@id/upload_discount_btn"
+        app:layout_constraintStart_toStartOf="@id/upload_discount_btn"
+        app:layout_constraintEnd_toEndOf="@id/upload_discount_btn"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

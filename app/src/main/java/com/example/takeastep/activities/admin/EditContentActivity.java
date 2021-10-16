@@ -14,7 +14,9 @@ import com.example.takeastep.databinding.ActivityAddContentBinding;
 import com.example.takeastep.models.ReadyContent;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -22,8 +24,9 @@ import java.util.Objects;
 public class EditContentActivity extends AppCompatActivity {
     ActivityAddContentBinding addContentBinding;
 
-    String[] categories = {"Vaccination Benefits", "Vaccination Risks"};
+    ArrayList<String> categories;
     String mCategory;
+    ArrayAdapter<String> spinnerAdapter;
 
     FirebaseFirestore mFirestore;
     private CollectionReference mCollectionReference;
@@ -39,10 +42,14 @@ public class EditContentActivity extends AppCompatActivity {
         setContentView(addContentBinding.getRoot());
 
         setSupportActionBar(addContentBinding.toolBar);
+        addContentBinding.toolBar.setTitle("Edit content");
         addContentBinding.toolBar.setNavigationOnClickListener(v -> onBackPressed());
 
         mFirestore = FirebaseFirestore.getInstance();
         mCollectionReference = mFirestore.collection("Ready Content");
+        categories = new ArrayList<>();
+        loadCategories();
+
 
         prepareSpinner();
 
@@ -85,8 +92,23 @@ public class EditContentActivity extends AppCompatActivity {
         });
     }
 
+    private void loadCategories() {
+        mFirestore.collection("Categories").get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    categories.clear();
+                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        if (documentSnapshot.exists()){
+                            String name = documentSnapshot.getString("name");
+                            categories.add(name);
+                        }
+                    }
+                    spinnerAdapter.notifyDataSetChanged();
+                })
+                .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
+    }
+
     private void prepareSpinner() {
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_item, categories);
+        spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_item, categories);
         addContentBinding.categorySpinner.setAdapter(spinnerAdapter);
         addContentBinding.categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

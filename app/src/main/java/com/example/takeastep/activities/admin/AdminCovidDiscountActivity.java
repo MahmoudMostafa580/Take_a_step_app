@@ -4,6 +4,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,55 +63,64 @@ public class AdminCovidDiscountActivity extends AppCompatActivity {
         adminCovidDiscountBinding.listView.setAdapter(requestsAdapter);
         requestsAdapter.setOnItemClickListener(position -> {
             selectedUser=mRequests.get(position);
-            AlertDialog builder = new AlertDialog.Builder(AdminCovidDiscountActivity.this).create();
-            LayoutInflater inflater = getLayoutInflater();
-            View dialogLayout = inflater.inflate(R.layout.check_certificate_layout, null);
-            builder.setView(dialogLayout);
-            builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            mFirestore.collection("users").document(selectedUser.getId()).get()
+            .addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.getString("discount")==null){
+                    AlertDialog builder = new AlertDialog.Builder(AdminCovidDiscountActivity.this).create();
+                    LayoutInflater inflater = getLayoutInflater();
+                    View dialogLayout = inflater.inflate(R.layout.check_certificate_layout, null);
+                    builder.setView(dialogLayout);
+                    builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-            ImageView certImage=dialogLayout.findViewById(R.id.certificate_img);
-            MaterialButton acceptBtn=dialogLayout.findViewById(R.id.accept_btn);
-            MaterialButton rejectBtn=dialogLayout.findViewById(R.id.reject_btn);
+                    ImageView certImage=dialogLayout.findViewById(R.id.certificate_img);
+                    MaterialButton acceptBtn=dialogLayout.findViewById(R.id.accept_btn);
+                    MaterialButton rejectBtn=dialogLayout.findViewById(R.id.reject_btn);
 
-            mStorageReference = FirebaseStorage.getInstance().getReference();
-            StorageReference certificate=mStorageReference.child("usersPictures/"+selectedUser.getEmail()+"/certificate");
-            certificate.getDownloadUrl()
-                    .addOnSuccessListener(uri ->
-                            Glide.with(AdminCovidDiscountActivity.this)
-                                    .load(uri).diskCacheStrategy(DiskCacheStrategy.ALL)
-                                    .centerInside()
-                                    .into(certImage))
-                    .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
+                    mStorageReference = FirebaseStorage.getInstance().getReference();
+                    StorageReference certificate=mStorageReference.child("usersPictures/"+selectedUser.getEmail()+"/certificate");
+                    certificate.getDownloadUrl()
+                            .addOnSuccessListener(uri ->
+                                    Glide.with(AdminCovidDiscountActivity.this)
+                                            .load(uri).diskCacheStrategy(DiskCacheStrategy.ALL)
+                                            .centerInside()
+                                            .into(certImage))
+                            .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
 
-            acceptBtn.setOnClickListener(v -> {
-                Map<String,Object> valid=new HashMap<>();
-                valid.put("validCertificate",true);
+                    acceptBtn.setOnClickListener(v -> {
+                        Map<String,Object> valid=new HashMap<>();
+                        valid.put("validCertificate",true);
+                        builder.dismiss();
 
-                DocumentReference documentReference=mFirestore.collection("users").document(selectedUser.getId());
-                documentReference.update(valid)
-                        .addOnSuccessListener(unused -> {
-                            Toast.makeText(this, "Reply sent to user", Toast.LENGTH_SHORT).show();
-                            builder.dismiss();
-                            mRequests.remove(position);
-                            requestsAdapter.notifyItemRemoved(position);
-                            valid.put("certificate",null);
-                            documentReference.update(valid);
-                        });
+                        DocumentReference documentReference=mFirestore.collection("users").document(selectedUser.getId());
+                        documentReference.update(valid)
+                                .addOnSuccessListener(unused -> {
+                                    //Toast.makeText(this, "Reply sent to user", Toast.LENGTH_SHORT).show();
+                                    Intent discountIntent=new Intent(getApplicationContext(), AddDiscountActivity.class);
+                                    discountIntent.putExtra("userEmail",selectedUser.getEmail());
+                                    discountIntent.putExtra("userId",selectedUser.getId());
+                                    startActivity(discountIntent);
+
+                                    //mRequests.remove(position);
+                                    //requestsAdapter.notifyItemRemoved(position);
+                                });
+                    });
+
+                    rejectBtn.setOnClickListener(v -> {
+                        Map<String,Object> valid=new HashMap<>();
+                        valid.put("validCertificate",false);
+
+                        DocumentReference documentReference=mFirestore.collection("users").document(selectedUser.getId());
+                        documentReference.update(valid)
+                                .addOnSuccessListener(unused -> {
+                                    Toast.makeText(this, "Reply sent to user", Toast.LENGTH_SHORT).show();
+                                    builder.dismiss();
+                                });
+                    });
+                    builder.show();
+                }else{
+                    Toast.makeText(this, "User already have discount", Toast.LENGTH_SHORT).show();
+                }
             });
-
-            rejectBtn.setOnClickListener(v -> {
-                Map<String,Object> valid=new HashMap<>();
-                valid.put("validCertificate",false);
-
-                DocumentReference documentReference=mFirestore.collection("users").document(selectedUser.getId());
-                documentReference.update(valid)
-                        .addOnSuccessListener(unused -> {
-                            Toast.makeText(this, "Reply sent to user", Toast.LENGTH_SHORT).show();
-                            builder.dismiss();
-                        });
-            });
-
-            builder.show();
         });
 
         loadRequests();
@@ -141,5 +151,11 @@ public class AdminCovidDiscountActivity extends AppCompatActivity {
     private void showTextMessage() {
         adminCovidDiscountBinding.text.setVisibility(View.VISIBLE);
         adminCovidDiscountBinding.listView.setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
     }
 }

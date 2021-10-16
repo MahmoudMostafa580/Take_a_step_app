@@ -14,7 +14,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.takeastep.R;
+import com.example.takeastep.activities.admin.AdminCovidDiscountActivity;
 import com.example.takeastep.databinding.ActivityCovidDiscountBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -69,25 +71,18 @@ public class CovidDiscountActivity extends AppCompatActivity {
 
     }
 
-    private void showAlert() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(CovidDiscountActivity.this);
-        LayoutInflater inflater = this.getLayoutInflater();
-        View dialogLayout = inflater.inflate(R.layout.discount_layout, null);
+    private void showDiscount() {
+        covidDiscountBinding.congratulationsTxt.setVisibility(View.VISIBLE);
+        covidDiscountBinding.discountImage.setVisibility(View.VISIBLE);
 
-        builder.setView(dialogLayout);
-        builder.setTitle("Congratulations");
-
-        ImageView discountImg = dialogLayout.findViewById(R.id.discount_img);
-
-        Random random = new Random();
-        int randInt = random.nextInt(10) + 1;
-        String imgName = "discount" + randInt;
-        Uri img = Uri.parse("android.resource://com.example.takeastep/drawable/" + imgName);
-        Glide.with(getApplicationContext()).load(img).centerInside().into(discountImg);
-
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-
+        StorageReference certificate=mStorageReference.child("usersPictures/"+mFirebaseAuth.getCurrentUser().getEmail()+"/discount");
+        certificate.getDownloadUrl()
+                .addOnSuccessListener(uri ->
+                        Glide.with(CovidDiscountActivity.this)
+                                .load(uri).diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .centerInside()
+                                .into( covidDiscountBinding.discountImage))
+                .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
     private void checkValidation() {
@@ -96,14 +91,15 @@ public class CovidDiscountActivity extends AppCompatActivity {
                     isValid = documentSnapshot.getBoolean("validCertificate") != null;
                     if (isValid) {
                         Toast.makeText(this, "Congratulations. You are vaccinated", Toast.LENGTH_SHORT).show();
-                        covidDiscountBinding.certificateFrameLayout.setEnabled(false);
-                        covidDiscountBinding.uploadCertificateBtn.setEnabled(false);
-                        loading(false);
+                        covidDiscountBinding.certificateFrameLayout.setVisibility(View.GONE);
+                        covidDiscountBinding.txt.setVisibility(View.GONE);
+                        covidDiscountBinding.uploadCertificateBtn.setVisibility(View.GONE);
+                        covidDiscountBinding.progressBar.setVisibility(View.GONE);
 
-                        showAlert();
+                        showDiscount();
                     } else {
                         loading(false);
-                        Toast.makeText(this, "Waiting for admin confirmation", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(this, "Waiting for admin confirmation", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());

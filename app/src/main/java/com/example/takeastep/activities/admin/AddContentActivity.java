@@ -43,9 +43,6 @@ public class AddContentActivity extends AppCompatActivity {
     private StorageTask mUploadTask;
     private Uri videoUri;
 
-    TextInputLayout categoryName;
-    MaterialButton addCategoryBtn;
-
     boolean isCategoryExists;
 
 
