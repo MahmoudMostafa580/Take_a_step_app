@@ -24,6 +24,8 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class HelpCenterFragment extends Fragment {
@@ -88,7 +90,7 @@ public class HelpCenterFragment extends Fragment {
         String message = helpCenterBinding.messageEditText.getText().toString();
         if (!message.isEmpty()) {
             ChatMessage chatMessage = new ChatMessage(mFirebaseAuth.getCurrentUser().getUid(),
-                    "ALQyPwPRatn1H3oGIaOo", message, System.currentTimeMillis());
+                    "ALQyPwPRatn1H3oGIaOo", message, System.currentTimeMillis(),false);
             DocumentReference mDocumentReference = firestore.collection("users").document(mFirebaseAuth.getCurrentUser().getUid())
                     .collection("chat").document();
             mDocumentReference.set(chatMessage)
@@ -99,12 +101,11 @@ public class HelpCenterFragment extends Fragment {
                             helpCenterBinding.chatRecyclerView.setVisibility(View.VISIBLE);
                             chatMessages.add(chatMessage);
                             chatAdapter.notifyDataSetChanged();
+                            helpCenterBinding.errorText.setVisibility(View.GONE);
                             helpCenterBinding.chatRecyclerView.smoothScrollToPosition(chatMessages.size() - 1);
                         }
                     })
                     .addOnFailureListener(e -> Toast.makeText(getContext(), "جاااااااااى", Toast.LENGTH_SHORT).show());
-            //chatAdapter.notifyItemInserted(chatMessages.size()-1);
-
 
             User user = new User(mFirebaseAuth.getCurrentUser().getDisplayName(), mFirebaseAuth.getCurrentUser().getPhotoUrl().toString()
                     , message, System.currentTimeMillis(), mFirebaseAuth.getCurrentUser().getUid());
@@ -125,6 +126,10 @@ public class HelpCenterFragment extends Fragment {
                         helpCenterBinding.progressBar.setVisibility(View.GONE);
                         helpCenterBinding.chatRecyclerView.setVisibility(View.VISIBLE);
                         ChatMessage message = documentSnapshot.toObject(ChatMessage.class);
+                        message.setSeen(true);
+                        Map<String, Object> seen=new HashMap<>();
+                        seen.put("seen",true);
+                        documentSnapshot.getReference().update(seen);
                         chatMessages.add(message);
                     }
                     if (chatMessages.size()==0){
@@ -140,39 +145,5 @@ public class HelpCenterFragment extends Fragment {
                     Toast.makeText(getContext(), "Error while loading messages", Toast.LENGTH_SHORT).show();
                     helpCenterBinding.progressBar.setVisibility(View.GONE);
                 });
-
     }
-
-    /*private final EventListener<QuerySnapshot> eventListener=(value, error) ->{
-        if (error!=null){
-            return;
-        }
-        if (value!=null){
-            int count=chatMessages.size();
-            for (DocumentChange documentChange:value.getDocumentChanges()){
-                if (documentChange.getType() == DocumentChange.Type.ADDED){
-                    ChatMessage chatMessage=new ChatMessage();
-                    chatMessage.senderId=documentChange.getDocument().getString("sender id");
-                    chatMessage.receiverId=documentChange.getDocument().getString("receiver id");
-                    chatMessage.message=documentChange.getDocument().getString("message");
-                    chatMessage.dateTime=getReadableDateTime(documentChange.getDocument().getDate("messageTime"));
-                    chatMessages.add(chatMessage);
-                }
-            }
-            chatMessages.sort(Comparator.comparing(obj -> obj.dateTime));
-            if (count==0){
-                chatAdapter.notifyDataSetChanged();
-                Log.v("list size",String.valueOf(chatMessages.size()));
-
-            }else{
-                chatAdapter.notifyItemRangeInserted(chatMessages.size(),chatMessages.size());
-                helpCenterBinding.chatRecyclerView.smoothScrollToPosition(chatMessages.size()-1);
-            }
-        }
-        helpCenterBinding.progressBar.setVisibility(View.GONE);
-    };
-
-    public String getReadableDateTime(Date date){
-        return new SimpleDateFormat("MMMM dd, hh:mm a", Locale.getDefault()).format(date);
-    }*/
 }

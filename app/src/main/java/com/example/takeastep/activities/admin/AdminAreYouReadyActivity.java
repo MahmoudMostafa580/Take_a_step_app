@@ -1,16 +1,16 @@
 package com.example.takeastep.activities.admin;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.PopupMenu;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.takeastep.R;
 import com.example.takeastep.activities.admin.adapters.ReadyContentAdapter;
@@ -46,7 +46,7 @@ public class AdminAreYouReadyActivity extends AppCompatActivity {
         adminAreYouReadyBinding.toolBar.setNavigationOnClickListener(v -> onBackPressed());
 
         adminAreYouReadyBinding.recycler.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(this);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         adminAreYouReadyBinding.recycler.setLayoutManager(linearLayoutManager);
 
         mContent = new ArrayList<>();
@@ -61,18 +61,14 @@ public class AdminAreYouReadyActivity extends AppCompatActivity {
             popup.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
                     case R.id.edit:
-                        Intent updateIntent=new Intent(getApplicationContext(),EditContentActivity.class);
-                        String caption=mContent.get(position).getCaption();
-                        String category=mContent.get(position).getCategory();
-                        String imageUrl=mContent.get(position).getImageUrl();
-                        String videoUrl=mContent.get(position).getVideoUrl();
-                        updateIntent.putExtra("caption",caption);
-                        updateIntent.putExtra("category",category);
-                        if (videoUrl==null){
-                            updateIntent.putExtra("imageUrl",imageUrl);
-                        }else{
-                            updateIntent.putExtra("videoUrl",videoUrl);
-                        }
+                        Intent updateIntent = new Intent(getApplicationContext(), EditContentActivity.class);
+                        String caption = mContent.get(position).getCaption();
+                        String category = mContent.get(position).getCategory();
+                        String videoUrl = mContent.get(position).getVideoUrl();
+                        updateIntent.putExtra("caption", caption);
+                        updateIntent.putExtra("category", category);
+
+                        updateIntent.putExtra("videoUrl", videoUrl);
                         startActivity(updateIntent);
 
                         return true;
@@ -96,7 +92,7 @@ public class AdminAreYouReadyActivity extends AppCompatActivity {
     }
 
     private void loadContents() {
-        mCollectionReference.orderBy("time",Query.Direction.DESCENDING).get()
+        mCollectionReference.orderBy("time", Query.Direction.DESCENDING).get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     mContent.clear();
                     for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {

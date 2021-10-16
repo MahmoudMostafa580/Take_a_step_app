@@ -3,14 +3,19 @@ package com.example.takeastep.activities.user;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.graphics.drawable.DrawerArrowDrawable;
 import androidx.core.view.GravityCompat;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +29,8 @@ import com.example.takeastep.fragments.HomeFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -31,6 +38,7 @@ import com.makeramen.roundedimageview.RoundedImageView;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     ActivityMainBinding homeBinding;
     FirebaseAuth firebaseAuth;
+    FirebaseFirestore mFirestore;
     private FirebaseUser mFirebaseUser;
 
     SharedPreferences mySharedPreferences;
@@ -41,6 +49,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     RoundedImageView drawerProfileImage;
     TextView drawerUserName;
 
+    int messagesReceivedCounter;
+
+    RelativeLayout customLayout;
+    TextView badge;
+
     public static NavigationView navigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         firebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser=FirebaseAuth.getInstance().getCurrentUser();
+        mFirestore=FirebaseFirestore.getInstance();
         mySharedPreferences = getSharedPreferences("userData", MODE_PRIVATE);
         editor = mySharedPreferences.edit();
 
@@ -68,6 +82,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         }
 
+        customLayout = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.notification_badge, null);
+        badge = (customLayout.findViewById(R.id.counter));
+        countMessages();
+
+
+        homeBinding.drawerNavView.getMenu().findItem(R.id.help_center).setActionView(customLayout);
+
         homeBinding.drawerNavView.setNavigationItemSelectedListener(this);
 
         if (homeBinding.drawerNavView.getHeaderCount() > 0) {
@@ -78,6 +99,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             loadUserDetails();
         }
 
+    }
+
+    public void countMessages(){
+        mFirestore.collection("users").document(firebaseAuth.getCurrentUser().getUid()).collection("chat").get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()){
+                        messagesReceivedCounter=0;
+                        for (QueryDocumentSnapshot queryDocumentSnapshot:task.getResult()){
+                            if (queryDocumentSnapshot.exists()){
+                                if (queryDocumentSnapshot.getString("receiverId").equals(firebaseAuth.getCurrentUser().getUid())
+                                        && queryDocumentSnapshot.getBoolean("seen").equals(false)){
+                                    messagesReceivedCounter++;
+                                }
+                            }
+                        }
+                        Log.v("messagesReceivedCounter, ",messagesReceivedCounter+"");
+                        badge.setText(String.valueOf(messagesReceivedCounter));
+                        Log.v("Badge, ",badge.getText().toString());
+                        if (badge.getText().equals("0")){
+                            badge.setVisibility(View.GONE);
+                        }
+                    }
+                })
+                .addOnFailureListener(e -> {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        });
     }
 
     private void loadUserDetails() {
@@ -122,6 +169,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (item.getItemId()){
             case R.id.help_center:
                 getSupportFragmentManager().beginTransaction().replace(R.id.container_fragment,new HelpCenterFragment()).commit();
+                badge.setText("0");
+                badge.setVisibility(View.GONE);
                 break;
             case R.id.logout:
             {

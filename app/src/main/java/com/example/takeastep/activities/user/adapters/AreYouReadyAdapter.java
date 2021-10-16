@@ -1,30 +1,36 @@
 package com.example.takeastep.activities.user.adapters;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.MediaController;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.takeastep.R;
 import com.example.takeastep.models.ReadyContent;
+import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.LoadControl;
+import com.google.android.exoplayer2.MediaItem;
+import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
+import com.google.android.exoplayer2.source.MediaSourceFactory;
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
+import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
 
 import java.util.ArrayList;
 
-public class AreYouReadyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class AreYouReadyAdapter extends RecyclerView.Adapter<AreYouReadyAdapter.AreYouReadyVideoViewHolder> {
     private ArrayList<ReadyContent> contentsList;
     private Context mContext;
 
-    public static final int VIEW_TYPE_IMAGE = 1;
-    public static final int VIEW_TYPE_VIDEO = 2;
 
     public AreYouReadyAdapter(ArrayList<ReadyContent> contentsList, Context mContext) {
         this.contentsList = contentsList;
@@ -33,33 +39,64 @@ public class AreYouReadyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (viewType == VIEW_TYPE_IMAGE) {
-            return new AreYouReadyImageViewHolder(LayoutInflater.from(mContext).
-                    inflate(R.layout.user_item_areyouready_image_container, parent, false));
-        } else {
-            return new AreYouReadyVideoViewHolder(LayoutInflater.from(mContext).
-                    inflate(R.layout.user_item_areyouready_video_container, parent, false));
-        }
+    public AreYouReadyVideoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+        return new AreYouReadyVideoViewHolder(LayoutInflater.from(mContext).
+                inflate(R.layout.user_item_areyouready_video_container, parent, false));
+
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if (getItemViewType(position) == VIEW_TYPE_IMAGE) {
-            ReadyContent currentContent = contentsList.get(position);
-            ((AreYouReadyImageViewHolder) holder).contentImage.setImageURI(Uri.parse(currentContent.getImageUrl()));
-            Glide.with(mContext).load(currentContent.getImageUrl()).into(((AreYouReadyImageViewHolder) holder).contentImage);
-            ((AreYouReadyImageViewHolder) holder).contentCaption.setText(currentContent.getCaption());
-        } else {
-            ReadyContent currentContent = contentsList.get(position);
-            MediaController controller=new MediaController(mContext);
-            ((AreYouReadyVideoViewHolder) holder).contentVideo.setMediaController(controller);
-            ((AreYouReadyVideoViewHolder) holder).contentVideo.setVideoURI(Uri.parse(currentContent.getVideoUrl()));
-            //((AreYouReadyVideoViewHolder) holder).contentVideo.requestFocus();
-            ((AreYouReadyVideoViewHolder) holder).contentVideo.seekTo(50);
-            ((AreYouReadyVideoViewHolder) holder).contentCaption.setText(currentContent.getCaption());
-        }
+    public void onBindViewHolder(@NonNull AreYouReadyVideoViewHolder holder, int position) {
 
+        ReadyContent currentContent = contentsList.get(position);
+        holder.contentCaption.setText(currentContent.getCaption());
+
+        LoadControl loadControl = new DefaultLoadControl();
+        DefaultTrackSelector trackSelector = new DefaultTrackSelector(mContext, new AdaptiveTrackSelection.Factory());
+        CacheDataSource.Factory cacheFactory = new CacheDataSource.Factory().setUpstreamDataSourceFactory(new DefaultHttpDataSourceFactory());
+
+        MediaSourceFactory mediaSourceFactory =
+                new DefaultMediaSourceFactory(cacheFactory);
+        SimpleExoPlayer player = new SimpleExoPlayer.Builder(mContext)
+                .setTrackSelector(trackSelector)
+                .setMediaSourceFactory(mediaSourceFactory)
+                .setLoadControl(loadControl)
+                .build();
+        player.addMediaItem(position, MediaItem.fromUri(currentContent.getVideoUrl()));
+        player.prepare();
+        player.setPlayWhenReady(true);
+        player.play();
+        holder.playerView.setPlayer(player);
+
+        player.addListener(new Player.Listener() {
+            @Override
+            public void onPlaybackStateChanged(int playbackState) {
+                if (playbackState == Player.STATE_BUFFERING) {
+                    holder.progressBar.setVisibility(View.VISIBLE);
+                } else if (playbackState == Player.STATE_READY) {
+                    holder.progressBar.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+                if (playbackState == Player.STATE_BUFFERING) {
+                    holder.progressBar.setVisibility(View.VISIBLE);
+                } else if (playbackState == Player.STATE_READY) {
+                    holder.progressBar.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onIsPlayingChanged(boolean isPlaying) {
+                if (isPlaying) {
+                    holder.progressBar.setVisibility(View.GONE);
+                } else {
+                    holder.progressBar.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 
     @Override
@@ -67,36 +104,18 @@ public class AreYouReadyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         return contentsList.size();
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        if (contentsList.get(position).getVideoUrl() == null)
-            return VIEW_TYPE_IMAGE;
-        else
-            return VIEW_TYPE_VIDEO;
-    }
-
-
-    public static class AreYouReadyImageViewHolder extends RecyclerView.ViewHolder {
-
-        ImageView contentImage;
-        TextView contentCaption;
-
-        public AreYouReadyImageViewHolder(@NonNull View itemView) {
-            super(itemView);
-            contentImage = itemView.findViewById(R.id.content_image);
-            contentCaption = itemView.findViewById(R.id.content_caption);
-        }
-    }
 
     public static class AreYouReadyVideoViewHolder extends RecyclerView.ViewHolder {
 
-        VideoView contentVideo;
         TextView contentCaption;
+        PlayerView playerView;
+        ProgressBar progressBar;
 
         public AreYouReadyVideoViewHolder(@NonNull View itemView) {
             super(itemView);
-            contentVideo = itemView.findViewById(R.id.content_video);
             contentCaption = itemView.findViewById(R.id.content_caption);
+            playerView = itemView.findViewById(R.id.content_video);
+            progressBar = itemView.findViewById(R.id.videoProgressBar);
         }
     }
 

@@ -1,33 +1,24 @@
 package com.example.takeastep.models;
 
 public class ReadyContent {
-    String imageUrl,videoUrl,caption,category,time;
-
+    String videoUrl,caption,category;
+    Long time;
     public ReadyContent() {
     }
 
-    public ReadyContent(String imageUrl,String videoUrl, String caption, String category,String time) {
-        this.imageUrl = imageUrl;
+    public ReadyContent(String videoUrl, String caption, String category,Long time) {
         this.videoUrl=videoUrl;
         this.caption = caption;
         this.category = category;
         this.time=time;
     }
 
-    public String getTime() {
+    public Long getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(Long time) {
         this.time = time;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
     }
 
     public void setVideoUrl(String videoUrl) {

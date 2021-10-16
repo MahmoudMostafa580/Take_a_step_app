@@ -85,7 +85,7 @@ public class AdminChatActivity extends AppCompatActivity {
     public void sendMessage() {
         String message = helpCenterBinding.messageEditText.getText().toString();
         if (!message.isEmpty()) {
-            ChatMessage chatMessage = new ChatMessage(mFirebaseAuth.getCurrentUser().getUid(), userId, message, System.currentTimeMillis());
+            ChatMessage chatMessage = new ChatMessage(mFirebaseAuth.getCurrentUser().getUid(), userId, message, System.currentTimeMillis(),false);
             mDocumentReference.set(chatMessage)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()){
@@ -98,7 +98,6 @@ public class AdminChatActivity extends AppCompatActivity {
                         }
                     })
                     .addOnFailureListener(e -> Toast.makeText(this, "جاااااااااى", Toast.LENGTH_SHORT).show());
-            //chatAdapter.notifyItemInserted(chatMessages.size()-1);
 
             Map<String,Object> user =new HashMap<>();
             user.put("lastMessage",message);
@@ -121,6 +120,10 @@ public class AdminChatActivity extends AppCompatActivity {
                         helpCenterBinding.progressBar.setVisibility(View.GONE);
                         helpCenterBinding.chatRecyclerView.setVisibility(View.VISIBLE);
                         ChatMessage message = documentSnapshot.toObject(ChatMessage.class);
+                        message.setSeen(true);
+                        Map<String, Object> seen=new HashMap<>();
+                        seen.put("seen",true);
+                        documentSnapshot.getReference().update(seen);
                         chatMessages.add(message);
 
                     }

@@ -53,7 +53,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UsersViewHol
     public void onBindViewHolder(@NonNull UsersViewHolder holder, int position) {
 
         Calendar calendar=Calendar.getInstance();
-        SimpleDateFormat sdf= new SimpleDateFormat("hh:mm a", Locale.getDefault());
+        SimpleDateFormat sdf= new SimpleDateFormat("yyyy/MM/dd . hh:mm a", Locale.getDefault());
 
         calendar.setTimeInMillis(usersList.get(position).getLastMessageTime());
         String time=sdf.format(calendar.getTime());

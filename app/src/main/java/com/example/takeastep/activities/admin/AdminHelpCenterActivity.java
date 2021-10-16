@@ -60,7 +60,7 @@ public class AdminHelpCenterActivity extends AppCompatActivity {
     }
 
     private void getUsers() {
-        mCollectionReference.orderBy("lastMessageTime", Query.Direction.ASCENDING).get()
+        mCollectionReference.orderBy("lastMessageTime", Query.Direction.DESCENDING).get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
                         usersList.clear();

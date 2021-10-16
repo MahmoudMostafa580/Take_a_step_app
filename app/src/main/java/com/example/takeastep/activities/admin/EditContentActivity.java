@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bumptech.glide.Glide;
 import com.example.takeastep.databinding.ActivityAddContentBinding;
 import com.example.takeastep.models.ReadyContent;
 import com.google.firebase.firestore.CollectionReference;
@@ -30,7 +29,7 @@ public class EditContentActivity extends AppCompatActivity {
     private CollectionReference mCollectionReference;
 
     ReadyContent content = new ReadyContent();
-    String caption, category, imageUrl,videoUrl;
+    String caption, category, videoUrl;
 
 
     @Override
@@ -50,27 +49,19 @@ public class EditContentActivity extends AppCompatActivity {
         Intent updateIntent = getIntent();
         caption = updateIntent.getStringExtra("caption");
         category = updateIntent.getStringExtra("category");
-        imageUrl = updateIntent.getStringExtra("imageUrl");
-        videoUrl=updateIntent.getStringExtra("videoUrl");
+        videoUrl = updateIntent.getStringExtra("videoUrl");
 
 
         content.setCaption(caption);
         content.setCategory(category);
-        if (videoUrl==null){
-            content.setImageUrl(imageUrl);
-            Glide.with(this).load(imageUrl).into(addContentBinding.contentImage);
-            addContentBinding.addImageTxt.setVisibility(View.GONE);
 
-        }else{
-            content.setVideoUrl(videoUrl);
-            addContentBinding.contentVideo.setVideoURI(Uri.parse(videoUrl));
-            addContentBinding.contentVideo.start();
-            addContentBinding.addVideoTxt.setVisibility(View.GONE);
-        }
+        content.setVideoUrl(videoUrl);
+        addContentBinding.contentVideo.setVideoURI(Uri.parse(videoUrl));
+        addContentBinding.contentVideo.start();
+        addContentBinding.addVideoTxt.setVisibility(View.GONE);
 
         addContentBinding.captionLayout.getEditText().setText(caption);
         addContentBinding.categorySpinner.setText(category);
-        addContentBinding.addImageTxt.setVisibility(View.GONE);
         addContentBinding.captionLayout.setEnabled(false);
 
         addContentBinding.uploadBtn.setText("Update");
@@ -86,7 +77,7 @@ public class EditContentActivity extends AppCompatActivity {
                 mCollectionReference.document(content.getCaption()).update(update)
                         .addOnSuccessListener(unused -> {
                             Toast.makeText(this, "Content updated successfully", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(EditContentActivity.this,AdminAreYouReadyActivity.class));
+                            startActivity(new Intent(EditContentActivity.this, AdminAreYouReadyActivity.class));
                             finish();
                         })
                         .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
@@ -115,7 +106,7 @@ public class EditContentActivity extends AppCompatActivity {
     private boolean checkValidate() {
         String caption = addContentBinding.captionLayout.getEditText().getText().toString();
         String category = addContentBinding.categorySpinner.getText().toString();
-        if (imageUrl != null || videoUrl != null) {
+        if (videoUrl != null) {
             if (!caption.isEmpty() && !category.isEmpty()) {
                 return true;
             } else {

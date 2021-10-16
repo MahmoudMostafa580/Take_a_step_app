@@ -3,37 +3,51 @@ package com.example.takeastep.activities.admin;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bumptech.glide.Glide;
+import com.example.takeastep.R;
 import com.example.takeastep.databinding.ActivityAddContentBinding;
 import com.example.takeastep.models.ReadyContent;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class AddContentActivity extends AppCompatActivity {
-    private static final int PICK_IMAGE_REQUEST = 1;
     private static final int PICK_VIDEO_REQUEST = 2;
     ActivityAddContentBinding addContentBinding;
-    String[] categories = {"Vaccination Benefits", "Vaccination Risks"};
+    ArrayList<String> categories;
     String mCategory;
+    ArrayAdapter<String> spinnerAdapter;
 
     FirebaseFirestore mFirestore;
     StorageReference mStorageReference;
     private StorageTask mUploadTask;
-    private Uri imageUri, videoUri;
+    private Uri videoUri;
+
+    TextInputLayout categoryName;
+    MaterialButton addCategoryBtn;
+
+    boolean isCategoryExists;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,10 +61,11 @@ public class AddContentActivity extends AppCompatActivity {
         mFirestore = FirebaseFirestore.getInstance();
         mStorageReference = FirebaseStorage.getInstance().getReference();
 
+        categories = new ArrayList<>();
+        loadCategories();
         prepareSpinner();
-
-        addContentBinding.contentImage.setOnClickListener(v -> openImageChooser());
         addContentBinding.videoFrameLayout.setOnClickListener(v -> openVideoChooser());
+
 
 
         addContentBinding.uploadBtn.setOnClickListener(v -> {
@@ -62,8 +77,23 @@ public class AddContentActivity extends AppCompatActivity {
         });
     }
 
+    private void loadCategories() {
+        mFirestore.collection("Categories").get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    categories.clear();
+                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        if (documentSnapshot.exists()){
+                            String name = documentSnapshot.getString("name");
+                            categories.add(name);
+                        }
+                    }
+                    spinnerAdapter.notifyDataSetChanged();
+                })
+                .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
+    }
+
     private void prepareSpinner() {
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_item, categories);
+        spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_item, categories);
         addContentBinding.categorySpinner.setAdapter(spinnerAdapter);
         addContentBinding.categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -79,13 +109,6 @@ public class AddContentActivity extends AppCompatActivity {
         addContentBinding.categorySpinner.setOnDismissListener(() -> addContentBinding.categorySpinner.clearFocus());
     }
 
-    private void openImageChooser() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
-    }
-
     private void openVideoChooser() {
         Intent intent = new Intent();
         intent.setType("video/*");
@@ -96,12 +119,7 @@ public class AddContentActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            imageUri = data.getData();
-            addContentBinding.contentImage.setImageURI(imageUri);
-            Glide.with(this).load(imageUri).fitCenter().into(addContentBinding.contentImage);
-            addContentBinding.addImageTxt.setVisibility(View.GONE);
-        } else if (requestCode == PICK_VIDEO_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+        if (requestCode == PICK_VIDEO_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             videoUri = data.getData();
             addContentBinding.contentVideo.setVideoURI(videoUri);
             addContentBinding.contentVideo.start();
@@ -115,51 +133,49 @@ public class AddContentActivity extends AppCompatActivity {
             String caption = Objects.requireNonNull(addContentBinding.captionLayout.getEditText()).getText().toString();
             String category = addContentBinding.categorySpinner.getText().toString();
             StorageReference contentReference = mStorageReference.child("ReadyContent/" + caption);
-            if (imageUri == null) {
-                mUploadTask = contentReference.putFile(videoUri)
-                        .addOnSuccessListener(taskSnapshot -> contentReference.getDownloadUrl()
-                                .addOnSuccessListener(uri -> {
-                                    ReadyContent content = new ReadyContent(null, uri.toString(), caption, category, new Date().toString());
-                                    DocumentReference documentReference = mFirestore.collection("Ready Content").document(content.getCaption());
-                                    documentReference.set(content)
-                                            .addOnSuccessListener(unused -> {
-                                                Toast.makeText(this, "Data Uploaded Successfully", Toast.LENGTH_SHORT).show();
-                                                //startActivity(new Intent(AddContentActivity.this, AdminAreYouReadyActivity.class));
-                                                loading(false);
-                                                finish();
-                                            })
-                                            .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
-                                })
-                                .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()))
-                        .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show())
-                        .addOnProgressListener(snapshot -> {
-                            loading(true);
-                        });
+            mUploadTask = contentReference.putFile(videoUri)
+                    .addOnSuccessListener(taskSnapshot -> contentReference.getDownloadUrl()
+                            .addOnSuccessListener(uri -> {
+                                ReadyContent content = new ReadyContent(uri.toString(), caption, category.toLowerCase(), System.currentTimeMillis());
+                                DocumentReference documentReference = mFirestore.collection("Ready Content").document(content.getCaption());
+                                documentReference.set(content)
+                                        .addOnSuccessListener(unused -> {
+                                            Toast.makeText(this, "Data Uploaded Successfully", Toast.LENGTH_SHORT).show();
+                                            loading(false);
+                                            finish();
+                                        })
+                                        .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
+                            })
+                            .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()))
+                    .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show())
+                    .addOnProgressListener(snapshot -> {
+                        loading(true);
+                    });
 
-            } else if (videoUri == null) {
-                mUploadTask = contentReference.putFile(imageUri)
-                        .addOnSuccessListener(taskSnapshot -> contentReference.getDownloadUrl()
-                                .addOnSuccessListener(uri -> {
-                                    ReadyContent content = new ReadyContent(uri.toString(), null, caption, category, new Date().toString());
-                                    DocumentReference documentReference = mFirestore.collection("Ready Content").document(content.getCaption());
-                                    documentReference.set(content)
-                                            .addOnSuccessListener(unused -> {
-                                                Toast.makeText(this, "Data Uploaded Successfully", Toast.LENGTH_SHORT).show();
-                                                loading(false);
-                                                //startActivity(new Intent(AddContentActivity.this, AdminAreYouReadyActivity.class));
-                                                finish();
-                                            })
-                                            .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
-                                })
-                                .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()))
-                        .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show())
-                        .addOnProgressListener(snapshot -> {
-                            loading(true);
-                            //addContentBinding.uploadBtn.setEnabled(false);
-                        });
-            } else {
-                Toast.makeText(this, "No File Selected!", Toast.LENGTH_SHORT).show();
-            }
+            mFirestore.collection("Categories").get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                            isCategoryExists = category.equals(documentSnapshot.getId().toLowerCase());
+                            if (isCategoryExists)
+                                break;
+                        }
+
+                        if (isCategoryExists) {
+                            Toast.makeText(this, "This category already exist", Toast.LENGTH_SHORT).show();
+                        } else {
+                            DocumentReference documentReference = mFirestore.collection("Categories").document(category);
+                            Map<Object,String> c=new HashMap<>();
+                            c.put("name",category);
+                            documentReference.set(c)
+                                    .addOnSuccessListener(unused -> {
+                                        Toast.makeText(this, "Category added successfully", Toast.LENGTH_SHORT).show();
+                                        categories.add(category);
+                                        spinnerAdapter.notifyDataSetChanged();
+                                    })
+                                    .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
+                        }
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
         } else {
             loading(false);
             Toast.makeText(this, "Please fill fields!", Toast.LENGTH_SHORT).show();
@@ -169,7 +185,7 @@ public class AddContentActivity extends AppCompatActivity {
     private boolean checkValidate() {
         String caption = addContentBinding.captionLayout.getEditText().getText().toString();
         String category = addContentBinding.categorySpinner.getText().toString();
-        if (imageUri != null || videoUri != null) {
+        if (videoUri != null) {
             if (!caption.isEmpty() && !category.isEmpty()) {
                 return true;
             } else {

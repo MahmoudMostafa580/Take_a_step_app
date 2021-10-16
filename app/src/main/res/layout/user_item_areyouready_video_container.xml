@@ -16,15 +16,29 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <VideoView
+        <com.google.android.exoplayer2.ui.PlayerView
             android:id="@+id/content_video"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:scaleType="centerCrop"
+            app:resize_mode="fit"
+            app:hide_on_touch="true"
+            app:show_timeout="5000"
+            app:use_controller="true"
+            android:background="@android:color/background_dark"
+            app:player_layout_id="@layout/exo_player_view"
+            app:controller_layout_id="@layout/exo_controller"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/view"/>
+            app:layout_constraintBottom_toTopOf="@id/view" />
+        <ProgressBar
+            android:id="@+id/videoProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/content_video"
+            app:layout_constraintBottom_toBottomOf="@id/content_video"
+            app:layout_constraintStart_toStartOf="@id/content_video"
+            app:layout_constraintEnd_toEndOf="@id/content_video"/>
 
         <View
             android:id="@+id/view"

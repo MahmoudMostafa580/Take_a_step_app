@@ -36,39 +36,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingHorizontal="4dp"
-            app:checkedChip="@id/allCategoriesChip"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:singleLine="true"
             app:singleSelection="true">
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/allCategoriesChip"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="All Categories"
-                android:textColor="@drawable/chip_text"
-                app:chipBackgroundColor="@drawable/chip_selection" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/vaccination_benefits"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Vaccination Benefits"
-                android:textColor="@drawable/chip_text"
-                app:chipBackgroundColor="@drawable/chip_selection" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/vaccination_risks"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Vaccination Risks"
-                android:textColor="@drawable/chip_text"
-                app:chipBackgroundColor="@drawable/chip_selection" />
 
         </com.google.android.material.chip.ChipGroup>
     </HorizontalScrollView>

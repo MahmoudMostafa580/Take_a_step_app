@@ -8,7 +8,7 @@
         app:showAsAction="never" />
     <item
         android:id="@+id/notification"
-        android:actionLayout="@layout/custom_menu_item"
+        app:actionLayout="@layout/custom_menu_item"
         android:icon="@drawable/ic_notifications"
         android:title="help center"
         app:showAsAction="always" />

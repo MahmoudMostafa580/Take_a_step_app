@@ -48,7 +48,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
         Calendar calendar=Calendar.getInstance();
-        SimpleDateFormat sdf= new SimpleDateFormat("hh:mm a", Locale.getDefault());
+        SimpleDateFormat sdf= new SimpleDateFormat("yyyy/MM/dd . hh:mm a", Locale.getDefault());
 
         calendar.setTimeInMillis(chatMessages.get(position).getDateTime());
         String time=sdf.format(calendar.getTime());

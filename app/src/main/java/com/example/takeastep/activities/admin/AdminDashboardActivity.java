@@ -3,9 +3,11 @@ package com.example.takeastep.activities.admin;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +25,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.Objects;
 
@@ -68,37 +71,73 @@ public class AdminDashboardActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.admin_dashboard_menu, menu);
+        final MenuItem menuItem=menu.findItem(R.id.notification);
+        View actionView=menuItem.getActionView();
+        chatsItemCount=(TextView) actionView.findViewById(R.id.text_badge);
 
-        //setupBadge();
+        setupBadge();
 
+        actionView.setOnClickListener(v -> onOptionsItemSelected(menuItem));
         return super.onCreateOptionsMenu(menu);
     }
 
     private void setupBadge() {
-        BadgeDrawable badge = BadgeDrawable.create(getApplicationContext());
-        //BadgeUtils.attachBadgeDrawable(badge, new FrameLayout(getApplicationContext()));
-        badge.setBadgeGravity(BadgeDrawable.TOP_END);
-        badge.setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
-        badge.setBadgeTextColor(getResources().getColor(R.color.white));
-        badge.setMaxCharacterCount(99);
-
         if (chatsItemCount != null) {
-            mRef = mFirestore.collection("chat users");
+            mRef=mFirestore.collection("users");
             mRef.get()
                     .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            for (DocumentSnapshot documentSnapshot : Objects.requireNonNull(task.getResult())) {
-                                chatsCount++;
-                            }
-                            if (chatsCount == 0) {
-                                badge.setVisible(false);
-                            } else {
-                                badge.setVisible(true);
-                                badge.setNumber(chatsCount);
+                        if (task.isSuccessful()){
+                            for (QueryDocumentSnapshot queryDocumentSnapshot: task.getResult()){
+                                if (queryDocumentSnapshot.exists()){
+                                    queryDocumentSnapshot.getReference().collection("chat").get()
+                                            .addOnCompleteListener(task1 -> {
+                                                if (task1.isSuccessful()){
+                                                    for (QueryDocumentSnapshot queryDocumentSnapshot1:task1.getResult()){
+                                                        if (queryDocumentSnapshot1.exists()){
+                                                            if (queryDocumentSnapshot1.getString("receiverId").equals("ALQyPwPRatn1H3oGIaOo")
+                                                                    && queryDocumentSnapshot1.getBoolean("seen").equals(false)){
+                                                                chatsCount++;
+                                                            }
+                                                        }
+                                                    }
+                                                    if (chatsCount == 0) {
+                                                        chatsItemCount.setVisibility(View.GONE);
+                                                    } else {
+                                                        chatsItemCount.setVisibility(View.VISIBLE);
+                                                        chatsItemCount.setText(String.valueOf(chatsCount));
+                                                    }
+                                                }
+                                            })
+                                            .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
+                                }
                             }
                         }
                     })
                     .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
+
+
+
+//            mRef = mFirestore.collection("users").document().collection("chat");
+//            mRef.get()
+//                    .addOnCompleteListener(task -> {
+//                        if (task.isSuccessful()) {
+//                            for (QueryDocumentSnapshot queryDocumentSnapshot:task.getResult()){
+//                                if (queryDocumentSnapshot.exists()){
+//                                    if (queryDocumentSnapshot.getString("receiverId").equals("ALQyPwPRatn1H3oGIaOo")
+//                                            && queryDocumentSnapshot.getBoolean("seen").equals(false)){
+//                                        chatsCount++;
+//                                    }
+//                                }
+//                            }
+//                            if (chatsCount == 0) {
+//                                chatsItemCount.setVisibility(View.GONE);
+//                            } else {
+//                                chatsItemCount.setVisibility(View.VISIBLE);
+//                                chatsItemCount.setText(String.valueOf(chatsCount));
+//                            }
+//                        }
+//                    })
+//                    .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
         }
     }
 
@@ -118,5 +157,17 @@ public class AdminDashboardActivity extends AppCompatActivity {
         editor.putBoolean("isLogged", false);
         editor.apply();
         finish();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setupBadge();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setupBadge();
     }
 }
