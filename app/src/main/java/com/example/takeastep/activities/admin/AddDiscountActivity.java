@@ -29,7 +29,6 @@ public class AddDiscountActivity extends AppCompatActivity {
     private StorageReference mStorageReference;
     private FirebaseFirestore mFirestore;
     private StorageTask mUploadTask;
-    ;
     private Uri discountImage;
     String userEmail, userId;
 

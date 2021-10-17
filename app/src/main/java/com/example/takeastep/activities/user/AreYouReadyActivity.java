@@ -95,14 +95,6 @@ public class AreYouReadyActivity extends AppCompatActivity {
 
 
     private void loadContents() {
-//        ArrayList<ReadyContent> mList=new ArrayList<>();
-//        for (int i = 0; i <mContent.size() ; i++) {
-//            if (mContent.get(i).getCategory().equals(mCategories.get(chipId))){
-//                mList.add(mContent.get(i));
-//            }
-//        }
-//        mAdapter=new AreYouReadyAdapter(mList,AreYouReadyActivity.this);
-//        mAdapter.notifyDataSetChanged();
 
         mCollectionReference.orderBy("time",Query.Direction.DESCENDING).get()
                 .addOnCompleteListener(task -> {

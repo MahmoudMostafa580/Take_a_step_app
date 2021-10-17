@@ -1,5 +1,6 @@
 package com.example.takeastep.activities.admin;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -21,6 +22,8 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +37,7 @@ public class AdminTogetherWeWinActivity extends AppCompatActivity {
     Vaccine selectedVaccine = new Vaccine();
 
     private FirebaseFirestore mFirestore;
+    private FirebaseStorage mFirebaseStorage;
     private CollectionReference mCollectionReference;
 
     TextInputLayout nameLayout;
@@ -52,7 +56,8 @@ public class AdminTogetherWeWinActivity extends AppCompatActivity {
         adminTogetherWeWinBinding.toolBar.setNavigationOnClickListener(v -> onBackPressed());
 
         mFirestore = FirebaseFirestore.getInstance();
-        mCollectionReference = mFirestore.collection("Vaccines Types");
+        mFirebaseStorage=FirebaseStorage.getInstance();
+        mCollectionReference = mFirestore.collection("Vaccines");
 
         adminTogetherWeWinBinding.vaccineTypeRecycler.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -66,47 +71,38 @@ public class AdminTogetherWeWinActivity extends AppCompatActivity {
         vaccineAdapter.setOnItemClickListener(this::menuClick);
 
         adminTogetherWeWinBinding.addBtn.setOnClickListener(v -> {
-            AlertDialog dialogBuilder = new AlertDialog.Builder(this).create();
-            LayoutInflater inflater = this.getLayoutInflater();
-            View dialogView = inflater.inflate(R.layout.add_vaccine_layout, null);
-            dialogBuilder.setView(dialogView);
-            dialogBuilder.setTitle("Add Vaccine");
-
-            nameLayout = dialogView.findViewById(R.id.vaccine_name_layout);
-            infoLayout = dialogView.findViewById(R.id.vaccine_info_layout);
-            uploadBtn = dialogView.findViewById(R.id.vaccineUploadBtn);
-
-
-            uploadBtn.setOnClickListener(v1 -> {
-                String name = nameLayout.getEditText().getText().toString();
-                String info = infoLayout.getEditText().getText().toString();
-
-                if (!name.isEmpty() && !info.isEmpty()) {
-                    uploadVaccine();
-                    dialogBuilder.dismiss();
-                    vaccineAdapter.notifyDataSetChanged();
-                } else {
-                    Toast.makeText(this, "Invalid data!", Toast.LENGTH_SHORT).show();
-                }
-            });
-            dialogBuilder.show();
-            dialogBuilder.setOnDismissListener(dialog -> {
-                loadVaccines();
-                vaccineAdapter.notifyDataSetChanged();
-            });
+            startActivity(new Intent(getApplicationContext(),AddVaccineActivity.class));
         });
 
     }
 
     private void loadVaccines() {
+        mCollectionReference=mFirestore.collection("Vaccines");
         mCollectionReference.get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    mVaccine.clear();
-                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                        Vaccine vaccine = documentSnapshot.toObject(Vaccine.class);
-                        mVaccine.add(vaccine);
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()){
+                        for (QueryDocumentSnapshot queryDocumentSnapshot: task.getResult()){
+                            if (queryDocumentSnapshot.exists()){
+                                queryDocumentSnapshot.getReference().collection("posts").get()
+                                        .addOnCompleteListener(task1 -> {
+                                            if (task1.isSuccessful()){
+                                                mVaccine.clear();
+                                                for (QueryDocumentSnapshot queryDocumentSnapshot1:task1.getResult()){
+                                                    if (queryDocumentSnapshot1.exists()){
+                                                        Vaccine vaccine = queryDocumentSnapshot1.toObject(Vaccine.class);
+                                                        mVaccine.add(vaccine);
+                                                    }
+                                                }
+                                                if (mVaccine.size()==0){
+                                                    adminTogetherWeWinBinding.errorText.setVisibility(View.VISIBLE);
+                                                }
+                                                vaccineAdapter.notifyDataSetChanged();
+                                            }
+                                        })
+                                        .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
+                            }
+                        }
                     }
-                    vaccineAdapter.notifyDataSetChanged();
                 })
                 .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
     }
@@ -119,6 +115,9 @@ public class AdminTogetherWeWinActivity extends AppCompatActivity {
         popup.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case R.id.edit:
+
+                    /* *******         محتاجة تعديل            ***************/
+
                     AlertDialog dialogBuilder = new AlertDialog.Builder(this).create();
                     LayoutInflater layoutInflater = this.getLayoutInflater();
                     View dialogView = layoutInflater.inflate(R.layout.add_vaccine_layout, null);
@@ -156,10 +155,17 @@ public class AdminTogetherWeWinActivity extends AppCompatActivity {
 
                     return true;
                 case R.id.delete:
-                    mCollectionReference.document(selectedVaccine.getName()).delete()
-                            .addOnSuccessListener(unused -> {
-                                mVaccine.remove(position);
-                                vaccineAdapter.notifyItemRemoved(position);
+                    mCollectionReference.document(selectedVaccine.getName()).collection("posts").get()
+                            .addOnSuccessListener(queryDocumentSnapshots -> {
+                                for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots){
+                                    if (documentSnapshot.getString("info").equals(selectedVaccine.getInfo())
+                                            && documentSnapshot.getString("image").equals(selectedVaccine.getImage())){
+                                        documentSnapshot.getReference().delete()
+                                                .addOnSuccessListener(unused -> {
+                                                    Toast.makeText(this, "Post deleted successfully", Toast.LENGTH_SHORT).show();
+                                                });
+                                    }
+                                }
                             })
                             .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
 
@@ -170,40 +176,6 @@ public class AdminTogetherWeWinActivity extends AppCompatActivity {
         });
         popup.show();
     }
-
-    private void uploadVaccine() {
-        String name = nameLayout.getEditText().getText().toString();
-        String info = infoLayout.getEditText().getText().toString();
-
-        Vaccine vaccine = new Vaccine(name, info);
-
-        mFirestore.collection("Vaccine Types").get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
-                            isVaccineExists = name.equals(queryDocumentSnapshot.getId());
-                            if (isVaccineExists)
-                                break;
-                        }
-                        if (isVaccineExists) {
-                            Toast.makeText(this, "This vaccine already exist...", Toast.LENGTH_SHORT).show();
-                        } else {
-                            DocumentReference documentReference = mFirestore.collection("Vaccines Types").document(vaccine.getName());
-                            documentReference.set(vaccine)
-                                    .addOnSuccessListener(unused -> {
-                                        Toast.makeText(this, "Vaccine added successfully", Toast.LENGTH_SHORT).show();
-                                        mVaccine.add(vaccine);
-                                        vaccineAdapter.notifyDataSetChanged();
-                                    })
-                                    .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
-                        }
-                    }
-                })
-                .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
-
-
-    }
-
 
     @Override
     protected void onResume() {
