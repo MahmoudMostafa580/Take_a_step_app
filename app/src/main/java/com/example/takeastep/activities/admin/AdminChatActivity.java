@@ -1,17 +1,21 @@
 package com.example.takeastep.activities.admin;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.takeastep.R;
 import com.example.takeastep.activities.user.adapters.ChatAdapter;
+import com.example.takeastep.databinding.ActivityAdminChatBinding;
 import com.example.takeastep.databinding.FragmentHelpCenterBinding;
 import com.example.takeastep.models.ChatMessage;
 import com.example.takeastep.models.User;
@@ -30,7 +34,7 @@ import java.util.Objects;
 
 public class AdminChatActivity extends AppCompatActivity {
 
-    FragmentHelpCenterBinding helpCenterBinding;
+    ActivityAdminChatBinding adminChatBinding;
     ArrayList<ChatMessage> chatMessages;
     ChatAdapter chatAdapter;
     FirebaseFirestore firestore;
@@ -44,22 +48,23 @@ public class AdminChatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        helpCenterBinding = FragmentHelpCenterBinding.inflate(getLayoutInflater());
+        adminChatBinding = ActivityAdminChatBinding.inflate(getLayoutInflater());
+        setContentView(adminChatBinding.getRoot());
 
-        setContentView(helpCenterBinding.getRoot());
 
-        androidx.appcompat.widget.Toolbar toolbar=new Toolbar(getApplicationContext());
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(v -> onBackPressed());
-        toolbar.setTitle("Chat");
-        toolbar.setBackgroundColor(getColor(R.color.purple_200));
-
+        setSupportActionBar(adminChatBinding.toolBar);
+        adminChatBinding.toolBar.setNavigationOnClickListener(v -> onBackPressed());
 
         firestore = FirebaseFirestore.getInstance();
         mFirebaseAuth = FirebaseAuth.getInstance();
 
         Intent chatIntent=getIntent();
         userId=chatIntent.getStringExtra("userId");
+        firestore.collection("users").document(userId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    String userName=documentSnapshot.getString("name");
+                    adminChatBinding.toolBar.setTitle(userName);
+                });
 
         Log.w("hg",userId+"");
 
@@ -69,32 +74,32 @@ public class AdminChatActivity extends AppCompatActivity {
         chatMessages = new ArrayList<>();
         listenMessages();
 
-        helpCenterBinding.chatRecyclerView.setHasFixedSize(true);
+        adminChatBinding.chatRecyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        helpCenterBinding.chatRecyclerView.setLayoutManager(linearLayoutManager);
+        adminChatBinding.chatRecyclerView.setLayoutManager(linearLayoutManager);
 
         chatAdapter = new ChatAdapter(chatMessages, this, Objects.requireNonNull(mFirebaseAuth.getCurrentUser()).getUid());
-        helpCenterBinding.chatRecyclerView.setAdapter(chatAdapter);
+        adminChatBinding.chatRecyclerView.setAdapter(chatAdapter);
 
-        helpCenterBinding.layoutSend.setOnClickListener(v -> {
+        adminChatBinding.layoutSend.setOnClickListener(v -> {
             sendMessage();
         });
 
     }
 
     public void sendMessage() {
-        String message = helpCenterBinding.messageEditText.getText().toString();
+        String message = adminChatBinding.messageEditText.getText().toString();
         if (!message.isEmpty()) {
             ChatMessage chatMessage = new ChatMessage(mFirebaseAuth.getCurrentUser().getUid(), userId, message, System.currentTimeMillis(),false);
             mDocumentReference.set(chatMessage)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()){
-                            helpCenterBinding.messageEditText.setText(null);
-                            helpCenterBinding.progressBar.setVisibility(View.GONE);
-                            helpCenterBinding.chatRecyclerView.setVisibility(View.VISIBLE);
+                            adminChatBinding.messageEditText.setText(null);
+                            adminChatBinding.progressBar.setVisibility(View.GONE);
+                            adminChatBinding.chatRecyclerView.setVisibility(View.VISIBLE);
                             chatMessages.add(chatMessage);
                             chatAdapter.notifyDataSetChanged();
-                            helpCenterBinding.chatRecyclerView.smoothScrollToPosition(chatMessages.size()-1);
+                            adminChatBinding.chatRecyclerView.smoothScrollToPosition(chatMessages.size()-1);
                         }
                     })
                     .addOnFailureListener(e -> Toast.makeText(this, "جاااااااااى", Toast.LENGTH_SHORT).show());
@@ -117,8 +122,8 @@ public class AdminChatActivity extends AppCompatActivity {
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     chatMessages.clear();
                     for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                        helpCenterBinding.progressBar.setVisibility(View.GONE);
-                        helpCenterBinding.chatRecyclerView.setVisibility(View.VISIBLE);
+                        adminChatBinding.progressBar.setVisibility(View.GONE);
+                        adminChatBinding.chatRecyclerView.setVisibility(View.VISIBLE);
                         ChatMessage message = documentSnapshot.toObject(ChatMessage.class);
                         message.setSeen(true);
                         Map<String, Object> seen=new HashMap<>();

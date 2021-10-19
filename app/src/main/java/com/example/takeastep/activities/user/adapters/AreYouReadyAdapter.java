@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,6 +27,7 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class AreYouReadyAdapter extends RecyclerView.Adapter<AreYouReadyAdapter.AreYouReadyVideoViewHolder> {
     private ArrayList<ReadyContent> contentsList;
@@ -50,53 +52,8 @@ public class AreYouReadyAdapter extends RecyclerView.Adapter<AreYouReadyAdapter.
     public void onBindViewHolder(@NonNull AreYouReadyVideoViewHolder holder, int position) {
 
         ReadyContent currentContent = contentsList.get(position);
-        holder.contentCaption.setText(currentContent.getCaption());
+        holder.setExoplayer(mContext,currentContent.getCaption(), currentContent.getVideoUrl());
 
-        LoadControl loadControl = new DefaultLoadControl();
-        DefaultTrackSelector trackSelector = new DefaultTrackSelector(mContext, new AdaptiveTrackSelection.Factory());
-        CacheDataSource.Factory cacheFactory = new CacheDataSource.Factory().setUpstreamDataSourceFactory(new DefaultHttpDataSourceFactory());
-
-        MediaSourceFactory mediaSourceFactory =
-                new DefaultMediaSourceFactory(cacheFactory);
-        SimpleExoPlayer player = new SimpleExoPlayer.Builder(mContext)
-                .setTrackSelector(trackSelector)
-                .setMediaSourceFactory(mediaSourceFactory)
-                .setLoadControl(loadControl)
-                .build();
-        player.addMediaItem(position, MediaItem.fromUri(currentContent.getVideoUrl()));
-        player.prepare();
-        player.setPlayWhenReady(true);
-        player.play();
-        holder.playerView.setPlayer(player);
-
-        player.addListener(new Player.Listener() {
-            @Override
-            public void onPlaybackStateChanged(int playbackState) {
-                if (playbackState == Player.STATE_BUFFERING) {
-                    holder.progressBar.setVisibility(View.VISIBLE);
-                } else if (playbackState == Player.STATE_READY) {
-                    holder.progressBar.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-                if (playbackState == Player.STATE_BUFFERING) {
-                    holder.progressBar.setVisibility(View.VISIBLE);
-                } else if (playbackState == Player.STATE_READY) {
-                    holder.progressBar.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void onIsPlayingChanged(boolean isPlaying) {
-                if (isPlaying) {
-                    holder.progressBar.setVisibility(View.GONE);
-                } else {
-                    holder.progressBar.setVisibility(View.VISIBLE);
-                }
-            }
-        });
     }
 
     @Override
@@ -107,15 +64,41 @@ public class AreYouReadyAdapter extends RecyclerView.Adapter<AreYouReadyAdapter.
 
     public static class AreYouReadyVideoViewHolder extends RecyclerView.ViewHolder {
 
-        TextView contentCaption;
-        PlayerView playerView;
+
         ProgressBar progressBar;
 
         public AreYouReadyVideoViewHolder(@NonNull View itemView) {
             super(itemView);
-            contentCaption = itemView.findViewById(R.id.content_caption);
-            playerView = itemView.findViewById(R.id.content_video);
             progressBar = itemView.findViewById(R.id.videoProgressBar);
+        }
+        public void setExoplayer(Context context,String caption, String videoUrl){
+            TextView contentCaption=itemView.findViewById(R.id.content_caption);
+            PlayerView playerView = itemView.findViewById(R.id.content_video);
+
+            contentCaption.setText(caption);
+
+            try{
+                SimpleExoPlayer simpleExoPlayer=new SimpleExoPlayer.Builder(context).build();
+                playerView.setPlayer(simpleExoPlayer);
+                MediaItem mediaitem=MediaItem.fromUri(videoUrl);
+                simpleExoPlayer.addMediaItems(Collections.singletonList(mediaitem));
+                simpleExoPlayer.prepare();
+                simpleExoPlayer.setPlayWhenReady(false);
+                simpleExoPlayer.addListener(new Player.EventListener() {
+                    @Override
+                    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+                        if (playbackState==Player.STATE_BUFFERING){
+                            progressBar.setVisibility(View.VISIBLE);
+                        }else if (playbackState==Player.STATE_READY){
+                            progressBar.setVisibility(View.GONE);
+                        }
+                    }
+                });
+
+
+            }catch (Exception e){
+                Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

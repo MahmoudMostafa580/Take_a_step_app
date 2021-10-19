@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
+    android:layout_marginHorizontal="4dp"
+    android:layout_marginBottom="8dp"
     app:cardCornerRadius="4dp"
     app:cardElevation="8dp"
     app:layout_constraintBottom_toBottomOf="parent"
@@ -20,35 +21,36 @@
             android:id="@+id/content_video"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            app:resize_mode="fit"
-            app:hide_on_touch="true"
-            app:show_timeout="5000"
-            app:use_controller="true"
             android:background="@android:color/background_dark"
-            app:player_layout_id="@layout/exo_player_view"
             app:controller_layout_id="@layout/exo_controller"
+            app:hide_on_touch="true"
+            app:layout_constraintBottom_toTopOf="@id/view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/view" />
+            app:player_layout_id="@layout/exo_player_view"
+            app:resize_mode="fit"
+            app:show_timeout="5000"
+            app:use_controller="true" />
+
         <ProgressBar
             android:id="@+id/videoProgressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="@id/content_video"
             app:layout_constraintBottom_toBottomOf="@id/content_video"
+            app:layout_constraintEnd_toEndOf="@id/content_video"
             app:layout_constraintStart_toStartOf="@id/content_video"
-            app:layout_constraintEnd_toEndOf="@id/content_video"/>
+            app:layout_constraintTop_toTopOf="@id/content_video" />
 
         <View
             android:id="@+id/view"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/cardview_shadow_start_color"
-            app:layout_constraintTop_toBottomOf="@id/content_video"
             app:layout_constraintBottom_toTopOf="@id/content_caption"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/content_video" />
 
         <TextView
             android:id="@+id/content_caption"
@@ -58,10 +60,10 @@
             android:padding="8dp"
             android:textColor="@color/black"
             android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/content_video"
-            app:layout_constraintBottom_toBottomOf="parent"
             tools:text="this is caption of content" />
 
 

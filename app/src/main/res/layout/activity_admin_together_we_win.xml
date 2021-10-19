@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/cardview_shadow_start_color"
     tools:context=".activities.admin.AdminTogetherWeWinActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -51,5 +50,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:text="No Vaccines added!"
         android:textSize="18sp"
-        android:visibility="gone"/>
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -83,7 +83,7 @@ public class TogetherWeWinActivity extends AppCompatActivity {
                         });
                     }
 
-                    chip.setOnClickListener(v -> loadChipsVaccines());
+//                    chip.setOnClickListener(v -> loadChipsVaccines());
 
                 })
                 .addOnFailureListener(e -> Toast.makeText(this, "Error while loading types!", Toast.LENGTH_SHORT).show());
@@ -99,6 +99,7 @@ public class TogetherWeWinActivity extends AppCompatActivity {
                                         .addOnCompleteListener(task1 -> {
                                             if (task1.isSuccessful()) {
                                                 mVaccine.clear();
+                                                togetherWeWinBinding.text.setVisibility(View.GONE);
                                                 for (QueryDocumentSnapshot queryDocumentSnapshot1 : task1.getResult()) {
                                                     if (queryDocumentSnapshot1.exists()) {
                                                         Vaccine vaccine = queryDocumentSnapshot1.toObject(Vaccine.class);
@@ -135,6 +136,7 @@ public class TogetherWeWinActivity extends AppCompatActivity {
                                                 .addOnCompleteListener(task1 -> {
                                                     if (task1.isSuccessful()) {
                                                         mVaccine.clear();
+                                                        togetherWeWinBinding.text.setVisibility(View.GONE);
                                                         for (QueryDocumentSnapshot queryDocumentSnapshot1 : task1.getResult()) {
                                                             if (queryDocumentSnapshot1.exists()) {
                                                                 Vaccine vaccine = queryDocumentSnapshot1.toObject(Vaccine.class);

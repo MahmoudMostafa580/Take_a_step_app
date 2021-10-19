@@ -83,7 +83,7 @@ public class AreYouReadyActivity extends AppCompatActivity {
 
                     }
 
-                    chip.setOnClickListener(v -> loadContents());
+//                    chip.setOnClickListener(v -> loadContents());
 
                 })
                 .addOnFailureListener(e -> Toast.makeText(this, "Error while loading categories!", Toast.LENGTH_SHORT).show());

@@ -41,9 +41,6 @@ public class AdminTogetherWeWinActivity extends AppCompatActivity {
     private FirebaseStorage mFirebaseStorage;
     private CollectionReference mCollectionReference;
 
-    TextInputLayout nameLayout;
-    TextInputLayout infoLayout;
-    MaterialButton uploadBtn;
 
     boolean isVaccineExists;
 
@@ -87,6 +84,7 @@ public class AdminTogetherWeWinActivity extends AppCompatActivity {
                                         .addOnCompleteListener(task1 -> {
                                             if (task1.isSuccessful()){
                                                 mVaccine.clear();
+                                                adminTogetherWeWinBinding.errorText.setVisibility(View.GONE);
                                                 for (QueryDocumentSnapshot queryDocumentSnapshot1:task1.getResult()){
                                                     if (queryDocumentSnapshot1.exists()){
                                                         Vaccine vaccine = queryDocumentSnapshot1.toObject(Vaccine.class);
@@ -94,9 +92,7 @@ public class AdminTogetherWeWinActivity extends AppCompatActivity {
                                                     }
                                                 }
                                                 Log.v("vaccine size, ",mVaccine.size()+"");
-                                                if (mVaccine.size()==0){
-                                                    adminTogetherWeWinBinding.errorText.setVisibility(View.VISIBLE);
-                                                }
+
                                                 vaccineAdapter.notifyDataSetChanged();
                                             }
                                         })
