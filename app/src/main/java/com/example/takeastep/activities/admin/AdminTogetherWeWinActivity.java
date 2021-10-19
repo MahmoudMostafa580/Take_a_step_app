@@ -2,6 +2,7 @@ package com.example.takeastep.activities.admin;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
@@ -77,7 +78,6 @@ public class AdminTogetherWeWinActivity extends AppCompatActivity {
     }
 
     private void loadVaccines() {
-        mCollectionReference=mFirestore.collection("Vaccines");
         mCollectionReference.get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()){
@@ -93,6 +93,7 @@ public class AdminTogetherWeWinActivity extends AppCompatActivity {
                                                         mVaccine.add(vaccine);
                                                     }
                                                 }
+                                                Log.v("vaccine size, ",mVaccine.size()+"");
                                                 if (mVaccine.size()==0){
                                                     adminTogetherWeWinBinding.errorText.setVisibility(View.VISIBLE);
                                                 }
@@ -115,43 +116,15 @@ public class AdminTogetherWeWinActivity extends AppCompatActivity {
         popup.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case R.id.edit:
+                    Intent updateIntent=new Intent(getApplicationContext(),EditVaccineActivity.class);
+                    String name=selectedVaccine.getName();
+                    String info=selectedVaccine.getInfo();
+                    String image=selectedVaccine.getImage();
 
-                    /* *******         محتاجة تعديل            ***************/
-
-                    AlertDialog dialogBuilder = new AlertDialog.Builder(this).create();
-                    LayoutInflater layoutInflater = this.getLayoutInflater();
-                    View dialogView = layoutInflater.inflate(R.layout.add_vaccine_layout, null);
-                    dialogBuilder.setView(dialogView);
-
-                    nameLayout = dialogView.findViewById(R.id.vaccine_name_layout);
-                    infoLayout = dialogView.findViewById(R.id.vaccine_info_layout);
-                    uploadBtn = dialogView.findViewById(R.id.vaccineUploadBtn);
-
-                    nameLayout.getEditText().setText(selectedVaccine.getName());
-                    nameLayout.setEnabled(false);
-                    infoLayout.getEditText().setText(selectedVaccine.getInfo());
-                    uploadBtn.setText("Update");
-                    uploadBtn.setOnClickListener(v -> {
-                        String info = infoLayout.getEditText().getText().toString();
-                        if (!info.isEmpty()) {
-                            Map<String, Object> update = new HashMap<>();
-                            update.put("info", info);
-
-                            mCollectionReference.document(selectedVaccine.getName()).update(update)
-                                    .addOnSuccessListener(unused -> {
-                                        Toast.makeText(this, "Vaccine updated successfully", Toast.LENGTH_SHORT).show();
-                                    })
-                                    .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
-
-                            dialogBuilder.dismiss();
-                        } else {
-                            Toast.makeText(this, "Invalid data", Toast.LENGTH_SHORT).show();
-                        }
-
-                    });
-                    dialogBuilder.show();
-                    dialogBuilder.setOnDismissListener(dialog -> loadVaccines());
-                    loadVaccines();
+                    updateIntent.putExtra("name",name);
+                    updateIntent.putExtra("info",info);
+                    updateIntent.putExtra("image",image);
+                    startActivity(updateIntent);
 
                     return true;
                 case R.id.delete:
@@ -162,6 +135,8 @@ public class AdminTogetherWeWinActivity extends AppCompatActivity {
                                             && documentSnapshot.getString("image").equals(selectedVaccine.getImage())){
                                         documentSnapshot.getReference().delete()
                                                 .addOnSuccessListener(unused -> {
+                                                    mVaccine.remove(position);
+                                                    vaccineAdapter.notifyItemRemoved(position);
                                                     Toast.makeText(this, "Post deleted successfully", Toast.LENGTH_SHORT).show();
                                                 });
                                     }

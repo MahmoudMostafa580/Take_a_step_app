@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -65,9 +66,9 @@ public class AdminAreYouReadyActivity extends AppCompatActivity {
                         String caption = mContent.get(position).getCaption();
                         String category = mContent.get(position).getCategory();
                         String videoUrl = mContent.get(position).getVideoUrl();
+
                         updateIntent.putExtra("caption", caption);
                         updateIntent.putExtra("category", category);
-
                         updateIntent.putExtra("videoUrl", videoUrl);
                         startActivity(updateIntent);
 
@@ -96,6 +97,7 @@ public class AdminAreYouReadyActivity extends AppCompatActivity {
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     mContent.clear();
                     for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        adminAreYouReadyBinding.errorText.setVisibility(View.GONE);
                         ReadyContent content = documentSnapshot.toObject(ReadyContent.class);
                         mContent.add(content);
                     }
@@ -115,7 +117,6 @@ public class AdminAreYouReadyActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.add) {
             startActivity(new Intent(getApplicationContext(), AddContentActivity.class));
-            //finish();
         }
         return super.onOptionsItemSelected(item);
     }

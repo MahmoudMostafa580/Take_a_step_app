@@ -1,6 +1,7 @@
 package com.example.takeastep.activities.admin.adapters;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.takeastep.R;
 import com.example.takeastep.models.Vaccine;
 
@@ -44,6 +46,8 @@ public class AdminVaccineTypesAdapter extends RecyclerView.Adapter<AdminVaccineT
     public void onBindViewHolder(@NonNull VaccineTypesViewHolder holder, int position) {
         Vaccine currentVaccine = mVaccinesList.get(position);
         holder.vaccineName.setText(currentVaccine.getName());
+        holder.vaccineInfo.setText(currentVaccine.getInfo());
+        Glide.with(mContext).load(Uri.parse(currentVaccine.getImage())).into(holder.vaccineImage);
     }
 
     @Override
@@ -52,12 +56,15 @@ public class AdminVaccineTypesAdapter extends RecyclerView.Adapter<AdminVaccineT
     }
 
     public static class VaccineTypesViewHolder extends RecyclerView.ViewHolder {
-        TextView vaccineName;
-        ImageView menu;
+        TextView vaccineName,vaccineInfo;
+
+        ImageView vaccineImage,menu;
 
         public VaccineTypesViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
             vaccineName = itemView.findViewById(R.id.vaccine_name);
+            vaccineInfo=itemView.findViewById(R.id.vaccineInfo);
+            vaccineImage=itemView.findViewById(R.id.vaccineImage);
             menu = itemView.findViewById(R.id.menu_image);
 
             menu.setOnClickListener(v -> {

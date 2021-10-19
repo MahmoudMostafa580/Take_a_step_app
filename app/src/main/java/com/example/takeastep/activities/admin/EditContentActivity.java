@@ -3,9 +3,11 @@ package com.example.takeastep.activities.admin;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -69,6 +71,7 @@ public class EditContentActivity extends AppCompatActivity {
 
         addContentBinding.captionLayout.getEditText().setText(caption);
         addContentBinding.categorySpinner.setText(category);
+        addContentBinding.categorySpinner.setInputType(InputType.TYPE_NULL);
         addContentBinding.captionLayout.setEnabled(false);
 
         addContentBinding.uploadBtn.setText("Update");
@@ -83,6 +86,7 @@ public class EditContentActivity extends AppCompatActivity {
 
                 mCollectionReference.document(content.getCaption()).update(update)
                         .addOnSuccessListener(unused -> {
+
                             Toast.makeText(this, "Content updated successfully", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(EditContentActivity.this, AdminAreYouReadyActivity.class));
                             finish();

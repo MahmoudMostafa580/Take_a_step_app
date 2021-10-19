@@ -54,6 +54,7 @@ public class AreYouReadyActivity extends AppCompatActivity {
         areYouReadyBinding.contentRecyclerView.setAdapter(mAdapter);
 
         loadCategories();
+        loadAllCategoriesList();
 
     }
 
@@ -76,11 +77,6 @@ public class AreYouReadyActivity extends AppCompatActivity {
                         chip.setCheckable(true);
                         chip.setId(i);
                         areYouReadyBinding.chipGroup.addView(chip,i);
-                        if (chip.getId()==0){
-                            chip.setChecked(true);
-                            chip.setCheckable(true);
-                            loadContents();
-                        }
                         chip.setOnClickListener(v -> {
                             loadContents();
                         });
@@ -103,10 +99,15 @@ public class AreYouReadyActivity extends AppCompatActivity {
                         for (QueryDocumentSnapshot queryDocumentSnapshot:task.getResult()){
                             if (queryDocumentSnapshot.exists()){
                                 chipId=areYouReadyBinding.chipGroup.getCheckedChipId();
-                                if (queryDocumentSnapshot.getString("category").equals(mCategories.get(chipId))){
-                                    areYouReadyBinding.errorText.setVisibility(View.GONE);
-                                    ReadyContent content=queryDocumentSnapshot.toObject(ReadyContent.class);
-                                    mContent.add(content);
+                                if (chipId==-1){
+                                    loadAllCategoriesList();
+                                }else{
+                                    if (queryDocumentSnapshot.getString("category").equals(mCategories.get(chipId))){
+                                        areYouReadyBinding.errorText.setVisibility(View.GONE);
+                                        ReadyContent content=queryDocumentSnapshot.toObject(ReadyContent.class);
+                                        mContent.add(content);
+
+                                    }
                                 }
                             }
                         }

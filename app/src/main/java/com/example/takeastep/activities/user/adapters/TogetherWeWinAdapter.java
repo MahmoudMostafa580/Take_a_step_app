@@ -1,14 +1,17 @@
 package com.example.takeastep.activities.user.adapters;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.takeastep.R;
 import com.example.takeastep.models.Vaccine;
 
@@ -34,6 +37,8 @@ public class TogetherWeWinAdapter extends RecyclerView.Adapter<TogetherWeWinAdap
         Vaccine currentVaccine = mVaccine.get(position);
         holder.vaccineName.setText(currentVaccine.getName());
         holder.vaccineInfo.setText(currentVaccine.getInfo());
+        holder.vaccineImage.setImageURI(Uri.parse(currentVaccine.getImage()));
+        Glide.with(mContext).load(Uri.parse(currentVaccine.getImage())).into(holder.vaccineImage);
     }
 
     @Override
@@ -43,11 +48,13 @@ public class TogetherWeWinAdapter extends RecyclerView.Adapter<TogetherWeWinAdap
 
     public static class TogetherWeWinViewHolder extends RecyclerView.ViewHolder {
         TextView vaccineName,vaccineInfo;
+        ImageView vaccineImage;
 
         public TogetherWeWinViewHolder(@NonNull View itemView) {
             super(itemView);
-            vaccineName=itemView.findViewById(R.id.vaccine_name);
-            vaccineInfo=itemView.findViewById(R.id.vaccine_info);
+            vaccineName=itemView.findViewById(R.id.vaccineName);
+            vaccineInfo=itemView.findViewById(R.id.vaccineInfo);
+            vaccineImage=itemView.findViewById(R.id.vaccineImage);
         }
     }
 }
