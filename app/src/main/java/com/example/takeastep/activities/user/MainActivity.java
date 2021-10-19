@@ -26,6 +26,7 @@ import com.example.takeastep.activities.SignInActivity;
 import com.example.takeastep.databinding.ActivityMainBinding;
 import com.example.takeastep.fragments.HelpCenterFragment;
 import com.example.takeastep.fragments.HomeFragment;
+import com.example.takeastep.fragments.StatisticsFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -180,6 +181,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 editor.apply();
                 finish();
             }
+                break;
+            case R.id.statics:
+                getSupportFragmentManager().beginTransaction().replace(R.id.container_fragment,new StatisticsFragment()).commit();
                 break;
             default:
                 getSupportFragmentManager().beginTransaction().replace(R.id.container_fragment,new HomeFragment()).commit();

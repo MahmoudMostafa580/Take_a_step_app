@@ -40,7 +40,7 @@
             <FrameLayout
                 android:id="@+id/image_frame_layout"
                 android:layout_width="0dp"
-                android:layout_height="220dp"
+                android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="32dp"
                 app:layout_constraintBottom_toTopOf="@id/chooseVaccineLayout"
@@ -52,6 +52,7 @@
                     android:id="@+id/vaccineImg"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:minHeight="220dp"
                     android:background="@drawable/background_sign_up_image"
                     android:foreground="?attr/selectableItemBackground"
                     android:scaleType="centerCrop" />

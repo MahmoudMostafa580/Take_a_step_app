@@ -136,7 +136,7 @@ public class AddVaccineActivity extends AppCompatActivity {
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             vaccineImage = data.getData();
             addVaccineBinding.vaccineImg.setImageURI(vaccineImage);
-            Picasso.with(this).load(vaccineImage).fit().centerCrop().into(addVaccineBinding.vaccineImg);
+            Picasso.with(this).load(vaccineImage).into(addVaccineBinding.vaccineImg);
             addVaccineBinding.addVaccineTxt.setVisibility(View.GONE);
         }
     }

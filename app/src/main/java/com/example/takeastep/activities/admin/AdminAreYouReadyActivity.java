@@ -14,6 +14,7 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.takeastep.R;
+import com.example.takeastep.activities.LauncherActivity;
 import com.example.takeastep.activities.admin.adapters.ReadyContentAdapter;
 import com.example.takeastep.databinding.ActivityAdminAreYouReadyBinding;
 import com.example.takeastep.models.ReadyContent;
@@ -131,5 +132,11 @@ public class AdminAreYouReadyActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         loadContents();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        LauncherActivity.stopVideos(-1);
     }
 }

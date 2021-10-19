@@ -49,8 +49,8 @@
             android:layout_width="match_parent"
             android:layout_height="180dp"
             android:background="@drawable/background_sign_up_image"
-            android:scaleType="centerCrop"
             android:foreground="?attr/selectableItemBackground"
+            android:scaleType="centerCrop"
             app:riv_corner_radius="5dp"
             app:riv_oval="false" />
 
@@ -67,43 +67,46 @@
         android:id="@+id/upload_certificate_btn"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        app:layout_constraintTop_toBottomOf="@id/certificate_frame_layout"
         android:layout_marginHorizontal="32dp"
+        android:layout_marginTop="32dp"
+        android:textColor="@color/white"
         android:text="Upload certificate"
-        android:layout_marginTop="32dp"/>
+        app:layout_constraintTop_toBottomOf="@id/certificate_frame_layout" />
 
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="25dp"
         android:layout_height="25dp"
-        app:layout_constraintTop_toTopOf="@id/upload_certificate_btn"
         app:layout_constraintBottom_toBottomOf="@id/upload_certificate_btn"
+        app:layout_constraintEnd_toEndOf="@id/upload_certificate_btn"
         app:layout_constraintStart_toStartOf="@id/upload_certificate_btn"
-        app:layout_constraintEnd_toEndOf="@id/upload_certificate_btn"/>
+        app:layout_constraintTop_toTopOf="@id/upload_certificate_btn" />
 
     <TextView
         android:id="@+id/congratulations_txt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Congratulations. You have earned discount"
-        android:textSize="22sp"
         android:layout_marginHorizontal="32dp"
         android:layout_marginTop="100dp"
         android:gravity="center"
-        app:layout_constraintStart_toStartOf="parent"
+        android:text="Congratulations. You have earned discount"
+        android:textSize="22sp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolBar"
-        android:visibility="gone"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolBar" />
 
     <ImageView
         android:id="@+id/discount_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        app:layout_constraintTop_toBottomOf="@id/congratulations_txt"
-        app:layout_constraintStart_toStartOf="parent"
+        android:adjustViewBounds="true"
+        android:maxHeight="250dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="gone"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/congratulations_txt" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

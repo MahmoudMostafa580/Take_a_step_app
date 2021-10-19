@@ -7,6 +7,10 @@
             android:icon="@drawable/ic_home"
             android:title="Home" />
         <item
+            android:id="@+id/statics"
+            android:icon="@drawable/ic_chart"
+            android:title="Covid-19 Statistics" />
+        <item
             android:id="@+id/help_center"
             android:icon="@drawable/ic_help_center"
             android:title="Help Center"

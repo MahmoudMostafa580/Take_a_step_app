@@ -35,7 +35,6 @@ public class TogetherWeWinAdapter extends RecyclerView.Adapter<TogetherWeWinAdap
     @Override
     public void onBindViewHolder(@NonNull TogetherWeWinViewHolder holder, int position) {
         Vaccine currentVaccine = mVaccine.get(position);
-        holder.vaccineName.setText(currentVaccine.getName());
         holder.vaccineInfo.setText(currentVaccine.getInfo());
         holder.vaccineImage.setImageURI(Uri.parse(currentVaccine.getImage()));
         Glide.with(mContext).load(Uri.parse(currentVaccine.getImage())).into(holder.vaccineImage);
@@ -47,12 +46,11 @@ public class TogetherWeWinAdapter extends RecyclerView.Adapter<TogetherWeWinAdap
     }
 
     public static class TogetherWeWinViewHolder extends RecyclerView.ViewHolder {
-        TextView vaccineName,vaccineInfo;
+        TextView vaccineInfo;
         ImageView vaccineImage;
 
         public TogetherWeWinViewHolder(@NonNull View itemView) {
             super(itemView);
-            vaccineName=itemView.findViewById(R.id.vaccineName);
             vaccineInfo=itemView.findViewById(R.id.vaccineInfo);
             vaccineImage=itemView.findViewById(R.id.vaccineImage);
         }

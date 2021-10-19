@@ -4,57 +4,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardElevation="4dp"
+    android:layout_margin="8dp"
+    android:layout_marginHorizontal="4dp"
     android:layout_marginBottom="8dp"
-    android:layout_marginHorizontal="4dp">
+    app:cardCornerRadius="15dp"
+    app:contentPadding="16dp"
+    app:cardElevation="4dp">
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/vaccineName"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintVertical_bias="0"
-            android:textSize="18sp"
-            android:paddingHorizontal="4dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-
-            tools:text="Vaccine Name" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray"
-            android:layout_marginVertical="4dp"
-            app:layout_constraintTop_toBottomOf="@id/vaccineName"
-            app:layout_constraintBottom_toTopOf="@id/vaccineImage"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
         <ImageView
             android:id="@+id/vaccineImage"
             android:layout_width="match_parent"
-            android:layout_height="220dp"
-            android:src="@drawable/logo2"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:maxHeight="200dp"
             android:scaleType="fitXY"
-            app:layout_constraintTop_toBottomOf="@id/vaccineName"
+            android:src="@drawable/logo2"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/vaccineInfo"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
             android:paddingHorizontal="4dp"
-            tools:text="Vaccine Info"
-            app:layout_constraintTop_toBottomOf="@id/vaccineImage"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/vaccineImage"
+            app:layout_constraintVertical_bias="0"
+            tools:text="@tools:sample/lorem/random"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

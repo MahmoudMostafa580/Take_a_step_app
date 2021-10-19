@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.takeastep.R;
+import com.example.takeastep.activities.LauncherActivity;
 import com.example.takeastep.activities.user.adapters.AreYouReadyAdapter;
 import com.example.takeastep.databinding.ActivityAreYouReadyBinding;
 import com.example.takeastep.models.ReadyContent;
@@ -27,6 +29,7 @@ public class AreYouReadyActivity extends AppCompatActivity {
     CollectionReference mCollectionReference;
 
     ArrayList<ReadyContent> mContent;
+    ArrayList<ReadyContent> tempContent = new ArrayList<>();
     private ArrayList<String> mCategories;
 
     int chipId;
@@ -50,12 +53,32 @@ public class AreYouReadyActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(this);
         areYouReadyBinding.contentRecyclerView.setLayoutManager(linearLayoutManager);
 
-        mAdapter=new AreYouReadyAdapter(mContent,AreYouReadyActivity.this);
+        mAdapter=new AreYouReadyAdapter(tempContent,AreYouReadyActivity.this);
         areYouReadyBinding.contentRecyclerView.setAdapter(mAdapter);
 
         loadCategories();
         loadAllCategoriesList();
 
+        areYouReadyBinding.chipGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == -1) {
+                areYouReadyBinding.chipGroup.check(R.id.chip_all);
+            } else if (checkedId == R.id.chip_all) {
+                LauncherActivity.stopVideos(-1);
+                tempContent.clear();
+                tempContent.addAll(mContent);
+                mAdapter.notifyDataSetChanged();
+            } else {
+                LauncherActivity.stopVideos(-1);
+                tempContent.clear();
+                Chip chip = group.findViewById(checkedId);
+                for (int i = 0; i < mContent.size(); i++) {
+                    if (mContent.get(i).getCategory().equals(chip.getText().toString().trim().toLowerCase())) {
+                        tempContent.add(mContent.get(i));
+                    }
+                }
+                mAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
 
@@ -72,52 +95,17 @@ public class AreYouReadyActivity extends AppCompatActivity {
                     }
 
                     for (int i = 0; i <mCategories.size() ; i++) {
-                        chip=new Chip(this);
+                        chip = (Chip) getLayoutInflater().inflate(R.layout.chip_item, areYouReadyBinding.chipGroup, false);
                         chip.setText(mCategories.get(i));
                         chip.setCheckable(true);
                         chip.setId(i);
-                        areYouReadyBinding.chipGroup.addView(chip,i);
-                        chip.setOnClickListener(v -> {
-                            loadContents();
-                        });
-
+                        areYouReadyBinding.chipGroup.addView(chip);
                     }
-
-//                    chip.setOnClickListener(v -> loadContents());
 
                 })
                 .addOnFailureListener(e -> Toast.makeText(this, "Error while loading categories!", Toast.LENGTH_SHORT).show());
     }
 
-
-    private void loadContents() {
-
-        mCollectionReference.orderBy("time",Query.Direction.DESCENDING).get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult()!=null){
-                        mContent.clear();
-                        for (QueryDocumentSnapshot queryDocumentSnapshot:task.getResult()){
-                            if (queryDocumentSnapshot.exists()){
-                                chipId=areYouReadyBinding.chipGroup.getCheckedChipId();
-                                if (chipId==-1){
-                                    loadAllCategoriesList();
-                                }else{
-                                    if (queryDocumentSnapshot.getString("category").equals(mCategories.get(chipId))){
-                                        areYouReadyBinding.errorText.setVisibility(View.GONE);
-                                        ReadyContent content=queryDocumentSnapshot.toObject(ReadyContent.class);
-                                        mContent.add(content);
-
-                                    }
-                                }
-                            }
-                        }
-                        mAdapter.notifyDataSetChanged();
-                    }else{
-                        showTextMessage();
-                    }
-                })
-                .addOnFailureListener(e -> Toast.makeText(this, "Error while loading content!", Toast.LENGTH_SHORT).show());
-    }
 
     private void loadAllCategoriesList() {
         mCollectionReference.orderBy("time", Query.Direction.DESCENDING).get()
@@ -127,6 +115,7 @@ public class AreYouReadyActivity extends AppCompatActivity {
                         areYouReadyBinding.errorText.setVisibility(View.GONE);
                         ReadyContent content = documentSnapshot.toObject(ReadyContent.class);
                         mContent.add(content);
+                        tempContent.add(content);
                     }
                     Log.v("categoriesSize, ",mContent.size()+"");
                     mAdapter.notifyDataSetChanged();
@@ -134,9 +123,16 @@ public class AreYouReadyActivity extends AppCompatActivity {
                 .addOnFailureListener(e -> Toast.makeText(AreYouReadyActivity.this, "Error while loading content!", Toast.LENGTH_SHORT).show());
     }
 
-    private void showTextMessage() {
-        areYouReadyBinding.errorText.setVisibility(View.VISIBLE);
-        areYouReadyBinding.contentRecyclerView.setVisibility(View.GONE);
+    @Override
+    protected void onStop() {
+        super.onStop();
+        LauncherActivity.stopVideos(-1);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        LauncherActivity.stopVideos(-1);
+
+    }
 }

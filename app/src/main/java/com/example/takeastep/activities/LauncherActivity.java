@@ -11,6 +11,10 @@ import android.view.WindowManager;
 import com.example.takeastep.activities.admin.AdminDashboardActivity;
 import com.example.takeastep.activities.user.MainActivity;
 import com.example.takeastep.databinding.ActivityLauncherBinding;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LauncherActivity extends AppCompatActivity {
     SharedPreferences mySharedPreferences;
@@ -26,7 +30,20 @@ public class LauncherActivity extends AppCompatActivity {
         mySharedPreferences=getSharedPreferences("userData",MODE_PRIVATE);
 
         checkState();
+
     }
+
+
+    public static SimpleExoPlayer exoPlayersVideo;
+    public static Map<Integer,SimpleExoPlayer> mapExoPlayersvideo = new HashMap<>();
+
+
+    public static void stopVideos(int pos){
+        for (int position : mapExoPlayersvideo.keySet())
+            if(pos!=position && mapExoPlayersvideo.get(position)!=null)
+                mapExoPlayersvideo.get(position).pause();
+    }
+
     private void checkState() {
         Boolean isLogged=mySharedPreferences.getBoolean("isLogged",false);
         Boolean isUser=mySharedPreferences.getBoolean("isUser",true);
