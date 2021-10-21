@@ -22,6 +22,8 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
@@ -30,7 +32,7 @@ public class AdminAreYouReadyActivity extends AppCompatActivity {
     ReadyContentAdapter mContentAdapter;
     FirebaseFirestore mFirestore;
     CollectionReference mCollectionReference;
-
+    StorageReference mStorageReference;
     ArrayList<ReadyContent> mContent;
     ReadyContent selectedContent = new ReadyContent();
 
@@ -41,8 +43,9 @@ public class AdminAreYouReadyActivity extends AppCompatActivity {
         setContentView(adminAreYouReadyBinding.getRoot());
 
         mFirestore = FirebaseFirestore.getInstance();
-        //mStorageReference = FirebaseStorage.getInstance().getReference();
         mCollectionReference = mFirestore.collection("Ready Content");
+        mStorageReference = FirebaseStorage.getInstance().getReference();
+
 
         setSupportActionBar(adminAreYouReadyBinding.toolBar);
         adminAreYouReadyBinding.toolBar.setNavigationOnClickListener(v -> onBackPressed());
@@ -67,18 +70,33 @@ public class AdminAreYouReadyActivity extends AppCompatActivity {
                         String caption = mContent.get(position).getCaption();
                         String category = mContent.get(position).getCategory();
                         String videoUrl = mContent.get(position).getVideoUrl();
+                        long time=mContent.get(position).getTime();
 
                         updateIntent.putExtra("caption", caption);
                         updateIntent.putExtra("category", category);
                         updateIntent.putExtra("videoUrl", videoUrl);
+                        updateIntent.putExtra("time",time);
                         startActivity(updateIntent);
 
                         return true;
                     case R.id.delete:
-                        mCollectionReference.document(selectedContent.getCaption()).delete()
+                        mCollectionReference.document(String.valueOf(mContent.get(position).getTime())).delete()
                                 .addOnSuccessListener(unused -> {
-                                    mContent.remove(position);
-                                    mContentAdapter.notifyItemRemoved(position);
+                                    StorageReference videoRef=mStorageReference.child("ReadyContent/"+mContent.get(position).getTime().toString());
+                                    videoRef.delete()
+                                            .addOnSuccessListener(unused1 -> {
+                                                mContent.remove(position);
+                                                mContentAdapter.notifyItemRemoved(position);
+                                                LauncherActivity.mapExoPlayersvideo.remove(position);
+                                                Toast.makeText(this, "Content deleted successfully", Toast.LENGTH_SHORT).show();
+                                                if (mContent.size()==0){
+                                                    adminAreYouReadyBinding.errorText.setVisibility(View.VISIBLE);
+                                                }
+                                            })
+                                            .addOnFailureListener(e -> {
+                                                Toast.makeText(this, "Error while deleting item!", Toast.LENGTH_SHORT).show();
+
+                                            });
                                 })
                                 .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
 
@@ -90,6 +108,7 @@ public class AdminAreYouReadyActivity extends AppCompatActivity {
             popup.show();
         });
 
+        LauncherActivity.releaseVideos(-1);
         loadContents();
     }
 
@@ -131,12 +150,13 @@ public class AdminAreYouReadyActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        LauncherActivity.stopVideos(-1);
         loadContents();
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onPause() {
+        super.onPause();
         LauncherActivity.stopVideos(-1);
     }
 }

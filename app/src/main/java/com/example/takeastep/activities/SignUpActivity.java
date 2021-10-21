@@ -52,7 +52,10 @@ public class SignUpActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("userData", MODE_PRIVATE);
         editor = sharedPreferences.edit();
 
-        signUpBinding.signInTxt.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), SignInActivity.class)));
+        signUpBinding.signInTxt.setOnClickListener(v -> {
+            startActivity(new Intent(getApplicationContext(), SignInActivity.class));
+            finish();
+        });
 
         signUpBinding.imageFrameLayout.setOnClickListener(v -> {
             openFileChooser();
@@ -92,8 +95,10 @@ public class SignUpActivity extends AppCompatActivity {
                                                             mFirebaseUser.updateProfile(profileChangeRequest);
                                                             showToast("Account created successfully");
                                                             editor.putBoolean("isLogged", true);
+                                                            editor.putBoolean("isUser",true);
                                                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
                                                             finish();
+                                                            editor.apply();
                                                         })
                                                         .addOnFailureListener(e ->
                                                                 Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
@@ -150,7 +155,7 @@ public class SignUpActivity extends AppCompatActivity {
         } else if (signUpBinding.passLayout.getEditText().getText().toString().trim().isEmpty()) {
             signUpBinding.passLayout.getEditText().setError("Please enter password!");
             return false;
-        }else if (signUpBinding.confirmPassLayout.getEditText().getText().toString().trim().isEmpty()) {
+        } else if (signUpBinding.confirmPassLayout.getEditText().getText().toString().trim().isEmpty()) {
             signUpBinding.confirmPassLayout.getEditText().setError("Please confirm password!");
             return false;
         } else if (!signUpBinding.passLayout.getEditText().getText().toString()
@@ -170,5 +175,12 @@ public class SignUpActivity extends AppCompatActivity {
             signUpBinding.signUpProgressBar.setVisibility(View.INVISIBLE);
             signUpBinding.signUpBtn.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(getApplicationContext(), SignInActivity.class));
+        finish();
     }
 }

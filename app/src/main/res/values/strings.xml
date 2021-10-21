@@ -4,7 +4,7 @@
     <string name="close">Close</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="type_a_message">Type a message</string>
-    <string name="all_vaccines">All Vaccines</string>
+    <string name="all_categories">All Categories</string>
     <string name="today_cases">Today cases</string>
     <string name="egypt_live">Egypt Live</string>
     <string name="worldwide_live">Worldwide Live</string>

@@ -63,7 +63,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
         adminDashboardBinding.takeAstepCard.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(),
                 AdminTakeAStepActivity.class)));
 
-        //setupBadge();
+        setupBadge();
 
     }
 
@@ -82,6 +82,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
     }
 
     private void setupBadge() {
+        chatsCount=0;
         if (chatsItemCount != null) {
             mRef=mFirestore.collection("users");
             mRef.get()

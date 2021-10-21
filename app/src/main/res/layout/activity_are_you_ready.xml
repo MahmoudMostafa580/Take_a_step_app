@@ -50,7 +50,7 @@
                 android:textColor="@drawable/chip_text"
                 app:chipBackgroundColor="@drawable/chip_selection"
                 android:checked="true"
-                android:text="@string/all_vaccines" />
+                android:text="@string/all_categories" />
 
         </com.google.android.material.chip.ChipGroup>
     </HorizontalScrollView>

@@ -83,7 +83,7 @@ public class ReadyContentAdapter extends RecyclerView.Adapter<ReadyContentAdapte
                 LauncherActivity.mapExoPlayersvideo.get(position).play();
             });
         } catch (Exception e) {
-            Toast.makeText(mContext, "Error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "Error while playing video!", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -92,7 +92,6 @@ public class ReadyContentAdapter extends RecyclerView.Adapter<ReadyContentAdapte
     public int getItemCount() {
         return contentsList.size();
     }
-
 
     public static class ReadyContentVideoViewHolder extends RecyclerView.ViewHolder {
 

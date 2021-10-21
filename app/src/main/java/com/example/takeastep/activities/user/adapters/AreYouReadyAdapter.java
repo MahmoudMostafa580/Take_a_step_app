@@ -1,5 +1,7 @@
 package com.example.takeastep.activities.user.adapters;
 
+import static com.example.takeastep.activities.LauncherActivity.exoPlayersVideo;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +21,6 @@ import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.ui.PlayerView;
-import static com.example.takeastep.activities.LauncherActivity.exoPlayersVideo;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -71,10 +72,11 @@ public class AreYouReadyAdapter extends RecyclerView.Adapter<AreYouReadyAdapter.
 
             LauncherActivity.mapExoPlayersvideo.put(position, exoPlayersVideo);
 
-            holder.playImg.setOnClickListener(v->{
+            holder.playImg.setOnClickListener(v -> {
                 LauncherActivity.stopVideos(position);
-                if (LauncherActivity.mapExoPlayersvideo.get(position).getCurrentPosition() >= LauncherActivity.mapExoPlayersvideo.get(position).getDuration())
+                if (LauncherActivity.mapExoPlayersvideo.get(position).getCurrentPosition() >= LauncherActivity.mapExoPlayersvideo.get(position).getDuration()) {
                     LauncherActivity.mapExoPlayersvideo.get(position).seekTo(1);
+                }
                 LauncherActivity.mapExoPlayersvideo.get(position).play();
             });
         } catch (Exception e) {
@@ -96,7 +98,7 @@ public class AreYouReadyAdapter extends RecyclerView.Adapter<AreYouReadyAdapter.
     public static class AreYouReadyVideoViewHolder extends RecyclerView.ViewHolder {
 
 
-        ImageView  playImg;
+        ImageView playImg;
         ProgressBar progressBar;
         TextView contentCaption;
         PlayerView playerView;

@@ -1,13 +1,13 @@
 package com.example.takeastep.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.takeastep.activities.admin.AdminDashboardActivity;
 import com.example.takeastep.activities.user.MainActivity;
@@ -33,9 +33,22 @@ public class SignInActivity extends AppCompatActivity {
         mySharedPreferences = getSharedPreferences("userData", MODE_PRIVATE);
         editor = mySharedPreferences.edit();
 
-        signInBinding.createNewAccountTxt.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), SignUpActivity.class)));
+        if (mySharedPreferences.getBoolean("isLogged", false)) {
+            if (mySharedPreferences.getBoolean("isUser", false)) {
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                finish();
+            } else {
+                startActivity(new Intent(getApplicationContext(), AdminDashboardActivity.class));
+                finish();
+            }
+        }
+
+        signInBinding.createNewAccountTxt.setOnClickListener(v -> {
+            startActivity(new Intent(getApplicationContext(), SignUpActivity.class));
+            finish();
+        });
         signInBinding.signInBtn.setOnClickListener(v -> {
-            if (isValidData()){
+            if (isValidData()) {
                 signIn();
             }
         });

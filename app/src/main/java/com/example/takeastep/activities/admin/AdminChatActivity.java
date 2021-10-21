@@ -55,6 +55,7 @@ public class AdminChatActivity extends AppCompatActivity {
         setSupportActionBar(adminChatBinding.toolBar);
         adminChatBinding.toolBar.setNavigationOnClickListener(v -> onBackPressed());
 
+
         firestore = FirebaseFirestore.getInstance();
         mFirebaseAuth = FirebaseAuth.getInstance();
 
@@ -65,6 +66,7 @@ public class AdminChatActivity extends AppCompatActivity {
                     String userName=documentSnapshot.getString("name");
                     adminChatBinding.toolBar.setTitle(userName);
                 });
+
 
         Log.w("hg",userId+"");
 

@@ -62,11 +62,7 @@ public class AddVaccineActivity extends AppCompatActivity {
         addVaccineBinding.imageFrameLayout.setOnClickListener(v -> openFileChooser());
 
         addVaccineBinding.uploadBtn.setOnClickListener(v -> {
-            if (mUploadTask != null && mUploadTask.isInProgress()) {
-                Toast.makeText(AddVaccineActivity.this, "Upload in progress...", Toast.LENGTH_SHORT).show();
-            } else {
                 uploadVaccine();
-            }
         });
 
     }
@@ -99,29 +95,30 @@ public class AddVaccineActivity extends AppCompatActivity {
             String vaccineName = addVaccineBinding.vaccinesSpinner.getText().toString();
             StorageReference vaccineReference=mStorageReference.child("Vaccines/"+vaccineName+"/"+System.currentTimeMillis());
             mUploadTask=vaccineReference.putFile(vaccineImage)
-                    .addOnSuccessListener(taskSnapshot -> {
-                        vaccineReference.getDownloadUrl()
-                                .addOnSuccessListener(uri -> {
-                                    Vaccine vaccine=new Vaccine(vaccineName,info,uri.toString());
-                                    DocumentReference documentReference=mFirestore.collection("Vaccines").document(vaccine.getName()).collection("posts").document();
-                                    documentReference.set(vaccine)
-                                            .addOnSuccessListener(unused -> {
-                                                Map<String,Object> name=new HashMap<>();
-                                                name.put("name",vaccine.getName());
-                                                DocumentReference nameRef=mFirestore.collection("Vaccines").document(vaccine.getName());
-                                                nameRef.set(name);
-                                                Toast.makeText(this, "Vaccine uploaded successfully", Toast.LENGTH_SHORT).show();
-                                                loading(false);
-                                                finish();
-                                            })
-                                            .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
-                                })
-                                .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
-                    })
+                    .addOnSuccessListener(taskSnapshot -> vaccineReference.getDownloadUrl()
+                            .addOnSuccessListener(uri -> {
+                                Vaccine vaccine=new Vaccine(vaccineName,info,uri.toString());
+                                DocumentReference documentReference=mFirestore.collection("Vaccines").document(vaccine.getName()).collection("posts").document();
+                                documentReference.set(vaccine)
+                                        .addOnSuccessListener(unused -> {
+                                            Map<String,Object> name=new HashMap<>();
+                                            name.put("name",vaccine.getName());
+                                            DocumentReference nameRef=mFirestore.collection("Vaccines").document(vaccine.getName());
+                                            nameRef.set(name);
+                                            Toast.makeText(this, "Vaccine uploaded successfully", Toast.LENGTH_SHORT).show();
+                                            loading(false);
+                                            finish();
+                                        })
+                                        .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
+                            })
+                            .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show()))
                     .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show())
                     .addOnProgressListener(command -> {
                         loading(true);
                     });
+        }else {
+            loading(false);
+            Toast.makeText(this, "Please fill fields!", Toast.LENGTH_SHORT).show();
         }
     }
 

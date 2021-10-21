@@ -87,6 +87,8 @@ public class AdminTogetherWeWinActivity extends AppCompatActivity {
                 vaccineAdapter.notifyDataSetChanged();
             }
         });
+
+        loadAllVaccines();
     }
 
     void loadTypes() {

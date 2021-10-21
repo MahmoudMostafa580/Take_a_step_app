@@ -72,9 +72,12 @@ public class AreYouReadyActivity extends AppCompatActivity {
                 tempContent.clear();
                 Chip chip = group.findViewById(checkedId);
                 for (int i = 0; i < mContent.size(); i++) {
-                    if (mContent.get(i).getCategory().equals(chip.getText().toString().trim().toLowerCase())) {
+                    if (mContent.get(i).getCategory().equals(chip.getText().toString().trim())) {
                         tempContent.add(mContent.get(i));
                     }
+                }
+                if (tempContent.size()==0){
+                    group.removeViewAt(checkedId+1);
                 }
                 mAdapter.notifyDataSetChanged();
             }
@@ -123,16 +126,16 @@ public class AreYouReadyActivity extends AppCompatActivity {
                 .addOnFailureListener(e -> Toast.makeText(AreYouReadyActivity.this, "Error while loading content!", Toast.LENGTH_SHORT).show());
     }
 
+
     @Override
     protected void onStop() {
         super.onStop();
-        LauncherActivity.stopVideos(-1);
+        LauncherActivity.releaseVideos(-1);
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        LauncherActivity.stopVideos(-1);
-
+    protected void onPause() {
+        super.onPause();
+        LauncherActivity.releaseVideos(-1);
     }
 }
