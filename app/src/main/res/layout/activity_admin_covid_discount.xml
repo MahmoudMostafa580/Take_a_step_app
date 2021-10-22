@@ -38,6 +38,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:text="No requests available"
+        android:text="@string/no_requests_available"
         android:textSize="18sp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -28,7 +28,7 @@
         android:layout_marginTop="32dp"
         android:fontFamily="@font/abhaya_libre"
         android:gravity="center"
-        android:text="To get discounts. Please upload your verified vaccination card photo"
+        android:text="@string/to_get_discounts_please_upload_your_verified_vaccination_card_photo"
         android:textSize="22sp"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
@@ -60,7 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Add Vaccine Certificate"
+            android:text="@string/add_vaccine_certificate"
             android:textSize="18sp" />
     </FrameLayout>
 
@@ -71,7 +71,7 @@
         android:layout_marginHorizontal="32dp"
         android:layout_marginTop="32dp"
         android:textColor="@color/white"
-        android:text="Upload certificate"
+        android:text="@string/upload_certificate"
         app:layout_constraintTop_toBottomOf="@id/certificate_frame_layout" />
 
     <ProgressBar
@@ -90,7 +90,7 @@
         android:layout_marginHorizontal="32dp"
         android:layout_marginTop="100dp"
         android:gravity="center"
-        android:text="Congratulations. You have earned discount"
+        android:text="@string/congratulations_you_have_earned_discount"
         android:textSize="22sp"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
@@ -107,7 +107,8 @@
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/congratulations_txt" />
+        app:layout_constraintTop_toBottomOf="@id/congratulations_txt"
+        tools:ignore="ContentDescription" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

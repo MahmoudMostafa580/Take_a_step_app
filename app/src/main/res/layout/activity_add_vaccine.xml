@@ -63,7 +63,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Add Vaccine Image"
+                    android:text="@string/add_vaccine_image"
                     android:textColor="@color/black"
                     android:textSize="20sp" />
             </FrameLayout>
@@ -84,7 +84,7 @@
                     android:id="@+id/vaccinesSpinner"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:hint="Vaccine Name"
+                    android:hint="@string/vaccine_name"
                     android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -95,7 +95,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="32dp"
-                android:hint="Vaccine Info"
+                android:hint="@string/vaccine_info"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/chooseVaccineLayout">
@@ -115,7 +115,7 @@
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="32dp"
                 android:layout_marginBottom="32dp"
-                android:text="Upload"
+                android:text="@string/upload"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"

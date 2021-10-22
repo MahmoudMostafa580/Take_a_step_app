@@ -61,7 +61,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Add video"
+                    android:text="@string/add_video"
                     android:textColor="@color/white"
                     android:textSize="20sp" />
             </FrameLayout>
@@ -73,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="32dp"
-                android:hint="Caption"
+                android:hint="@string/caption"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/video_frame_layout">
@@ -100,7 +100,7 @@
                     android:id="@+id/categorySpinner"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:hint="Category"
+                    android:hint="@string/category"
                     android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -111,7 +111,7 @@
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="32dp"
                 android:layout_marginBottom="32dp"
-                android:text="Upload"
+                android:text="@string/upload"
                 android:textSize="18sp"
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"

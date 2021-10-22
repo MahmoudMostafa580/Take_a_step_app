@@ -43,7 +43,8 @@
           android:layout_width="match_parent"
           android:layout_height="0dp"
           android:layout_weight="1"
-          android:src="@drawable/logo2"/>
+          android:src="@drawable/logo2"
+          tools:ignore="ContentDescription" />
       <TextView
           android:layout_width="match_parent"
           android:layout_height="match_parent"
@@ -52,7 +53,7 @@
           android:textStyle="bold"
           android:textColor="@color/purple_200"
           android:paddingBottom="4dp"
-          android:text="Are You Ready"/>
+          android:text="@string/are_you_ready"/>
 
     </LinearLayout>
 
@@ -79,7 +80,8 @@
           android:layout_width="match_parent"
           android:layout_height="0dp"
           android:layout_weight="1"
-          android:src="@drawable/together_we_win"/>
+          android:src="@drawable/together_we_win"
+          tools:ignore="ContentDescription" />
       <TextView
           android:layout_width="match_parent"
           android:layout_height="match_parent"
@@ -88,7 +90,7 @@
           android:textStyle="bold"
           android:textColor="@color/purple_200"
           android:paddingBottom="4dp"
-          android:text="Together We Win"/>
+          android:text="@string/together_we_win"/>
 
     </LinearLayout>
 
@@ -115,7 +117,8 @@
           android:layout_height="0dp"
           android:layout_weight="1"
           android:padding="4dp"
-          android:src="@drawable/discount"/>
+          android:src="@drawable/discount"
+          tools:ignore="ContentDescription" />
       <TextView
           android:layout_width="match_parent"
           android:layout_height="match_parent"
@@ -124,7 +127,7 @@
           android:textStyle="bold"
           android:textColor="@color/purple_200"
           android:paddingBottom="4dp"
-          android:text="COVID-19 Discount"/>
+          android:text="@string/covid_19_discount"/>
 
     </LinearLayout>
   </com.google.android.material.card.MaterialCardView>
@@ -150,7 +153,8 @@
           android:layout_width="match_parent"
           android:layout_height="0dp"
           android:layout_weight="1"
-          android:src="@drawable/vaccine_time"/>
+          android:src="@drawable/vaccine_time"
+          tools:ignore="ContentDescription" />
       <TextView
           android:layout_width="match_parent"
           android:layout_height="match_parent"
@@ -159,7 +163,7 @@
           android:textStyle="bold"
           android:textColor="@color/purple_200"
           android:paddingBottom="4dp"
-          android:text="Take A Step"/>
+          android:text="@string/take_a_step"/>
 
     </LinearLayout>
 

@@ -30,6 +30,7 @@
         android:textSize="10sp"
         app:layout_constraintStart_toStartOf="@id/textMessage"
         app:layout_constraintTop_toBottomOf="@id/textMessage"
-        tools:text="10:15 pm"/>
+        tools:text="10:15 pm"
+        tools:ignore="SmallSp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

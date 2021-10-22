@@ -18,12 +18,14 @@
             android:id="@+id/exo_play"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_play"/>
+            android:src="@drawable/ic_play"
+            tools:ignore="ContentDescription" />
         <ImageView
             android:id="@+id/exo_pause"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_pause"/>
+            android:src="@drawable/ic_pause"
+            tools:ignore="ContentDescription" />
     </LinearLayout>
 
     <RelativeLayout
@@ -45,7 +47,7 @@
             android:id="@+id/spirit"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="/"
+            android:text="@string/spirit"
             android:textColor="@color/white"
             android:gravity="center_vertical"
             android:layout_marginHorizontal="2dp"

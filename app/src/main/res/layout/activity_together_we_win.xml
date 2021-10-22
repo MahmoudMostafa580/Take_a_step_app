@@ -70,7 +70,7 @@
         android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No information about vaccines available now"
+        android:text="@string/no_information_about_vaccines_available_now"
         android:textColor="@color/black"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"

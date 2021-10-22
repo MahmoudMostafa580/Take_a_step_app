@@ -57,7 +57,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        android:text="No messages yet!"
+        android:text="@string/no_messages_yet"
         android:textSize="18sp"
         app:layout_constraintTop_toTopOf="@id/view_background"
         app:layout_constraintEnd_toEndOf="@id/view_background"
@@ -97,6 +97,7 @@
         android:textColorHint="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/layout_send" />
+        app:layout_constraintEnd_toStartOf="@id/layout_send"
+        tools:ignore="Autofill" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

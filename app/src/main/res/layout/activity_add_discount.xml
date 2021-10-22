@@ -28,7 +28,7 @@
         android:layout_marginTop="32dp"
         android:fontFamily="@font/abhaya_libre"
         android:gravity="center"
-        android:text="This user get vaccinated. Give him discount"
+        android:text="@string/this_user_get_vaccinated_give_him_discount"
         android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -59,7 +59,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Add Vaccine Discount"
+            android:text="@string/add_vaccine_discount"
             android:textSize="18sp" />
     </FrameLayout>
 
@@ -69,7 +69,7 @@
         android:layout_height="64dp"
         app:layout_constraintTop_toBottomOf="@id/discount_frame_layout"
         android:layout_marginHorizontal="32dp"
-        android:text="Upload discount"
+        android:text="@string/upload_discount"
         android:layout_marginTop="32dp"/>
 
     <ProgressBar

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:clipToPadding="false"
@@ -11,20 +11,21 @@
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_gravity="center"
-        android:src="@drawable/ic_notifications" />
+        android:src="@drawable/ic_notifications"
+        tools:ignore="ContentDescription" />
     <TextView
         android:id="@+id/text_badge"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_gravity="right|end|top"
+        android:layout_gravity="end|top"
         android:layout_marginTop="3dp"
-        android:layout_marginRight="-5dp"
+        android:layout_marginEnd="-5dp"
         android:gravity="center"
         android:background="@drawable/badge_bg"
         android:padding="3dp"
         android:textColor="@android:color/white"
-        android:text="0"
-        android:textSize="10sp" />
+        android:textSize="10sp"
+        tools:ignore="SmallSp" />
 
 
 </FrameLayout>
