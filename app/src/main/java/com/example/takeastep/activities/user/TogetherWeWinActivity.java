@@ -11,10 +11,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.takeastep.R;
 import com.example.takeastep.activities.user.adapters.TogetherWeWinAdapter;
 import com.example.takeastep.databinding.ActivityTogetherWeWinBinding;
+import com.example.takeastep.models.ReadyContent;
 import com.example.takeastep.models.Vaccine;
 import com.google.android.material.chip.Chip;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
@@ -30,7 +32,6 @@ public class TogetherWeWinActivity extends AppCompatActivity {
     private ArrayList<String> mTypes;
     private CollectionReference mCollectionReference;
 
-    int chipId;
     Chip chip;
 
     @Override
@@ -43,7 +44,7 @@ public class TogetherWeWinActivity extends AppCompatActivity {
         togetherWeWinBinding.toolBar.setNavigationOnClickListener(v -> onBackPressed());
 
         mFirestore = FirebaseFirestore.getInstance();
-        mCollectionReference = mFirestore.collection("Vaccines");
+        mCollectionReference = mFirestore.collection("TogetherWeWin");
 
         togetherWeWinBinding.togetherWeWinRecycler.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -84,8 +85,10 @@ public class TogetherWeWinActivity extends AppCompatActivity {
                     mTypes.clear();
                     for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                         if (documentSnapshot.exists()) {
-                            String name = documentSnapshot.getString("name");
-                            mTypes.add(name);
+                            if (documentSnapshot.getLong("numOfPosts")>=1){
+                                String name = documentSnapshot.getString("name");
+                                mTypes.add(name);
+                            }
                         }
                     }
 
@@ -95,92 +98,25 @@ public class TogetherWeWinActivity extends AppCompatActivity {
                         chip.setId(i);
                         togetherWeWinBinding.chipGroup.addView(chip);
                     }
-
-
                 })
                 .addOnFailureListener(e -> Toast.makeText(this, "Error while loading types!", Toast.LENGTH_SHORT).show());
     }
 
     private void loadAllVaccines() {
-        mCollectionReference.get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        mVaccine.clear();
-                        tempVaccine.clear();
-                        for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
-                            if (queryDocumentSnapshot.exists()) {
-                                queryDocumentSnapshot.getReference().collection("posts").get()
-                                        .addOnCompleteListener(task1 -> {
-                                            if (task1.isSuccessful()) {
-
-                                                togetherWeWinBinding.text.setVisibility(View.GONE);
-                                                for (QueryDocumentSnapshot queryDocumentSnapshot1 : task1.getResult()) {
-                                                    if (queryDocumentSnapshot1.exists()) {
-                                                        Vaccine vaccine = queryDocumentSnapshot1.toObject(Vaccine.class);
-                                                        mVaccine.add(vaccine);
-                                                        tempVaccine.add(vaccine);
-                                                    }
-                                                }
-                                                Log.v("vaccine size, ", mVaccine.size() + "");
-                                                if (mVaccine.size() == 0) {
-                                                    showTextMessage();
-                                                }
-
-                                                togetherWeWinAdapter.notifyDataSetChanged();
-
-                                            }
-                                        })
-                                        .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
-                            }
-                        }
+        mCollectionReference.orderBy("time", Query.Direction.DESCENDING).get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    mVaccine.clear();
+                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        togetherWeWinBinding.text.setVisibility(View.GONE);
+                        Vaccine post = documentSnapshot.toObject(Vaccine.class);
+                        mVaccine.add(post);
+                        tempVaccine.add(post);
                     }
+
+                    togetherWeWinAdapter.notifyDataSetChanged();
                 })
-                .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
+                .addOnFailureListener(e -> Toast.makeText(TogetherWeWinActivity.this, "Error while loading posts!", Toast.LENGTH_SHORT).show());
     }
 
-//    public void loadChipsVaccines() {
-//        mCollectionReference.get()
-//                .addOnCompleteListener(task -> {
-//                    if (task.isSuccessful()) {
-//                        for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
-//                            if (queryDocumentSnapshot.exists()) {
-//                                chipId = togetherWeWinBinding.chipGroup.getCheckedChipId();
-//                                if (chipId == -1) {
-//                                    mVaccine.clear();
-//                                    loadAllVaccines();
-//                                } else {
-//                                    if (queryDocumentSnapshot.getString("name").equals(mTypes.get(chipId))) {
-//                                        queryDocumentSnapshot.getReference().collection("posts").get()
-//                                                .addOnCompleteListener(task1 -> {
-//                                                    if (task1.isSuccessful()) {
-//                                                        mVaccine.clear();
-//                                                        togetherWeWinBinding.text.setVisibility(View.GONE);
-//                                                        for (QueryDocumentSnapshot queryDocumentSnapshot1 : task1.getResult()) {
-//                                                            if (queryDocumentSnapshot1.exists()) {
-//                                                                Vaccine vaccine = queryDocumentSnapshot1.toObject(Vaccine.class);
-//                                                                mVaccine.add(vaccine);
-//                                                            }
-//                                                        }
-//                                                        Log.v("vaccine size, ", mVaccine.size() + "");
-//                                                        if (mVaccine.size() == 0) {
-//                                                            showTextMessage();
-//                                                        }
-//                                                        togetherWeWinAdapter.notifyDataSetChanged();
-//                                                    }
-//                                                })
-//                                                .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
-//                                    }
-//                                }
-//
-//                            }
-//                        }
-//                    }
-//                })
-//                .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
-//    }
 
-    private void showTextMessage() {
-        togetherWeWinBinding.text.setVisibility(View.VISIBLE);
-        togetherWeWinBinding.togetherWeWinRecycler.setVisibility(View.GONE);
-    }
 }

@@ -2,14 +2,24 @@ package com.example.takeastep.models;
 
 public class Vaccine {
     String name,info,image;
+    Long time;
 
-    public Vaccine(String name, String info,String image) {
+    public Vaccine(String name, String info,String image,Long time) {
         this.name = name;
         this.info = info;
         this.image=image;
+        this.time=time;
     }
 
     public Vaccine() {
+    }
+
+    public Long getTime() {
+        return time;
+    }
+
+    public void setTime(Long time) {
+        this.time = time;
     }
 
     public String getImage() {

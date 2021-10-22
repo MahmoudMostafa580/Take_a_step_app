@@ -10,6 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <TextView
             android:id="@+id/welcome_back_txt"
             android:layout_width="wrap_content"
@@ -43,14 +44,14 @@
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="40dp"
             android:hint="Email"
-            app:errorEnabled="true"
             app:boxBackgroundColor="#9FAAAAAA"
             app:boxStrokeColor="@color/purple_200"
+            app:errorEnabled="true"
             app:hintTextColor="@color/purple_200"
-            app:startIconDrawable="@drawable/ic_email"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/login_txt">
+            app:layout_constraintTop_toBottomOf="@id/login_txt"
+            app:startIconDrawable="@drawable/ic_email">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -66,21 +67,22 @@
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="16dp"
             android:hint="Password"
-            app:errorEnabled="true"
             app:boxBackgroundColor="#9FAAAAAA"
             app:boxStrokeColor="@color/purple_200"
-            app:hintTextColor="@color/purple_200"
             app:endIconMode="password_toggle"
-            app:startIconDrawable="@drawable/ic_lock"
+            app:errorEnabled="true"
+            app:hintTextColor="@color/purple_200"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/email_layout">
+            app:layout_constraintTop_toBottomOf="@id/email_layout"
+            app:startIconDrawable="@drawable/ic_lock">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
+
         <FrameLayout
             android:id="@+id/signIn_frameLayout"
             android:layout_width="match_parent"
@@ -96,16 +98,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
                 android:layout_marginHorizontal="16dp"
+                android:backgroundTint="@color/purple_700"
                 android:text="sign in"
                 android:textColor="@android:color/white"
-                android:backgroundTint="@color/purple_700"
                 android:textSize="22sp"
                 android:textStyle="bold" />
+
             <ProgressBar
                 android:id="@+id/signInProgressBar"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center" />
         </FrameLayout>
 
         <TextView
@@ -115,6 +118,7 @@
             android:layout_marginTop="30dp"
             android:layout_marginBottom="16dp"
             android:clickable="true"
+            android:focusable="true"
             android:foreground="?attr/selectableItemBackground"
             android:text="Create New Account"
             android:textColor="#1428bf"
@@ -123,8 +127,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/signIn_frameLayout"
-            android:focusable="true" />
+            app:layout_constraintTop_toBottomOf="@id/signIn_frameLayout" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

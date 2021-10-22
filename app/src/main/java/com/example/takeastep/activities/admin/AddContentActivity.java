@@ -3,7 +3,6 @@ package com.example.takeastep.activities.admin;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -11,15 +10,12 @@ import android.widget.MediaController;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.takeastep.R;
 import com.example.takeastep.databinding.ActivityAddContentBinding;
 import com.example.takeastep.models.ReadyContent;
-import com.google.android.material.button.MaterialButton;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -27,7 +23,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -65,7 +60,7 @@ public class AddContentActivity extends AppCompatActivity {
         addContentBinding.videoFrameLayout.setOnClickListener(v -> openVideoChooser());
 
         addContentBinding.uploadBtn.setOnClickListener(v -> {
-                uploadContent();
+            uploadContent();
         });
     }
 
@@ -74,7 +69,7 @@ public class AddContentActivity extends AppCompatActivity {
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     categories.clear();
                     for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                        if (documentSnapshot.exists()){
+                        if (documentSnapshot.exists()) {
                             String name = documentSnapshot.getString("name");
                             categories.add(name);
                         }
@@ -113,7 +108,7 @@ public class AddContentActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_VIDEO_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             videoUri = data.getData();
-            MediaController mc=new MediaController(this);
+            MediaController mc = new MediaController(this);
             mc.setAnchorView(addContentBinding.contentVideo);
             addContentBinding.contentVideo.setMediaController(mc);
             addContentBinding.contentVideo.setVideoURI(videoUri);
@@ -129,7 +124,7 @@ public class AddContentActivity extends AppCompatActivity {
         if (checkValidate()) {
             String caption = Objects.requireNonNull(addContentBinding.captionLayout.getEditText()).getText().toString();
             String category = addContentBinding.categorySpinner.getText().toString();
-            long time=System.currentTimeMillis();
+            long time = System.currentTimeMillis();
             StorageReference contentReference = mStorageReference.child("ReadyContent/" + time);
             mUploadTask = contentReference.putFile(videoUri)
                     .addOnSuccessListener(taskSnapshot -> contentReference.getDownloadUrl()
@@ -159,11 +154,13 @@ public class AddContentActivity extends AppCompatActivity {
                         }
 
                         if (isCategoryExists) {
+                            mFirestore.collection("Categories").document(category).update("numOfVideos",FieldValue.increment(1));
                             Toast.makeText(this, "This category already exist", Toast.LENGTH_SHORT).show();
                         } else {
                             DocumentReference documentReference = mFirestore.collection("Categories").document(category);
-                            Map<Object,String> c=new HashMap<>();
-                            c.put("name",category);
+                            Map<String, Object> c = new HashMap<>();
+                            c.put("name", category);
+                            c.put("numOfVideos",1);
                             documentReference.set(c)
                                     .addOnSuccessListener(unused -> {
                                         Toast.makeText(this, "Category added successfully", Toast.LENGTH_SHORT).show();

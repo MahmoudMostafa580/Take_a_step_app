@@ -52,7 +52,8 @@
                     android:id="@+id/vaccineImg"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:minHeight="220dp"
+                    android:minHeight="200dp"
+                    android:adjustViewBounds="true"
                     android:background="@drawable/background_sign_up_image"
                     android:foreground="?attr/selectableItemBackground"
                     android:scaleType="centerCrop" />
@@ -115,6 +116,7 @@
                 android:layout_marginTop="32dp"
                 android:layout_marginBottom="32dp"
                 android:text="Upload"
+                android:textColor="@color/white"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

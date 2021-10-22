@@ -30,6 +30,7 @@
         android:gravity="center"
         android:text="To get discounts. Please upload your verified vaccination card photo"
         android:textSize="22sp"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolBar" />

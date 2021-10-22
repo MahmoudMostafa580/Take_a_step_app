@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:theme="@style/Theme.TakeAStep"
     tools:context=".activities.SignUpActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -59,8 +60,8 @@
             android:layout_marginTop="16dp"
             android:hint="Name"
             app:boxBackgroundColor="#9FAAAAAA"
-            app:errorEnabled="true"
             app:boxStrokeColor="@color/purple_200"
+            app:errorEnabled="true"
             app:hintTextColor="@color/purple_200"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -83,9 +84,9 @@
             android:hint="Email"
             app:boxBackgroundColor="#9FAAAAAA"
             app:boxStrokeColor="@color/purple_200"
-            app:hintTextColor="@color/purple_200"
-
             app:errorEnabled="true"
+
+            app:hintTextColor="@color/purple_200"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/name_layout"
@@ -107,9 +108,9 @@
             android:hint="Password"
             app:boxBackgroundColor="#9FAAAAAA"
             app:boxStrokeColor="@color/purple_200"
-            app:hintTextColor="@color/purple_200"
             app:endIconMode="password_toggle"
             app:errorEnabled="true"
+            app:hintTextColor="@color/purple_200"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/email_layout"
@@ -131,10 +132,10 @@
             android:hint="Confirm Password"
             app:boxBackgroundColor="#9FAAAAAA"
             app:boxStrokeColor="@color/purple_200"
-            app:hintTextColor="@color/purple_200"
-
             app:endIconMode="password_toggle"
+
             app:errorEnabled="true"
+            app:hintTextColor="@color/purple_200"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/pass_layout"
@@ -161,8 +162,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
                 android:layout_marginHorizontal="16dp"
-                android:text="Sign Up"
                 android:backgroundTint="@color/purple_700"
+                android:text="Sign Up"
                 android:textColor="@android:color/white"
                 android:textSize="22sp"
                 android:textStyle="bold" />

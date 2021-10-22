@@ -225,6 +225,8 @@ public class EditContentActivity extends AppCompatActivity {
                         if (documentSnapshot.exists()) {
                             String name = documentSnapshot.getString("name");
                             categories.add(name);
+                        }else {
+                            Toast.makeText(this, "No categories", Toast.LENGTH_SHORT).show();
                         }
                     }
                     spinnerAdapter.notifyDataSetChanged();

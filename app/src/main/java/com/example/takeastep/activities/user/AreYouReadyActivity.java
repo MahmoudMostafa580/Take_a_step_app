@@ -32,7 +32,6 @@ public class AreYouReadyActivity extends AppCompatActivity {
     ArrayList<ReadyContent> tempContent = new ArrayList<>();
     private ArrayList<String> mCategories;
 
-    int chipId;
     Chip chip;
 
     @Override
@@ -82,9 +81,8 @@ public class AreYouReadyActivity extends AppCompatActivity {
                 mAdapter.notifyDataSetChanged();
             }
         });
+        LauncherActivity.releaseVideos(-1);
     }
-
-
 
     private void loadCategories() {
         mFirestore.collection("Categories").get()
@@ -92,8 +90,10 @@ public class AreYouReadyActivity extends AppCompatActivity {
                     mCategories.clear();
                     for (QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots){
                         if (documentSnapshot.exists()){
-                            String name = documentSnapshot.getString("name");
-                            mCategories.add(name);
+                            if (documentSnapshot.getLong("numOfVideos")>=1){
+                                String name = documentSnapshot.getString("name");
+                                mCategories.add(name);
+                            }
                         }
                     }
 
@@ -108,7 +108,6 @@ public class AreYouReadyActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(e -> Toast.makeText(this, "Error while loading categories!", Toast.LENGTH_SHORT).show());
     }
-
 
     private void loadAllCategoriesList() {
         mCollectionReference.orderBy("time", Query.Direction.DESCENDING).get()
@@ -126,16 +125,15 @@ public class AreYouReadyActivity extends AppCompatActivity {
                 .addOnFailureListener(e -> Toast.makeText(AreYouReadyActivity.this, "Error while loading content!", Toast.LENGTH_SHORT).show());
     }
 
-
     @Override
-    protected void onStop() {
-        super.onStop();
-        LauncherActivity.releaseVideos(-1);
+    protected void onStart() {
+        super.onStart();
+        LauncherActivity.stopVideos(-1);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        LauncherActivity.releaseVideos(-1);
+        LauncherActivity.stopVideos(-1);
     }
 }

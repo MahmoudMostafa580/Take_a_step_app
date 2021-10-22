@@ -19,6 +19,7 @@ import com.example.takeastep.activities.admin.adapters.ReadyContentAdapter;
 import com.example.takeastep.databinding.ActivityAdminAreYouReadyBinding;
 import com.example.takeastep.models.ReadyContent;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -70,36 +71,42 @@ public class AdminAreYouReadyActivity extends AppCompatActivity {
                         String caption = mContent.get(position).getCaption();
                         String category = mContent.get(position).getCategory();
                         String videoUrl = mContent.get(position).getVideoUrl();
-                        long time=mContent.get(position).getTime();
+                        long time = mContent.get(position).getTime();
 
                         updateIntent.putExtra("caption", caption);
                         updateIntent.putExtra("category", category);
                         updateIntent.putExtra("videoUrl", videoUrl);
-                        updateIntent.putExtra("time",time);
+                        updateIntent.putExtra("time", time);
                         startActivity(updateIntent);
 
                         return true;
                     case R.id.delete:
-                        mCollectionReference.document(String.valueOf(mContent.get(position).getTime())).delete()
-                                .addOnSuccessListener(unused -> {
-                                    StorageReference videoRef=mStorageReference.child("ReadyContent/"+mContent.get(position).getTime().toString());
-                                    videoRef.delete()
-                                            .addOnSuccessListener(unused1 -> {
-                                                mContent.remove(position);
-                                                mContentAdapter.notifyItemRemoved(position);
-                                                LauncherActivity.mapExoPlayersvideo.remove(position);
-                                                Toast.makeText(this, "Content deleted successfully", Toast.LENGTH_SHORT).show();
-                                                if (mContent.size()==0){
-                                                    adminAreYouReadyBinding.errorText.setVisibility(View.VISIBLE);
-                                                }
+
+                        mFirestore.collection("Categories").document(mContent.get(position).getCategory())
+                                .update("numOfVideos", FieldValue.increment(-1))
+                                .addOnSuccessListener(unused2 -> {
+                                    mCollectionReference.document(String.valueOf(mContent.get(position).getTime())).delete()
+                                            .addOnSuccessListener(unused -> {
+                                                StorageReference videoRef = mStorageReference.child("ReadyContent/" + mContent.get(position).getTime().toString());
+                                                videoRef.delete()
+                                                        .addOnSuccessListener(unused1 -> {
+                                                            mContent.remove(position);
+                                                            mContentAdapter.notifyItemRemoved(position);
+                                                            LauncherActivity.mapExoPlayersvideo.remove(position);
+                                                            Toast.makeText(this, "Content deleted successfully", Toast.LENGTH_SHORT).show();
+                                                            if (mContent.size() == 0) {
+                                                                adminAreYouReadyBinding.errorText.setVisibility(View.VISIBLE);
+                                                            }
+                                                        })
+                                                        .addOnFailureListener(e -> {
+                                                            Toast.makeText(this, "Error while deleting item!", Toast.LENGTH_SHORT).show();
+                                                        });
                                             })
-                                            .addOnFailureListener(e -> {
-                                                Toast.makeText(this, "Error while deleting item!", Toast.LENGTH_SHORT).show();
-
-                                            });
+                                            .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
                                 })
-                                .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
-
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                });
                         return false;
 
                 }

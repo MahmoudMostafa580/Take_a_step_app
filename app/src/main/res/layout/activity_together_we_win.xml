@@ -71,6 +71,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="No information about vaccines available now"
+        android:textColor="@color/black"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

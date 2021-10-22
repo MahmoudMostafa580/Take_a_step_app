@@ -17,6 +17,7 @@ import com.example.takeastep.R;
 import com.example.takeastep.databinding.ActivityAddVaccineBinding;
 import com.example.takeastep.models.Vaccine;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -43,6 +44,7 @@ public class AddVaccineActivity extends AppCompatActivity {
     ArrayAdapter<String> spinnerAdapter;
     Uri vaccineImage;
 
+    boolean isVaccineExists;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,18 +95,15 @@ public class AddVaccineActivity extends AppCompatActivity {
         if (checkValidate()){
             String info = Objects.requireNonNull(addVaccineBinding.infoLayout.getEditText()).getText().toString();
             String vaccineName = addVaccineBinding.vaccinesSpinner.getText().toString();
-            StorageReference vaccineReference=mStorageReference.child("Vaccines/"+vaccineName+"/"+System.currentTimeMillis());
+            long time = System.currentTimeMillis();
+            StorageReference vaccineReference=mStorageReference.child("Vaccines/"+time);
             mUploadTask=vaccineReference.putFile(vaccineImage)
                     .addOnSuccessListener(taskSnapshot -> vaccineReference.getDownloadUrl()
                             .addOnSuccessListener(uri -> {
-                                Vaccine vaccine=new Vaccine(vaccineName,info,uri.toString());
-                                DocumentReference documentReference=mFirestore.collection("Vaccines").document(vaccine.getName()).collection("posts").document();
-                                documentReference.set(vaccine)
+                                Vaccine post=new Vaccine(vaccineName,info,uri.toString(),time);
+                                DocumentReference documentReference=mFirestore.collection("TogetherWeWin").document(String.valueOf(time));
+                                documentReference.set(post)
                                         .addOnSuccessListener(unused -> {
-                                            Map<String,Object> name=new HashMap<>();
-                                            name.put("name",vaccine.getName());
-                                            DocumentReference nameRef=mFirestore.collection("Vaccines").document(vaccine.getName());
-                                            nameRef.set(name);
                                             Toast.makeText(this, "Vaccine uploaded successfully", Toast.LENGTH_SHORT).show();
                                             loading(false);
                                             finish();
@@ -116,6 +115,33 @@ public class AddVaccineActivity extends AppCompatActivity {
                     .addOnProgressListener(command -> {
                         loading(true);
                     });
+
+            mFirestore.collection("Vaccines").get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                            isVaccineExists = vaccineName.equals(documentSnapshot.getId());
+                            if (isVaccineExists)
+                                break;
+                        }
+
+                        if (isVaccineExists) {
+                            mFirestore.collection("Vaccines").document(vaccineName).update("numOfPosts", FieldValue.increment(1));
+                            Toast.makeText(this, "This vaccine already exist", Toast.LENGTH_SHORT).show();
+                        } else {
+                            DocumentReference documentReference = mFirestore.collection("Vaccines").document(vaccineName);
+                            Map<String, Object> v = new HashMap<>();
+                            v.put("name", vaccineName);
+                            v.put("numOfPosts",1);
+                            documentReference.set(v)
+                                    .addOnSuccessListener(unused -> {
+                                        Toast.makeText(this, "Vaccine added successfully", Toast.LENGTH_SHORT).show();
+                                        mVaccines.add(vaccineName);
+                                        spinnerAdapter.notifyDataSetChanged();
+                                    })
+                                    .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
+                        }
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
         }else {
             loading(false);
             Toast.makeText(this, "Please fill fields!", Toast.LENGTH_SHORT).show();
