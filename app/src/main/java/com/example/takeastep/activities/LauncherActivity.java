@@ -53,7 +53,7 @@ public class LauncherActivity extends AppCompatActivity {
 
     private void checkState() {
         Boolean isLogged = mySharedPreferences.getBoolean("isLogged", false);
-        Boolean isUser = mySharedPreferences.getBoolean("isUser", true);
+        Boolean isUser = mySharedPreferences.getBoolean("isUser", false);
         Boolean isAdmin = mySharedPreferences.getBoolean("isAdmin", false);
         if (isLogged) {
             if (isUser) {
@@ -61,8 +61,7 @@ public class LauncherActivity extends AppCompatActivity {
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     finish();
                 }, 2000);
-            }
-            if (isAdmin) {
+            } else if (isAdmin) {
                 new Handler().postDelayed(() -> {
                     startActivity(new Intent(getApplicationContext(), AdminDashboardActivity.class));
                     finish();

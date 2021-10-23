@@ -115,7 +115,6 @@ public class AdminAreYouReadyActivity extends AppCompatActivity {
             popup.show();
         });
 
-        LauncherActivity.releaseVideos(-1);
         loadContents();
     }
 
@@ -148,16 +147,11 @@ public class AdminAreYouReadyActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        loadContents();
-    }
 
     @Override
     protected void onStart() {
         super.onStart();
-        LauncherActivity.stopVideos(-1);
+        LauncherActivity.releaseVideos(-1);
         loadContents();
     }
 
@@ -165,5 +159,12 @@ public class AdminAreYouReadyActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         LauncherActivity.stopVideos(-1);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        LauncherActivity.stopVideos(-1);
+
     }
 }

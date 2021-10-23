@@ -116,29 +116,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
                     })
                     .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
 
-
-
-//            mRef = mFirestore.collection("users").document().collection("chat");
-//            mRef.get()
-//                    .addOnCompleteListener(task -> {
-//                        if (task.isSuccessful()) {
-//                            for (QueryDocumentSnapshot queryDocumentSnapshot:task.getResult()){
-//                                if (queryDocumentSnapshot.exists()){
-//                                    if (queryDocumentSnapshot.getString("receiverId").equals("ALQyPwPRatn1H3oGIaOo")
-//                                            && queryDocumentSnapshot.getBoolean("seen").equals(false)){
-//                                        chatsCount++;
-//                                    }
-//                                }
-//                            }
-//                            if (chatsCount == 0) {
-//                                chatsItemCount.setVisibility(View.GONE);
-//                            } else {
-//                                chatsItemCount.setVisibility(View.VISIBLE);
-//                                chatsItemCount.setText(String.valueOf(chatsCount));
-//                            }
-//                        }
-//                    })
-//                    .addOnFailureListener(e -> Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show());
         }
     }
 

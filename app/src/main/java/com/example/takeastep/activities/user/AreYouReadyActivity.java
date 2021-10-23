@@ -81,7 +81,6 @@ public class AreYouReadyActivity extends AppCompatActivity {
                 mAdapter.notifyDataSetChanged();
             }
         });
-        LauncherActivity.releaseVideos(-1);
     }
 
     private void loadCategories() {
@@ -128,12 +127,19 @@ public class AreYouReadyActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        LauncherActivity.stopVideos(-1);
+        LauncherActivity.releaseVideos(-1);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         LauncherActivity.stopVideos(-1);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        LauncherActivity.stopVideos(-1);
+
     }
 }
